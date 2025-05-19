@@ -32,6 +32,56 @@ const Tasks = [
         expectedCompletionDateTime: new Date().getTime() + (2 * DAY_MILLIS),
         creationDateTime: new Date().getTime(),
         lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        projectId: 'PRO-SHOPPING',
+        tite: 'Bananas',
+        description: null,
+        isDone: false,
+        ordinal: null,
+        expectedCompletionDateTime: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        projectId: 'PRO-SHOPPING',
+        tite: 'Oranges',
+        description: null,
+        isDone: false,
+        ordinal: null,
+        expectedCompletionDateTime: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        projectId: 'PRO-SHOPPING',
+        tite: 'Black Beans',
+        description: null,
+        isDone: false,
+        ordinal: null,
+        expectedCompletionDateTime: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        projectId: 'PRO-SHOPPING',
+        tite: 'Rice',
+        description: null,
+        isDone: false,
+        ordinal: null,
+        expectedCompletionDateTime: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        projectId: 'PRO-SHOPPING',
+        tite: 'Tomatos',
+        description: null,
+        isDone: false,
+        ordinal: null,
+        expectedCompletionDateTime: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
     }
 ]
 
@@ -39,8 +89,17 @@ const Projects = [
     {
         id: 'PRO-TODOAPP', // Temp, will change with randomly generated IDs (would need to create a login, or just rely on localStorage to remember deviceID)
         name: 'Todo App',
-        description: 'This is an exercise in futility that will lead to nothing',
-        hexColor: '00ff00',
+        description: 'Will implement a fetch by ',
+        hexColor: 'EEFC57',
+        icon: null,
+        creationDateTime: new Date().getTime(),
+        lastModifiedDateTime: new Date().getTime()
+    },
+    {
+        id: 'PRO-SHOPPING',
+        name: 'Shopping List',
+        description: null,
+        hexColor: '28AFB0',
         icon: null,
         creationDateTime: new Date().getTime(),
         lastModifiedDateTime: new Date().getTime()
