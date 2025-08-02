@@ -8,7 +8,7 @@ type SelectBoxProps = {
 export default function SelectBox({ name, options }: SelectBoxProps) {
 
   return (
-        <select name={name} className="w-full h-full rounded-md">
+        <select name={name} className="w-full h-[48px] rounded-md">
             {options.map((option) => (
                 <option key={option} value={option.trim()}>
                     {option.trim()}

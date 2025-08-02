@@ -5,17 +5,22 @@ import ReactDatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-const DatePicker = ({}) => {
-//   const [selectedDate, setSelectedDate] = useState<Date | null>(value || null);
+type DatePickerProps = {
+  name: string;
+};
 
-// const [selectedDate, setSelectedDate] = useState(new Date());
+const DatePicker = ({ name }: DatePickerProps) => {
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 
   return (
     <ReactDatePicker
       selected={selectedDate}
+      name={name}
+      showTimeSelect
       onChange={(date) => setSelectedDate(date)}
+      dateFormat="MMMM d, yyyy h:mm aa"
     />
   );
 };
