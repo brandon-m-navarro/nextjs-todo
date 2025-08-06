@@ -31,7 +31,7 @@ export default function SimpleAnimation() {
                 </div>
 
                 {/* Center Floating Cube */}
-                <div>
+                <div className='animate-move-y'>
 
                     {/* Platform */}
                     <div className='absolute z-5 w-[100px] h-[100px] left-[35%] top-[35%] bg-[#FFFFFF] border-[#000000] border-[2px] rounded-[4px]'/>
