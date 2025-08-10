@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-export default function CubeAnimation() {
+export default function RubiksCube() {
   const [rotation, setRotation] = useState({ x: -20, y: 20 });
   const dragging = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -16,6 +16,7 @@ export default function CubeAnimation() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!dragging.current) return;
+
     const dx = e.clientX - lastPos.current.x;
     const dy = e.clientY - lastPos.current.y;
     setRotation(r => ({
@@ -47,7 +48,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
             <div
                 key={i}
-                className="w-full h-full bg-[#009B48] border border-black"
+                className="w-full h-full bg-[#009B48] border border-[#000000]"
             />
             ))}
           </div>
@@ -56,7 +57,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
             <div
                 key={i}
-                className="w-full h-full bg-[#0045AD] border border-black"
+                className="w-full h-full bg-[#0045AD] border border-[#000000]"
             />
             ))}
           </div>
@@ -65,7 +66,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
                 <div
                     key={i}
-                    className="w-full h-full bg-[#FF5900] border border-black"
+                    className="w-full h-full bg-[#FF5900] border border-[#000000]"
                 />
             ))}
           </div>
@@ -74,7 +75,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
                 <div
                     key={i}
-                    className="w-full h-full bg-[#B90000] border border-black"
+                    className="w-full h-full bg-[#B90000] border border-[#000000]"
                 />
             ))}
           </div>
@@ -83,7 +84,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
                 <div
                     key={i}
-                    className="w-full h-full bg-[#FFFFFF] border border-black"
+                    className="w-full h-full bg-[#FFFFFF] border border-[#000000]"
                 />
             ))}
           </div>
@@ -92,7 +93,7 @@ export default function CubeAnimation() {
             {[...Array(9)].map((_, i) => (
                 <div
                     key={i}
-                    className="w-full h-full bg-[#FFD500] border border-black"
+                    className="w-full h-full bg-[#FFD500] border border-[#000000]"
                 />
             ))}
           </div>
