@@ -13,7 +13,7 @@ import { Button } from "./button";
 import { useActionState } from "react";
 // import { authenticate } from '@/app/lib/actions';
 import SimpleAnimation from "./animation";
-import RubiksCube from "./rubiks_cube";
+
 
 export default function EditTaskForm() {
   // const [errorMessage, formAction, isPending] = useActionState(
@@ -46,8 +46,6 @@ export default function EditTaskForm() {
     >
 
       <SimpleAnimation/>
-
-      <RubiksCube />
 
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8 w-[28rem]">
         <h1 className={`${manrope.className} text-[36px] ml-[6px] mb-[12px] mt-[0px]`}>Add Task</h1>
