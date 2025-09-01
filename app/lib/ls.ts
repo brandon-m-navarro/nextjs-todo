@@ -9,12 +9,11 @@ const LS_KEY = 'appData';          // Key under which data is stored in local st
 
 // Define the structure of your stored data
 export interface AppData {
-  // Add your specific data structure here
-  // Example:
+
   // user?: { id: string; name: string };
   // tasks?: Array<{ id: string; title: string }>;
   // projects?: Array<{ id: string; name: string }>;
-  // Add any other properties you store
+
   [key: string]: unknown; // Flexible structure if you don't know exact shape
 }
 

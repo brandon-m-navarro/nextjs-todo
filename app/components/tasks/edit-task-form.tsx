@@ -1,7 +1,7 @@
 "use client";
 
 import DatePicker from "./datepicker";
-import { manrope } from "@/app/ui/fonts";
+import { manrope } from "@/app/components/ui/fonts";
 import SelectBox from "./select-box";
 // import {
 //   AtSymbolIcon,
