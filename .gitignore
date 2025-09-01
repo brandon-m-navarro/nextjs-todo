@@ -4,6 +4,9 @@
 *.env
 .env
 
+#Workspace file
+*.code-workspace
+
 # Logs
 logs
 *.log

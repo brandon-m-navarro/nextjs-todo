@@ -2,10 +2,10 @@ const HOUR_MILLIS = 1000 * 60 * 60;
 const DAY_MILLIS = HOUR_MILLIS * 24;
 const WEEK_MILLIS = DAY_MILLIS * 7;
 
-const Tasks = [
+export const Tasks = [
     {
         projectId: 'PRO-TODOAPP',
-        tite: 'Create Wireframes',
+        title: 'Create Wireframes',
         description: 'Description . . .',
         isDone: true,
         ordinal: 0,
@@ -15,7 +15,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-TODOAPP',
-        tite: 'Refine Mockups',
+        title: 'Refine Mockups',
         description: 'Description . . .',
         isDone: false,
         ordinal: 1,
@@ -25,7 +25,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-TODOAPP',
-        tite: 'Implement JS Skeleton',
+        title: 'Implement JS Skeleton',
         description: 'Description . . .',
         isDone: false,
         ordinal: 2,
@@ -35,7 +35,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
-        tite: 'Bananas',
+        title: 'Bananas',
         description: null,
         isDone: false,
         ordinal: null,
@@ -45,7 +45,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
-        tite: 'Oranges',
+        title: 'Oranges',
         description: null,
         isDone: false,
         ordinal: null,
@@ -55,7 +55,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
-        tite: 'Black Beans',
+        title: 'Black Beans',
         description: null,
         isDone: false,
         ordinal: null,
@@ -65,7 +65,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
-        tite: 'Rice',
+        title: 'Rice',
         description: null,
         isDone: false,
         ordinal: null,
@@ -75,7 +75,7 @@ const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
-        tite: 'Tomatos',
+        title: 'Tomatos',
         description: null,
         isDone: false,
         ordinal: null,
@@ -85,7 +85,7 @@ const Tasks = [
     }
 ]
 
-const Projects = [
+export const Projects = [
     {
         id: 'PRO-TODOAPP', // Temp, will change with randomly generated IDs (would need to create a login, or just rely on localStorage to remember deviceID)
         name: 'Todo App',
