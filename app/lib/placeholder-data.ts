@@ -1,6 +1,5 @@
 const HOUR_MILLIS = 1000 * 60 * 60;
 const DAY_MILLIS = HOUR_MILLIS * 24;
-const WEEK_MILLIS = DAY_MILLIS * 7;
 
 export const Tasks = [
     {

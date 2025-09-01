@@ -3,14 +3,14 @@
 import DatePicker from "./datepicker";
 import { manrope } from "@/app/ui/fonts";
 import SelectBox from "./select-box";
-import {
-  AtSymbolIcon,
-  KeyIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+// import {
+//   AtSymbolIcon,
+//   KeyIcon,
+//   ExclamationCircleIcon,
+// } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "./button";
-import { useActionState } from "react";
+// import { useActionState } from "react";
 // import { authenticate } from '@/app/lib/actions';
 import SimpleAnimation from "./animation";
 
