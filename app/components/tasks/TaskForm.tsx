@@ -1,57 +1,58 @@
 "use client";
 
-import DatePicker from "./datepicker";
+import DatePicker from "../ui/datepicker";
 import { manrope } from "@/app/components/ui/fonts";
-import SelectBox from "./select-box";
-// import {
-//   AtSymbolIcon,
-//   KeyIcon,
-//   ExclamationCircleIcon,
-// } from "@heroicons/react/24/outline";
+import SelectBox from "../ui/select-box";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { Button } from "./button";
-// import { useActionState } from "react";
-// import { authenticate } from '@/app/lib/actions';
-import SimpleAnimation from "./animation";
+import { Button } from "../ui/button";
+import SimpleAnimation from "../ui/animation";
 
+import { useState } from "react";
+import { createTask } from "@/app/lib/db";
+import { describe } from "node:test";
 
-export default function EditTaskForm() {
-  // const [errorMessage, formAction, isPending] = useActionState(
-  //   authenticate,
-  //   undefined,
-  // );
+interface TaskFormProps {
+  projectId: string;
+}
+
+export default function TaskForm() {
+  const [title, setTitle] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) return; // Prevent submission if title is empty
+    setIsSubmitting(true);
+
+    try {
+      await createTask({
+        projectId,
+        title,
+        description: '',
+        isDone: false
+      })
+      setTitle(''); // Clear the title input after successful submission
+    } catch (error) {
+      console.error("Error creating task:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <form
-      action={(formData: FormData) => {
-        const task = {
-          project: formData.get("project"),
-          title: formData.get("title"),
-          description: formData.get("description"),
-          dueDate: formData.get("dueDate"),
-        };
-        console.log("submit task - ", task);
-
-        // Here you would typically handle the form submission,
-        // such as sending the task data to an API or updating local storage.
-
-        // Reset the form after submission
-        formData.set("project", "");
-        formData.set("title", "");
-        formData.set("description", "");
-        formData.set("dueDate", "");
-      }}
-
+      action={handleSubmit}
       className="space-y-3"
     >
-
-      <SimpleAnimation/>
+      <SimpleAnimation />
 
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8 w-[28rem]">
-        <h1 className={`${manrope.className} text-[36px] ml-[6px] mb-[12px] mt-[0px]`}>Add Task</h1>
+        <h1
+          className={`${manrope.className} text-[36px] ml-[6px] mb-[12px] mt-[0px]`}
+        > Add New Task
+        </h1>
         <div className="w-[calc(100%-24px)] h-fit m-auto">
           <div>
-
             <div className="flex flex-col h-[72px] relative mb-[12px]">
               <span className="text-[18px] leading-[18px] mb-[6px]">
                 Project
@@ -65,15 +66,15 @@ export default function EditTaskForm() {
             </div>
 
             <div className="flex flex-col h-[72px] relative mb-[12px]">
-              <span className="text-[18px] leading-[18px] mb-[6px]">
-                Title
-              </span>
+              <span className="text-[18px] leading-[18px] mb-[6px]">Title</span>
               <div className="h-[48px] w-full">
                 <input
                   type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   name="title"
                   className="box-border w-full h-full rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                  placeholder="Enter task title"
+                  placeholder="Enter task title..."
                   required
                 />
               </div>
@@ -106,11 +107,15 @@ export default function EditTaskForm() {
                 />
               </div>
             </div>
-
           </div>
         </div>
-        <Button className="text-[20px] mt-4 w-[calc(100%-12px)] m-auto h-[48px] cursor-pointer">
-          Save<ArrowRightIcon className="ml-auto h-[24px] w-[24px] text-gray-50" />
+        <Button
+          className="text-[20px] mt-4 w-[calc(100%-12px)] m-auto h-[48px] cursor-pointer"
+          type="submit"
+          disabled={isSubmitting || !title.trim()}
+        >
+          {isSubmitting ? "Adding..." : "Add Task"}
+          <ArrowRightIcon className="ml-auto h-[24px] w-[24px] text-gray-50" />
         </Button>
         <div
           className="flex h-8 items-end space-x-1"
