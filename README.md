@@ -57,7 +57,11 @@ app/
 │   ├── hooks/
 │   │   ├── useTasks.ts
 │   │   └── useProjects.ts
-│   └── types.ts                   # Shared TypeScript types
+│   ├── ls.ts                      # LocalStorage module
+│   └── definitions.ts             # Shared TypeScript types
+├── scripts/
+│   ├── create-tables.ts           # Executes SQL statements to init tables
+│   └── seed.ts                    # Clears and seeds DB with placeholder-data
 ├── layout.tsx                     # Root layout
 ├── page.tsx                       # Homepage (/)
 └── globals.css
