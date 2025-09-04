@@ -1,9 +1,11 @@
+import { generateId } from "./utilities";
 const HOUR_MILLIS = 1000 * 60 * 60;
 const DAY_MILLIS = HOUR_MILLIS * 24;
 
 export const Tasks = [
     {
         projectId: 'PRO-TODOAPP',
+        id: generateId('TSK'),
         title: 'Create Wireframes',
         description: 'Description . . .',
         isDone: true,
@@ -14,6 +16,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-TODOAPP',
+        id: generateId('TSK'),
         title: 'Refine Mockups',
         description: 'Description . . .',
         isDone: false,
@@ -24,6 +27,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-TODOAPP',
+        id: generateId('TSK'),
         title: 'Implement JS Skeleton',
         description: 'Description . . .',
         isDone: false,
@@ -34,6 +38,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
+        id: generateId('TSK'),
         title: 'Bananas',
         description: null,
         isDone: false,
@@ -44,6 +49,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
+        id: generateId('TSK'),
         title: 'Oranges',
         description: null,
         isDone: false,
@@ -54,6 +60,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
+        id: generateId('TSK'),
         title: 'Black Beans',
         description: null,
         isDone: false,
@@ -64,6 +71,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
+        id: generateId('TSK'),
         title: 'Rice',
         description: null,
         isDone: false,
@@ -74,6 +82,7 @@ export const Tasks = [
     },
     {
         projectId: 'PRO-SHOPPING',
+        id: generateId('TSK'),
         title: 'Tomatos',
         description: null,
         isDone: false,

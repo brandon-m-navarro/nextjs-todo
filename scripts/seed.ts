@@ -50,7 +50,7 @@ async function main() {
             
             await sql`
             CREATE TABLE tasks (
-                id SERIAL PRIMARY KEY,
+                id VARCHAR PRIMARY KEY,
                 project_id VARCHAR(50) NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
                 title VARCHAR(255) NOT NULL,
                 description TEXT,
@@ -62,19 +62,6 @@ async function main() {
                 UNIQUE (project_id, title)
             )`
             ;
-            // await sql`
-            // CREATE TABLE tasks (
-            //     id SERIAL PRIMARY KEY,
-            //     project_id VARCHAR(50) NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-            //     title VARCHAR(255) NOT NULL,
-            //     description TEXT,
-            //     is_done BOOLEAN DEFAULT FALSE,
-            //     ordinal INTEGER,
-            //     expected_completion_date_time TIMESTAMPTZ,
-            //     creation_date_time TIMESTAMPTZ NOT NULL,
-            //     last_modified_date_time TIMESTAMPTZ NOT NULL
-            // )`
-            // ;
             
             await sql`CREATE INDEX idx_tasks_project_id ON tasks(project_id)`;
         }
@@ -117,10 +104,11 @@ async function main() {
     for (const task of data.Tasks) {
       await sql`
         INSERT INTO tasks (
-          project_id, title, description, is_done, ordinal,
+          project_id, id, title, description, is_done, ordinal,
           expected_completion_date_time, creation_date_time, last_modified_date_time
         ) VALUES (
           ${task.projectId},
+          ${task.id},
           ${task.title},
           ${task.description},
           ${task.isDone},

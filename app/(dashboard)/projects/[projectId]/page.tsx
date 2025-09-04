@@ -1,6 +1,6 @@
-import { TaskForm } from "@/app/components/tasks/TaskForm";
+import TaskForm from "@/app/components/tasks/TaskForm";
 import { TaskList } from "@/app/components/tasks/TaskList";
-import { getTasksByProjectId } from '@/app/lib/data';
+import { db } from '@/app/lib/db';
 
 interface ProjectPageProps {
   params: {
@@ -10,7 +10,7 @@ interface ProjectPageProps {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = params;
-  const tasks = await getTasksByProjectId(projectId);
+  const tasks = await db.tasks.getByProjectId(projectId);
 
   return (
     <div className="p-8">

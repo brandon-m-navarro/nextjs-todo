@@ -30,7 +30,7 @@ async function createTables() {
 
     await sql`
       CREATE TABLE IF NOT EXISTS tasks (
-        id SERIAL PRIMARY KEY,
+        id VARCHAR(50) PRIMARY KEY,
         project_id VARCHAR(50) NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
         description TEXT,

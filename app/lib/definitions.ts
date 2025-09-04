@@ -1,26 +1,27 @@
 export type Task = {
     projectId: string;
+    id: string;
     title: string;
-    description?: string;
+    description: string | null;
     isDone: boolean;
-    ordinal?: number;
-    expectedCompletionDateTime?: number;
+    ordinal: number;
+    expectedCompletionDateTime: Date | null;
     // complexityRating?: number; // 1-5
     // effortRating?: number; // 1-5
     // priorityRating?: number; // 1-5
     // tags?: string[]; // e.g., ['urgent', 'important'] allow multiple tags & custom tags
-    creationDateTime: number;
-    lastModifiedDateTime: number;
+    creationDateTime: Date;
+    lastModifiedDateTime: Date;
 }
 
 export type Project = {
     id: string;
     name: string;
     description?: string;
-    hexColor?: string;
-    icon?: string;
-    creationDateTime: number;
-    lastModifiedDateTime: number;
+    hexColor: string | null;
+    icon: string | null;
+    creationDateTime: Date;
+    lastModifiedDateTime: Date;
 }
 
 export type LS = {

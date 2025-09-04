@@ -1,0 +1,125 @@
+import Link from 'next/link';
+import { db } from '@/app/lib/db';
+import { TaskList } from '@/app/components/tasks/TaskList';
+import { ProjectGrid } from '@/app/components/projects/ProjectGrid';
+
+export default async function DashboardPage() {
+  // Fetch data in parallel for better performance
+  const [projects, recentTasks] = await Promise.all([
+    db.projects.getAll(),
+    getRecentTasks(), // We'll create this helper function
+  ]);
+
+  const incompleteTasks = recentTasks.filter(task => !task.isDone);
+  const completedTasks = recentTasks.filter(task => task.isDone);
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <div className="flex gap-4">
+          <Link
+            href="/projects/new"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            New Project
+          </Link>
+          <Link
+            href="/tasks/new"
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            New Task
+          </Link>
+        </div>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Total Projects</h3>
+          <p className="text-3xl font-bold">{projects.length}</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Pending Tasks</h3>
+          <p className="text-3xl font-bold">{incompleteTasks.length}</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">Completed Today</h3>
+          <p className="text-3xl font-bold">{completedTasks.length}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Recent Tasks Section */}
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Recent Tasks</h2>
+            <Link 
+              href="/tasks"
+              className="text-blue-500 hover:text-blue-700"
+            >
+              View All →
+            </Link>
+          </div>
+          <TaskList tasks={recentTasks.slice(0, 5)} />
+        </div>
+
+        {/* Projects Section */}
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Your Projects</h2>
+            <Link 
+              href="/projects"
+              className="text-blue-500 hover:text-blue-700"
+            >
+              View All →
+            </Link>
+          </div>
+          <ProjectGrid projects={projects.slice(0, 3)} />
+        </div>
+      </div>
+
+      {/* Quick Actions 
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+        <div className="flex gap-4">
+          <Link
+            href="/tasks/new"
+            className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+          >
+            + Add Quick Task
+          </Link>
+          <Link
+            href="/projects/new"
+            className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+          >
+            + Start New Project
+          </Link>
+        </div>
+      </div>*/}
+    </div>
+  );
+}
+
+// Helper function to get recent tasks across all projects
+async function getRecentTasks() {
+  try {
+    const projects = await db.projects.getAll();
+    const allTasks: any[] = [];
+
+    // Get tasks for each project
+    for (const project of projects) {
+      const tasks = await db.tasks.getByProjectId(project.id);
+      allTasks.push(...tasks);
+    }
+
+    // Sort by most recent first
+    return allTasks.sort((a, b) => 
+      new Date(b.creationDateTime).getTime() - new Date(a.creationDateTime).getTime()
+    );
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    return [];
+  }
+}

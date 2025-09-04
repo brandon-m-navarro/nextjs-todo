@@ -8,15 +8,16 @@ import { Button } from "../ui/button";
 import SimpleAnimation from "../ui/animation";
 
 import { useState } from "react";
-import { createTask } from "@/app/lib/db";
-import { describe } from "node:test";
+import { db } from "@/app/lib/db";
+import { generateId } from "@/app/lib/utilities";
 
 interface TaskFormProps {
   projectId: string;
 }
 
-export default function TaskForm() {
+export default function TaskForm({ projectId }: TaskFormProps) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,12 +26,13 @@ export default function TaskForm() {
     setIsSubmitting(true);
 
     try {
-      await createTask({
-        projectId,
+      await db.projects.create(
+        generateId('PRO'),
         title,
-        description: '',
-        isDone: false
-      })
+        description,
+       '#f0f0f0', // Default color
+        'task.png' // Default icon
+      )
       setTitle(''); // Clear the title input after successful submission
     } catch (error) {
       console.error("Error creating task:", error);
@@ -41,7 +43,7 @@ export default function TaskForm() {
 
   return (
     <form
-      action={handleSubmit}
+      onSubmit={handleSubmit}
       className="space-y-3"
     >
       <SimpleAnimation />
