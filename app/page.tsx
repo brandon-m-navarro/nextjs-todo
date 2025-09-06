@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { db } from '@/app/lib/db';
+import SimpleAnimation from '@/app/components/ui/animation';
 
 export default async function HomePage() {
   // Fetch some data to showcase
@@ -16,15 +17,15 @@ export default async function HomePage() {
       {/* Hero Section */}
       <div className="text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Organize Your
-            <span className="text-blue-600"> Work</span> &
-            <span className="text-green-600"> Life</span>
+          <h1 className="text-5xl md:text-5xl font-bold text-gray-900 mb-6">
+            You Didn't Need This. Neither Did I.
           </h1>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-            A clean, simple todo app that helps you stay organized and productive. 
-            Manage projects, track tasks, and get things done.
+            But here it is anyway. A simple, beautiful todo app built with Next.js and Tailwind CSS.
           </p>
+          <div className="flex justify-center">
+            <SimpleAnimation />
+          </div>
           <div className="flex gap-4 justify-center">
             <Link
               href="/"
@@ -54,7 +55,7 @@ export default async function HomePage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📋</span>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Project Management</h3>
+              <h3 className="text-xl text-black font-semibold mb-3">Project Management</h3>
               <p className="text-gray-600">
                 Organize tasks into projects with custom colors and descriptions. 
                 Keep your work and personal life separate but accessible.
@@ -65,7 +66,7 @@ export default async function HomePage() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">✅</span>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Smart Tasks</h3>
+              <h3 className="text-xl font-semibold mb-3 text-black">Smart Tasks</h3>
               <p className="text-gray-600">
                 Create tasks with due dates, priorities, and descriptions. 
                 Mark them as complete and watch your productivity soar.
@@ -76,9 +77,9 @@ export default async function HomePage() {
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🎨</span>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Beautiful UI</h3>
+              <h3 className="text-xl font-semibold mb-3 text-black">Beautiful UI</h3>
               <p className="text-gray-600">
-                Enjoy a clean, modern interface that makes task management 
+                This is an objective statement. Enjoy a clean, modern interface that makes task management 
                 a pleasure rather than a chore.
               </p>
             </div>
@@ -88,7 +89,7 @@ export default async function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Recent Projects Preview */}
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-2xl font-semibold mb-4">Recent Projects</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-black">Recent Projects</h3>
               {projectsData.length > 0 ? (
                 <div className="space-y-3">
                   {projectsData.map((project) => (
@@ -102,7 +103,7 @@ export default async function HomePage() {
                           className="w-6 h-6 rounded-full flex-shrink-0"
                           style={{ backgroundColor: `#${project.hexColor || '3B82F6'}` }}
                         />
-                        <span className="font-medium">{project.name}</span>
+                        <span className="font-medium text-black">{project.name}</span>
                       </div>
                       {project.description && (
                         <p className="text-sm text-gray-600 mt-2">
@@ -125,7 +126,7 @@ export default async function HomePage() {
 
             {/* Recent Tasks Preview */}
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-2xl font-semibold mb-4">Recent Activity</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-black">Recent Activity</h3>
               {tasksData.length > 0 ? (
                 <div className="space-y-3">
                   {tasksData.map((task) => (
