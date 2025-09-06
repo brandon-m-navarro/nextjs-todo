@@ -38,5 +38,5 @@ try {
     console.log('   File:', testPage.filePath);
   }
 } catch (error) {
-  console.log('❌ Error scanning:', error.message);
+  console.log('!Error scanning:', error.message);
 }

@@ -17,7 +17,7 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Project Structure
-
+```
 app/
 ├── (dashboard)/                   # Route group for main app
 │   ├── layout.tsx                 # Main app layout with sidebar
@@ -65,3 +65,4 @@ app/
 ├── layout.tsx                     # Root layout
 ├── page.tsx                       # Homepage (/)
 └── globals.css
+```
