@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { db } from '@/app/lib/db';
-import { generateId } from '@/app/lib/utilities';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -24,25 +22,33 @@ export default function NewProjectPage() {
     setError('');
 
     try {
-      // Generate a project ID
-      const projectId = generateId('PRO');
-      
-      // Create the project in the database
-      await db.projects.create(
-        projectId,
-        formData.name,
-        formData.description,
-        formData.hexColor,
-        formData.icon
-      );
+      // Send POST request to your API route
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create project');
+      }
+
+      const result = await response.json();
+      
       // Redirect to the new project's page
-      router.push(`/projects/${projectId}`);
+      router.push(`/projects/${result.project.id}`);
       router.refresh(); // Refresh the server components
 
     } catch (error) {
       console.error('Failed to create project:', error);
-      setError('Failed to create project. Please try again.');
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to create project. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

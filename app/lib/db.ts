@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { neon } from '@neondatabase/serverless';
 import { Task } from '@/app/lib/definitions';
 import { Project } from '@/app/lib/definitions';
