@@ -11,9 +11,10 @@ import { useState } from "react";
 
 interface TaskFormProps {
   projectId: string;
+  onTaskCreated?: () => void;
 }
 
-export default function TaskForm({ projectId }: TaskFormProps) {
+export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -45,6 +46,8 @@ export default function TaskForm({ projectId }: TaskFormProps) {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to create task');
+      } else {
+        onTaskCreated?.(); // Call the callback if provided
       }
 
       // Clear the form after successful submission
@@ -74,7 +77,7 @@ export default function TaskForm({ projectId }: TaskFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-3"
+      className="space-y-3 text-black"
     >
       <SimpleAnimation />
 
@@ -97,7 +100,7 @@ export default function TaskForm({ projectId }: TaskFormProps) {
               <span className="text-[18px] leading-[18px] mb-[6px]">
                 Project
               </span>
-              <div className="h-[48px] w-full">
+              <div className="h-[48px] w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-white flex items-center">
                 <SelectBox
                   name="project"
                   options={["Project A", "Project B", "Project C"]}

@@ -83,6 +83,15 @@ export const db = {
 
     /* Task operations */
     tasks: {
+
+        // Get task by ID
+        getById: async (id: string): Promise<Task | null> => {
+            const result = await sql`
+                SELECT * FROM tasks WHERE id = ${id}
+            `;
+            return result.length > 0 ? (result[0] as Task) : null;
+        },
+
         // Get tasks by project ID
         getByProjectId: async (projectId: string): Promise<Task[]> => {
             const result = await sql`

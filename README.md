@@ -36,9 +36,17 @@ app/
 │           └── page.tsx           # /dashboard/projects/new - New project form
 ├── api/
 │   ├── tasks/
-│   │   └── route.ts               # API endpoints for tasks
+│   │   ├── route.ts                     # GET/POST /api/tasks
+│   │   └── [taskId]/
+│   │       └── route.ts                 # GET/PUT/DELETE /api/tasks/TSK-123
 │   └── projects/
-│       └── route.ts               # API endpoints for projects
+│       ├── route.ts                     # GET/POST /api/projects
+│       ├── [projectId]/
+│       │   ├── route.ts                 # GET/PUT/DELETE /api/projects/PRO-123
+│       │   └── tasks/
+│       │       ├── route.ts             # GET/POST /api/projects/PRO-123/tasks
+│       │       └── [taskId]/
+│       │           └── route.ts         # GET/PUT/DELETE /api/projects/PRO-123/tasks/TSK-456
 ├── components/                    # Shared components
 │   ├── ui/                        # Basic UI components
 │   │   ├── button.tsx

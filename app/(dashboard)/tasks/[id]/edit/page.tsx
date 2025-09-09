@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { TaskDetail } from '@/app/components/tasks/TaskDetails';
+import { TaskEditForm } from '@/app/components/tasks/TaskEditForm';
 
-interface TaskDetailPageProps {
-  params: {
+interface TaskEditPageProps {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getTask(taskId: string) {
@@ -26,8 +26,30 @@ async function getTask(taskId: string) {
   }
 }
 
-export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
-  const task = await getTask(params.id);
+async function getProjects() {
+  try {
+    const response = await fetch('http://localhost:3000/api/projects', {
+      next: { revalidate: 3600 },
+    });
+    
+    if (!response.ok) {
+      return [];
+    }
+    
+    const data = await response.json();
+    return data.projects || data.data || [];
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
+}
+
+export default async function TaskEditPage({ params }: TaskEditPageProps) {
+  const { id } = await params;
+  const [task, projects] = await Promise.all([
+    getTask(id),
+    getProjects()
+  ]);
 
   if (!task) {
     notFound();
@@ -38,7 +60,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       {/* Header with Back Button */}
       <div className="mb-8">
         <Link 
-          href="/tasks"
+          href={`/tasks/${id}`}
           className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group"
         >
           <svg 
@@ -49,22 +71,15 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to All Tasks
+          Back to Task
         </Link>
         
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Task Details</h1>
-          <Link
-            href={`/tasks/${params.id}/edit`}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Edit Task
-          </Link>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Task</h1>
+        <p className="text-gray-600">Update the task details below</p>
       </div>
 
-      {/* Task Detail Component */}
-      <TaskDetail task={task} />
+      {/* Edit Form */}
+      <TaskEditForm task={task} projects={projects} />
     </div>
   );
 }
