@@ -66,33 +66,7 @@ export function clamp(num: number, min: number, max: number): number {
     return Math.min(Math.max(num, min), max);
 }
 
-// Debounce function to limit how often a function can fire
-export function debounce<Func extends (...args: any[]) => void>(func: Func, wait: number): (...args: Parameters<Func>) => void {
-    let timeout: NodeJS.Timeout;
-    return (...args: Parameters<Func>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-}
-
-// Throttle function to ensure a function is called at most once in a specified time
-export function throttle<Func extends (...args: any[]) => void>(func: Func, limit: number): (...args: Parameters<Func>) => void {
-    let inThrottle: boolean;
-    return (...args: Parameters<Func>) => {
-        if (!inThrottle) {
-            func(...args);
-            inThrottle = true;
-            setTimeout(() => (inThrottle = false), limit);
-        }
-    };
-}
-
 // Deep clone an object or array
 export function deepClone<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
-}
-
-// Compare two objects or arrays for deep equality
-export function deepEqual(obj1: any, obj2: any): boolean {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
 }

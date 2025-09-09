@@ -77,7 +77,7 @@ export const db = {
             `;
             // For DELETE operations without RETURNING, result is usually an empty array
             // We'll assume success if no error was thrown
-            return true;
+            return result === undefined || result.length === 0;
         },
     },
 
@@ -157,5 +157,12 @@ export const db = {
             `;
             return result.length > 0 ? (result[0] as Task) : null;
         },
+
+        getAll: async (): Promise<Task[]> => {
+            const result = await sql`
+                SELECT * FROM tasks ORDER BY creation_date_time DESC
+            `;
+            return result as Task[];
+        }
     },
 };

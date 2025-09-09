@@ -31,7 +31,7 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
   const safeProjects = projects || [];
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-4 text-black">
       <select 
         value={currentProject || ''}
         onChange={(e) => updateUrl({ project: e.target.value })}

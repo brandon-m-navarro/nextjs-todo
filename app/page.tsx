@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/app/lib/db';
 import SimpleAnimation from '@/app/components/ui/animation';
+import { TaskWithProject } from './lib/definitions';
 
 export default async function HomePage() {
   // Fetch some data to showcase
@@ -18,7 +19,7 @@ export default async function HomePage() {
       <div className="text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-5xl font-bold text-gray-900 mb-6">
-            You Didn't Need This. Neither Did I.
+            {`You Didn't Need This. Neither Did I.`}
           </h1>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             But here it is anyway. A simple, beautiful todo app built with Next.js and Tailwind CSS.
@@ -133,7 +134,7 @@ export default async function HomePage() {
                     <div
                       key={task.id}
                       className="p-4 bg-white rounded-lg border-l-4"
-                      style={{ borderLeftColor: `#${task.hexColor || '3B82F6'}` }}
+                      style={{ borderLeftColor: `#${task.projectColor || '3B82F6'}` }}
                     >
                       <div className="flex items-center justify-between">
                         <span className={task.isDone ? 'line-through text-gray-500' : 'text-gray-900'}>
@@ -186,7 +187,7 @@ export default async function HomePage() {
 async function getRecentTasksPreview() {
   try {
     const projects = await db.projects.getAll();
-    const allTasks: any[] = [];
+    const allTasks: TaskWithProject[] = [];
 
     for (const project of projects) {
       const tasks = await db.tasks.getByProjectId(project.id);

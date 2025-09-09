@@ -1,17 +1,18 @@
-import Link from 'next/link';
-import { db } from '@/app/lib/db';
-import { TaskList } from '@/app/components/tasks/TaskList';
-import { ProjectGrid } from '@/app/components/projects/ProjectGrid';
+import Link from "next/link";
+import { db } from "@/app/lib/db";
+import { TaskList } from "@/app/components/tasks/TaskList";
+import { ProjectGrid } from "@/app/components/projects/ProjectGrid";
+import { Task, TaskWithProject } from "../lib/definitions";
 
 export default async function DashboardPage() {
   // Fetch data in parallel for better performance
   const [projects, recentTasks] = await Promise.all([
     db.projects.getAll(),
-    getRecentTasks(), // We'll create this helper function
+    getRecentTasks(),
   ]);
 
-  const incompleteTasks = recentTasks.filter(task => !task.isDone);
-  const completedTasks = recentTasks.filter(task => task.isDone);
+  const incompleteTasks = recentTasks.filter((task) => !task.isDone);
+  const completedTasks = recentTasks.filter((task) => task.isDone);
 
   return (
     <div className="space-y-8">
@@ -55,10 +56,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Recent Tasks</h2>
-            <Link 
-              href="/tasks"
-              className="text-blue-500 hover:text-blue-700"
-            >
+            <Link href="/tasks" className="text-blue-500 hover:text-blue-700">
               View All →
             </Link>
           </div>
@@ -69,7 +67,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Your Projects</h2>
-            <Link 
+            <Link
               href="/projects"
               className="text-blue-500 hover:text-blue-700"
             >
@@ -106,7 +104,8 @@ export default async function DashboardPage() {
 async function getRecentTasks() {
   try {
     const projects = await db.projects.getAll();
-    const allTasks: any[] = [];
+    const allTasks: Task[] = [];
+    const allTaskWithProject: TaskWithProject[] = [];
 
     // Get tasks for each project
     for (const project of projects) {
@@ -114,12 +113,27 @@ async function getRecentTasks() {
       allTasks.push(...tasks);
     }
 
-    // Sort by most recent first
-    return allTasks.sort((a, b) => 
-      new Date(b.creationDateTime).getTime() - new Date(a.creationDateTime).getTime()
-    );
+    // Add project info to each task
+    allTasks
+      .sort(
+        (a, b) =>
+          new Date(b.creationDateTime).getTime() -
+          new Date(a.creationDateTime).getTime()
+      )
+      .forEach((task) => {
+        const project = projects.find((p) => p.id === task.projectId);
+        if (project) {
+          allTaskWithProject.push({
+            ...task,
+            projectName: project.name,
+            projectColor: project.hexColor,
+          });
+        }
+      });
+
+      return allTaskWithProject;
   } catch (error) {
-    console.error('Error fetching tasks:', error);
+    console.error("Error fetching tasks:", error);
     return [];
   }
 }

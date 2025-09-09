@@ -62,9 +62,6 @@ app/
 │       └── ProjectView.tsx        # Main project view component
 ├── lib/                           # Utilities and hooks
 │   ├── db.ts                      # Database utilities
-│   ├── hooks/
-│   │   ├── useTasks.ts
-│   │   └── useProjects.ts
 │   ├── ls.ts                      # LocalStorage module
 │   └── definitions.ts             # Shared TypeScript types
 ├── scripts/

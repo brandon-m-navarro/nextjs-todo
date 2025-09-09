@@ -90,7 +90,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     projectName: project.name,
     projectColor: project.hexColor,
   }));
-        console.log(tasksWithProject)
 
   return (
     <div className="p-8 text-black">
@@ -119,7 +118,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {/* Task Form Accordion */}
-      <TaskFormAccordion projectId={projectId} />
+      <TaskFormAccordion projectId={projectId} projects={[project]} />
       
       {/* Tasks List */}
       <TaskList tasks={tasksWithProject} showProject={false} />

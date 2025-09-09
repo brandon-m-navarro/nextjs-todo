@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { TaskList } from '@/app/components/tasks/TaskList';
 import { TaskFilters } from '@/app/components/tasks/TaskFilters';
-import {Task, Project} from '@/app/lib/definitions';
+import { Task, Project } from '@/app/lib/definitions';
 
 async function getTasks() {
   try {
@@ -49,15 +49,21 @@ async function getProjects() {
   }
 }
 
+// Define the search params type
+interface SearchParams {
+  project?: string;
+  status?: 'all' | 'active' | 'completed';
+  sort?: 'newest' | 'oldest' | 'due-date';
+}
+
 export default async function TasksPage({
   searchParams,
 }: {
-  searchParams?: {
-    project?: string;
-    status?: 'all' | 'active' | 'completed';
-    sort?: 'newest' | 'oldest' | 'due-date';
-  };
+  searchParams: Promise<SearchParams>;
 }) {
+  // Await the searchParams promise
+  const resolvedSearchParams = await searchParams;
+  
   // Fetch data from API routes
   const [allTasks, projects] = await Promise.all([
     getTasks(),
@@ -67,15 +73,15 @@ export default async function TasksPage({
   // Apply filters
   const filteredTasks = allTasks.filter((task: Task) => {
     // Project filter
-    if (searchParams?.project && task.projectId !== searchParams.project) {
+    if (resolvedSearchParams?.project && task.projectId !== resolvedSearchParams.project) {
       return false;
     }
     
     // Status filter
-    if (searchParams?.status === 'active' && task.isDone) {
+    if (resolvedSearchParams?.status === 'active' && task.isDone) {
       return false;
     }
-    if (searchParams?.status === 'completed' && !task.isDone) {
+    if (resolvedSearchParams?.status === 'completed' && !task.isDone) {
       return false;
     }
     
@@ -84,7 +90,7 @@ export default async function TasksPage({
 
   // Apply sorting
   const sortedTasks = filteredTasks.sort((a: Task, b: Task) => {
-    switch (searchParams?.sort) {
+    switch (resolvedSearchParams?.sort) {
       case 'oldest':
         return new Date(a.creationDateTime).getTime() - new Date(b.creationDateTime).getTime();
       case 'due-date':
@@ -101,7 +107,7 @@ export default async function TasksPage({
   const completedTasks = allTasks.filter((task: Task) => task.isDone);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto text-black">
       {/* Header */}
       <div className="mb-8">
         <Link 
@@ -148,9 +154,9 @@ export default async function TasksPage({
         <h3 className="text-lg font-semibold mb-4">Filters</h3>
         <TaskFilters
           projects={projects}
-          currentProject={searchParams?.project}
-          currentStatus={searchParams?.status}
-          currentSort={searchParams?.sort}
+          currentProject={resolvedSearchParams?.project}
+          currentStatus={resolvedSearchParams?.status}
+          currentSort={resolvedSearchParams?.sort}
         />
       </div>
 
@@ -159,9 +165,9 @@ export default async function TasksPage({
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold">
             Tasks ({filteredTasks.length})
-            {searchParams?.project && (
+            {resolvedSearchParams?.project && (
               <span className="text-gray-600 text-lg font-normal ml-2">
-                in {projects.find((p: Project) => p.id === searchParams.project)?.name}
+                in {projects.find((p: Project) => p.id === resolvedSearchParams.project)?.name}
               </span>
             )}
           </h2>

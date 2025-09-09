@@ -6,31 +6,35 @@ import SelectBox from "../ui/select-box";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "../ui/button";
 import SimpleAnimation from "../ui/animation";
-
 import { useState } from "react";
+import { Project } from "@/app/lib/definitions";
 
 interface TaskFormProps {
-  projectId: string;
+  projects: Project[];
+  initialProjectId?: string; // Make it optional
   onTaskCreated?: () => void;
 }
 
-export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
+export default function TaskForm({ projects, initialProjectId = '', onTaskCreated }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<string>('');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(initialProjectId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string>('');
 
+  const initialProject = projects.find(p => p.id === initialProjectId);
+  const initialProjectName = initialProject ? initialProject.name : '';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim() || !selectedProjectId) return;
     
     setIsSubmitting(true);
     setError('');
 
     try {
-      // Send POST request to the API route for creating tasks
-      const response = await fetch(`/api/projects/${projectId}/tasks`, {
+      const response = await fetch(`/api/projects/${selectedProjectId}/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,21 +50,19 @@ export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to create task');
-      } else {
-        onTaskCreated?.(); // Call the callback if provided
       }
 
-      // Clear the form after successful submission
+      onTaskCreated?.();
+
+      // Clear the form
       setTitle('');
       setDescription('');
       setDueDate('');
-      
-      // Optional: Refresh the page or trigger a callback to update the task list
-      window.location.reload(); // Or use a state management solution
+      setSelectedProjectId('');
 
     } catch (error) {
       console.error("Error creating task:", error);
-            const errorMessage =
+      const errorMessage =
         error instanceof Error
           ? error.message
           : 'Failed to create task. Please try again.';
@@ -74,6 +76,13 @@ export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
     setDueDate(date);
   }
 
+  const handleProjectChange = (projectName: string) => {
+    const project = projects.find(p => p.name === projectName);
+    if (project) {
+      setSelectedProjectId(project.id);
+    }
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -82,12 +91,10 @@ export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
       <SimpleAnimation />
 
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8 w-[28rem]">
-        <h1
-          className={`${manrope.className} text-[36px] ml-[6px] mb-[12px] mt-[0px]`}
-        > Add New Task
+        <h1 className={`${manrope.className} text-[36px] ml-[6px] mb-[12px] mt-[0px]`}>
+          Add New Task
         </h1>
         
-        {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
             {error}
@@ -103,7 +110,10 @@ export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
               <div className="h-[48px] w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 bg-white flex items-center">
                 <SelectBox
                   name="project"
-                  options={["Project A", "Project B", "Project C"]}
+                  options={projects.map(p => p.name)}
+                  value={initialProjectName}
+                  onChange={handleProjectChange}
+                  required
                 />
               </div>
             </div>
@@ -156,16 +166,11 @@ export default function TaskForm({ projectId, onTaskCreated }: TaskFormProps) {
         <Button
           className="text-[20px] mt-4 w-[calc(100%-12px)] m-auto h-[48px] cursor-pointer"
           type="submit"
-          disabled={isSubmitting || !title.trim()}
+          disabled={isSubmitting || !title.trim() || !selectedProjectId}
         >
           {isSubmitting ? "Adding..." : "Add Task"}
           <ArrowRightIcon className="ml-auto h-[24px] w-[24px] text-gray-50" />
         </Button>
-        <div
-          className="flex h-8 items-end space-x-1"
-          aria-live="polite"
-          aria-atomic="true"
-        ></div>
       </div>
     </form>
   );

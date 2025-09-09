@@ -2,20 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-
-interface TaskWithProject {
-  id: string;
-  title: string;
-  description?: string | null;
-  isDone: boolean;
-  ordinal?: number | null;
-  expectedCompletionDateTime?: Date | null;
-  creationDateTime: Date;
-  lastModifiedDateTime: Date;
-  projectId: string;
-  projectName: string;
-  projectColor?: string | null;
-}
+import { TaskWithProject } from '@/app/lib/definitions';
 
 interface TaskListProps {
   tasks: TaskWithProject[];

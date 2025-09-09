@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { TaskDetail } from '@/app/components/tasks/TaskDetails';
 
+// Update interface to match Next.js 15 expectations
 interface TaskDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getTask(taskId: string) {
@@ -27,7 +28,10 @@ async function getTask(taskId: string) {
 }
 
 export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
-  const task = await getTask(params.id);
+  // Await the params first
+  const { id } = await params;
+  
+  const task = await getTask(id);  // Use the awaited id
 
   if (!task) {
     notFound();
@@ -55,7 +59,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Task Details</h1>
           <Link
-            href={`/tasks/${params.id}/edit`}
+            href={`/tasks/${id}/edit`}  // Use the awaited id
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             Edit Task
