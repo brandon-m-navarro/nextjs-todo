@@ -102,7 +102,7 @@ export default async function HomePage() {
                       <div className="flex items-center space-x-3">
                         <div
                           className="w-6 h-6 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: `#${project.hexColor || '3B82F6'}` }}
+                          style={{ backgroundColor: `#${project.hex_color || '3B82F6'}` }}
                         />
                         <span className="font-medium text-black">{project.name}</span>
                       </div>
@@ -193,8 +193,12 @@ async function getRecentTasksPreview() {
       const tasks = await db.tasks.getByProjectId(project.id);
       const tasksWithProject = tasks.map(task => ({
         ...task,
+        projectId: task.project_id,
+        isDone: task.is_done,
+        creationDateTime: task.creation_date_time,
+        lastModifiedDateTime: task.last_modified_date_time,
         projectName: project.name,
-        hexColor: project.hexColor
+        projectColor: project.hex_color,
       }));
       allTasks.push(...tasksWithProject);
     }

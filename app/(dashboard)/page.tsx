@@ -2,7 +2,7 @@ import Link from "next/link";
 import { db } from "@/app/lib/db";
 import { TaskList } from "@/app/components/tasks/TaskList";
 import { ProjectGrid } from "@/app/components/projects/ProjectGrid";
-import { Task, TaskWithProject } from "../lib/definitions";
+import { Task, TaskWithProject, ProjectFromDb, TaskFromDb } from "../lib/definitions";
 
 export default async function DashboardPage() {
   // Fetch data in parallel for better performance
@@ -74,7 +74,14 @@ export default async function DashboardPage() {
               View All →
             </Link>
           </div>
-          <ProjectGrid projects={projects.slice(0, 3)} />
+          <ProjectGrid
+            projects={projects.slice(0, 3).map((project: ProjectFromDb) => ({
+              ...project,
+              hexColor: project.hex_color ?? "#000000",
+              creationDateTime: project.creation_date_time ?? new Date().toISOString(),
+              lastModifiedDateTime: project.last_modified_date_time ?? new Date().toISOString(),
+            }))}
+          />
         </div>
       </div>
 
@@ -109,7 +116,22 @@ async function getRecentTasks() {
 
     // Get tasks for each project
     for (const project of projects) {
-      const tasks = await db.tasks.getByProjectId(project.id);
+      const tasksFromDb = await db.tasks.getByProjectId(project.id);
+      // Map TaskFromDb to Task by adding missing properties
+      const tasks: Task[] = tasksFromDb.map((task: TaskFromDb) => ({
+        ...task,
+        projectId: project.id,
+        isDone: task.is_done ?? false,
+        expectedCompletionDateTime: task.expected_completion_date_time
+          ? new Date(task.expected_completion_date_time)
+          : null,
+        creationDateTime: task.creation_date_time
+          ? new Date(task.creation_date_time)
+          : new Date(),
+        lastModifiedDateTime: task.last_modified_date_time
+          ? new Date(task.last_modified_date_time)
+          : new Date(),
+      }));
       allTasks.push(...tasks);
     }
 
@@ -126,7 +148,7 @@ async function getRecentTasks() {
           allTaskWithProject.push({
             ...task,
             projectName: project.name,
-            projectColor: project.hexColor,
+            projectColor: project.hex_color,
           });
         }
       });

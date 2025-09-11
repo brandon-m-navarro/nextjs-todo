@@ -60,7 +60,7 @@ app/
 │   │   └── TaskFormAccordion.tsx
 │   └── projects/
 │       ├── ProjectCard.tsx
-│       ├── ProjectSidebar.tsx
+│       ├── ProjectSidebar.tsx (not implemented)
 │       └── ProjectView.tsx
 ├── lib/
 │   ├── db.ts                           # Database utilities

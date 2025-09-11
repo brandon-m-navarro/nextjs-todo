@@ -57,7 +57,7 @@ export default async function ProjectsPage() {
               <div className="flex items-center space-x-3 mb-4">
                 <div
                   className="w-8 h-8 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: `#${project.hexColor || '3B82F6'}` }}
+                  style={{ backgroundColor: `#${project.hex_color || '3B82F6'}` }}
                 />
                 <h3 className="font-semibold text-lg text-gray-900">
                   {project.name}
@@ -73,7 +73,7 @@ export default async function ProjectsPage() {
               <div className="flex justify-between items-center text-sm text-gray-500">
                 <span>View Details →</span>
                 <span>
-                  {new Date(project.creationDateTime).toLocaleDateString()}
+                  {new Date(project.creation_date_time).toLocaleDateString()}
                 </span>
               </div>
             </Link>
