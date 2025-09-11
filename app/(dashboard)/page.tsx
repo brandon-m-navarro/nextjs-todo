@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { db } from "@/app/lib/db";
 import { TaskList } from "@/app/components/tasks/TaskList";
