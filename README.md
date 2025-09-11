@@ -19,55 +19,57 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Project Structure
 ```
 app/
-├── (dashboard)/                   # Route group for main app
-│   ├── layout.tsx                 # Main app layout with sidebar
-│   ├── page.tsx                   # /dashboard - Overview/default view
+├── (dashboard)/                        # Route group for dashboard (not in URL)
+│   ├── layout.tsx                      # Dashboard layout (sidebar, etc.)
+│   ├── page.tsx                        # /dashboard - Dashboard overview
 │   ├── tasks/
-│   │   ├── page.tsx               # /dashboard/tasks - All tasks view
+│   │   ├── page.tsx                    # /dashboard/tasks - All tasks
 │   │   ├── new/
-│   │   │   └── page.tsx           # /dashboard/tasks/new - Task form
+│   │   │   └── page.tsx                # /dashboard/tasks/new - New task form
 │   │   └── [id]/
-│   │       └── page.tsx           # /dashboard/tasks/123 - Task detail
+│   │       └── page.tsx                # /dashboard/tasks/[id] - Task detail
 │   └── projects/
-│       ├── page.tsx               # /dashboard/projects - Projects list
-│       ├── [projectId]/
-│       │   └── page.tsx           # /dashboard/projects/PRO-123 - Single project view
-│       └── new/
-│           └── page.tsx           # /dashboard/projects/new - New project form
+│       ├── page.tsx                    # /dashboard/projects - Projects list
+│       ├── new/
+│       │   └── page.tsx                # /dashboard/projects/new - New project form
+│       └── [projectId]/
+│           └── page.tsx                # /dashboard/projects/[projectId] - Project detail
 ├── api/
 │   ├── tasks/
-│   │   ├── route.ts                     # GET/POST /api/tasks
-│   │   └── [taskId]/
-│   │       └── route.ts                 # GET/PUT/DELETE /api/tasks/TSK-123
+│   │   ├── route.ts                    # /api/tasks (GET/POST)
+│   │   └── [id]/
+│   │       └── route.ts                # /api/tasks/[id] (GET/PUT/DELETE)
 │   └── projects/
-│       ├── route.ts                     # GET/POST /api/projects
+│       ├── route.ts                    # /api/projects (GET/POST)
 │       ├── [projectId]/
-│       │   ├── route.ts                 # GET/PUT/DELETE /api/projects/PRO-123
+│       │   ├── route.ts                # /api/projects/[projectId] (GET/PUT/DELETE)
 │       │   └── tasks/
-│       │       ├── route.ts             # GET/POST /api/projects/PRO-123/tasks
+│       │       ├── route.ts            # /api/projects/[projectId]/tasks (GET/POST)
 │       │       └── [taskId]/
-│       │           └── route.ts         # GET/PUT/DELETE /api/projects/PRO-123/tasks/TSK-456
-├── components/                    # Shared components
-│   ├── ui/                        # Basic UI components
+│       │           └── route.ts        # /api/projects/[projectId]/tasks/[taskId] (GET/PUT/DELETE)
+├── components/
+│   ├── ui/                             # Shared UI components
 │   │   ├── button.tsx
 │   │   ├── card.tsx
-│   │   └── input.tsx
+│   │   ├── input.tsx
+│   │   └── animation.tsx
 │   ├── tasks/
-│   │   ├── TaskForm.tsx           # Reusable task form
-│   │   ├── TaskList.tsx           # Task list component
-│   │   └── TaskCard.tsx           # Individual task item
+│   │   ├── TaskForm.tsx
+│   │   ├── TaskList.tsx
+│   │   ├── TaskCard.tsx
+│   │   └── TaskFormAccordion.tsx
 │   └── projects/
-│       ├── ProjectCard.tsx        # Project display card
-│       ├── ProjectSidebar.tsx     # Sidebar navigation
-│       └── ProjectView.tsx        # Main project view component
-├── lib/                           # Utilities and hooks
-│   ├── db.ts                      # Database utilities
-│   ├── ls.ts                      # LocalStorage module
-│   └── definitions.ts             # Shared TypeScript types
+│       ├── ProjectCard.tsx
+│       ├── ProjectSidebar.tsx
+│       └── ProjectView.tsx
+├── lib/
+│   ├── db.ts                           # Database utilities
+│   ├── ls.ts                           # LocalStorage helpers
+│   └── definitions.ts                  # Shared TypeScript types
 ├── scripts/
-│   ├── create-tables.ts           # Executes SQL statements to init tables
-│   └── seed.ts                    # Clears and seeds DB with placeholder-data
-├── layout.tsx                     # Root layout
-├── page.tsx                       # Homepage (/)
-└── globals.css
+│   ├── create-tables.ts                # SQL table creation
+│   └── seed.ts                         # DB seeding script
+├── layout.tsx                          # Root layout
+├── page.tsx                            # Homepage (/)
+└── globals.css                         # Tailwind/global styles
 ```

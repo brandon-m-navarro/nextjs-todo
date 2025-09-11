@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
-import { Task } from "@/app/lib/definitions";
+import { Task, TaskFromDb } from "@/app/lib/definitions";
 
 // Update the interface to expect a Promise
 interface RouteParams {
@@ -9,7 +9,7 @@ interface RouteParams {
   }>;
 }
 
-function mapTaskDbToType(taskFromDb: any): Task {
+function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
     return {
         projectId: taskFromDb.project_id,
         id: taskFromDb.id,
@@ -42,7 +42,7 @@ export async function GET(
     const taskWithProject = {
       ...task,
       projectName: project?.name || "Unknown Project",
-      projectColor: project?.hexColor || null,
+      projectColor: project?.hex_color || null,
     };
 
     return NextResponse.json({ success: true, task: taskWithProject });

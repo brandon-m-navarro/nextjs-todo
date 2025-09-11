@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
-import { Project } from '@/app/lib/definitions';
+import { Project, ProjectFromDb } from '@/app/lib/definitions';
 
 // Mapping function: snake_case DB fields to camelCase Project type
-function mapProjectDbToType(projectFromDb: any): Project {
+function mapProjectDbToType(projectFromDb: ProjectFromDb): Project {
     return {
         id: projectFromDb.id,
         name: projectFromDb.name,

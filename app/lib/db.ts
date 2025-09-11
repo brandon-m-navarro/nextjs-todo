@@ -1,31 +1,27 @@
 import 'server-only';
 
 import { neon } from '@neondatabase/serverless';
-import { Task } from '@/app/lib/definitions';
-import { Project } from '@/app/lib/definitions';
+import type { TaskFromDb, ProjectFromDb } from '@/app/lib/definitions';
 
 const sql = neon(process.env.DATABASE_URL!);
 
-// Database interaction functions
-
 export const db = {
-
     /* Project operations */
     projects: {
         // Get all projects
-        getAll: async (): Promise<Project[]> => {
+        getAll: async (): Promise<ProjectFromDb[]> => {
             const result = await sql`
                 SELECT * FROM projects ORDER BY creation_date_time DESC
             `;
-            return result as Project[];
+            return result as ProjectFromDb[];
         },
 
         // Get a project by ID
-        getById: async (id: string): Promise<Project | null> => {
+        getById: async (id: string): Promise<ProjectFromDb | null> => {
             const result = await sql`
                 SELECT * FROM projects WHERE id = ${id}
             `;
-            return result.length > 0 ? (result[0] as Project) : null;
+            return result.length > 0 ? (result[0] as ProjectFromDb) : null;
         },
 
         // Create a new project
@@ -35,14 +31,14 @@ export const db = {
             description?: string,
             hexColor?: string,
             icon?: string
-        ): Promise<Project> => {
+        ): Promise<ProjectFromDb> => {
             const now = new Date();
             const result = await sql`
                 INSERT INTO projects (id, name, description, hex_color, icon, creation_date_time, last_modified_date_time)
                 VALUES (${id}, ${name}, ${description || null}, ${hexColor || null}, ${icon || null}, ${now}, ${now})
                 RETURNING *
             `;
-            return result[0] as Project;
+            return result[0] as ProjectFromDb;
         },
 
         // Update a project
@@ -54,7 +50,7 @@ export const db = {
                 hexColor?: string; 
                 icon?: string 
             }
-        ): Promise<Project | null> => {
+        ): Promise<ProjectFromDb | null> => {
             const now = new Date();
             const result = await sql`
                 UPDATE projects
@@ -67,74 +63,72 @@ export const db = {
                 WHERE id = ${id}
                 RETURNING *
             `;
-            return result.length > 0 ? (result[0] as Project) : null;
+            return result.length > 0 ? (result[0] as ProjectFromDb) : null;
         },
 
         // Delete a project
         delete: async (id: string): Promise<boolean> => {
-            const result = await sql`
+            await sql`
                 DELETE FROM projects WHERE id = ${id}
             `;
-            // For DELETE operations without RETURNING, result is usually an empty array
-            // We'll assume success if no error was thrown
-            return result === undefined || result.length === 0;
+            // Assume success if no error was thrown
+            return true;
         },
     },
 
     /* Task operations */
     tasks: {
-
         // Get task by ID
-        getById: async (id: string): Promise<Task | null> => {
+        getById: async (id: string): Promise<TaskFromDb | null> => {
             const result = await sql`
                 SELECT * FROM tasks WHERE id = ${id}
             `;
-            return result.length > 0 ? (result[0] as Task) : null;
+            return result.length > 0 ? (result[0] as TaskFromDb) : null;
         },
 
         // Get tasks by project ID
-        getByProjectId: async (projectId: string): Promise<Task[]> => {
+        getByProjectId: async (projectId: string): Promise<TaskFromDb[]> => {
             const result = await sql`
                 SELECT * FROM tasks WHERE project_id = ${projectId} ORDER BY creation_date_time DESC
             `;
-            return result as Task[];
+            return result as TaskFromDb[];
         },
 
         // Create a new task
-        create: async (task: Omit<Task, 'creationDateTime' | 'lastModifiedDateTime'>): Promise<Task> => {
+        create: async (task: Omit<TaskFromDb, 'creation_date_time' | 'last_modified_date_time'>): Promise<TaskFromDb> => {
             const now = new Date();
             const result = await sql`
                 INSERT INTO tasks (
                     project_id, id, title, description, is_done, ordinal, 
                     expected_completion_date_time, creation_date_time, last_modified_date_time
                 ) VALUES (
-                    ${task.projectId}, ${task.id}, ${task.title}, 
-                    ${task.description || null}, ${task.isDone}, 
+                    ${task.project_id}, ${task.id}, ${task.title}, 
+                    ${task.description || null}, ${task.is_done}, 
                     ${task.ordinal || null}, 
-                    ${task.expectedCompletionDateTime ? new Date(task.expectedCompletionDateTime) : null},
+                    ${task.expected_completion_date_time ? new Date(task.expected_completion_date_time) : null},
                     ${now}, ${now}
                 )
                 RETURNING *
             `;
-            return result[0] as Task;
+            return result[0] as TaskFromDb;
         },
 
         // Update a task
-        update: async (id: string, updates: Partial<Omit<Task, 'id' | 'projectId' | 'creationDateTime'>>): Promise<Task | null> => {
+        update: async (id: string, updates: Partial<Omit<TaskFromDb, 'id' | 'project_id' | 'creation_date_time'>>): Promise<TaskFromDb | null> => {
             const now = new Date();
             const result = await sql`
                 UPDATE tasks
                 SET 
                     title = COALESCE(${updates.title}, title),
                     description = COALESCE(${updates.description}, description),
-                    is_done = COALESCE(${updates.isDone}, is_done),
+                    is_done = COALESCE(${updates.is_done}, is_done),
                     ordinal = COALESCE(${updates.ordinal}, ordinal),
-                    expected_completion_date_time = COALESCE(${updates.expectedCompletionDateTime ? new Date(updates.expectedCompletionDateTime) : null}, expected_completion_date_time),
+                    expected_completion_date_time = COALESCE(${updates.expected_completion_date_time ? new Date(updates.expected_completion_date_time) : null}, expected_completion_date_time),
                     last_modified_date_time = ${now}
                 WHERE id = ${id}
                 RETURNING *
             `;
-            return result.length > 0 ? (result[0] as Task) : null;
+            return result.length > 0 ? (result[0] as TaskFromDb) : null;
         },
 
         // Delete a task
@@ -147,7 +141,7 @@ export const db = {
         },
 
         // Toggle task completion
-        toggleComplete: async (id: string): Promise<Task | null> => {
+        toggleComplete: async (id: string): Promise<TaskFromDb | null> => {
             const now = new Date();
             const result = await sql`
                 UPDATE tasks 
@@ -155,14 +149,15 @@ export const db = {
                 WHERE id = ${id}
                 RETURNING *
             `;
-            return result.length > 0 ? (result[0] as Task) : null;
+            return result.length > 0 ? (result[0] as TaskFromDb) : null;
         },
 
-        getAll: async (): Promise<Task[]> => {
+        // Get all tasks
+        getAll: async (): Promise<TaskFromDb[]> => {
             const result = await sql`
                 SELECT * FROM tasks ORDER BY creation_date_time DESC
             `;
-            return result as Task[];
+            return result as TaskFromDb[];
         }
     },
 };

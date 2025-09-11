@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import { generateId } from '@/app/lib/utilities';
 import { Task } from '@/app/lib/definitions';
+import { TaskFromDb } from '@/app/lib/definitions';
 
-function mapTaskDbToType(taskFromDb: any): Task {
+function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
     return {
         projectId: taskFromDb.project_id,
         id: taskFromDb.id,
@@ -32,13 +33,13 @@ export async function POST(request: NextRequest) {
 
         const taskId = generateId('TSK');
         const dbTask = await db.tasks.create({
-            projectId,
+            project_id: projectId,
             id: taskId,
             title,
             description,
-            isDone: isDone || false,
+            is_done: isDone || false,
             ordinal,
-            expectedCompletionDateTime
+            expected_completion_date_time: expectedCompletionDateTime
         });
 
         // Map DB result to camelCase

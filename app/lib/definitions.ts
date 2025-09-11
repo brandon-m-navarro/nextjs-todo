@@ -14,6 +14,28 @@ export type Task = {
     lastModifiedDateTime: Date;
 }
 
+export interface TaskFromDb {
+    project_id: string;
+    id: string;
+    title: string;
+    description: string | null;
+    is_done: boolean;
+    ordinal: number;
+    expected_completion_date_time: Date | null;
+    creation_date_time: Date;
+    last_modified_date_time: Date;
+}
+
+export interface ProjectFromDb {
+    id: string;
+    name: string;
+    description?: string;
+    hex_color: string | null;
+    icon: string | null;
+    creation_date_time: Date;
+    last_modified_date_time: Date;
+}
+
 export interface TaskWithProject {
     projectId: string;
     id: string;
