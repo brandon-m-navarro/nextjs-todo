@@ -8,40 +8,38 @@ interface TaskEditPageProps {
   }>;
 }
 
+function getBaseUrl() {
+    return process.env.NODE_ENV === 'production'
+        ? 'nextjs-todo-lake.vercel.app'
+        : 'http://localhost:3000';
+}
+
 async function getTask(taskId: string) {
-  try {
-    const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
-      next: { revalidate: 30 },
-    });
-    
-    if (!response.ok) {
-      return null;
+    try {
+        const response = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
+            next: { revalidate: 30 },
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.task;
+    } catch (error) {
+        console.error('Error fetching task:', error);
+        return null;
     }
-    
-    const data = await response.json();
-    return data.task;
-  } catch (error) {
-    console.error('Error fetching task:', error);
-    return null;
-  }
 }
 
 async function getProjects() {
-  try {
-    const response = await fetch('http://localhost:3000/api/projects', {
-      next: { revalidate: 3600 },
-    });
-    
-    if (!response.ok) {
-      return [];
+    try {
+        const response = await fetch(`${getBaseUrl()}/api/projects`, {
+            next: { revalidate: 3600 },
+        });
+        if (!response.ok) return [];
+        const data = await response.json();
+        return data.projects || data.data || [];
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        return [];
     }
-    
-    const data = await response.json();
-    return data.projects || data.data || [];
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    return [];
-  }
 }
 
 export default async function TaskEditPage({ params }: TaskEditPageProps) {
