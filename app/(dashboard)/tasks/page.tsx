@@ -6,7 +6,7 @@ import { Task, Project } from '@/app/lib/definitions';
 async function getTasks() {
   try {
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'nextjs-todo-lake.vercel.app' 
+      ? 'https://nextjs-todo-lake.vercel.app' 
       : 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/tasks`, {
@@ -29,7 +29,7 @@ async function getTasks() {
 async function getProjects() {
   try {
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'nextjs-todo-lake.vercel.app' 
+      ? 'https://nextjs-todo-lake.vercel.app' 
       : 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/projects`, {

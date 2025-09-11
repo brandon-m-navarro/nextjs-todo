@@ -12,7 +12,7 @@ interface TaskDetailPageProps {
 async function getTask(id: string) {
   try {
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'nextjs-todo-lake.vercel.app' 
+      ? 'https://nextjs-todo-lake.vercel.app' 
       : 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/tasks/${id}`, {

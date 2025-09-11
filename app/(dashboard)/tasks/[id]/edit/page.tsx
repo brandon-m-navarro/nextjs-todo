@@ -10,7 +10,7 @@ interface TaskEditPageProps {
 
 function getBaseUrl() {
     return process.env.NODE_ENV === 'production'
-        ? 'nextjs-todo-lake.vercel.app'
+        ? 'https://nextjs-todo-lake.vercel.app'
         : 'http://localhost:3000';
 }
 
