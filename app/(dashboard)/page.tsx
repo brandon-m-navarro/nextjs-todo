@@ -4,6 +4,14 @@ import { TaskList } from "@/app/components/tasks/TaskList";
 import { ProjectGrid } from "@/app/components/projects/ProjectGrid";
 import { Task, TaskWithProject, ProjectFromDb, TaskFromDb } from "../lib/definitions";
 
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  description: 'Your task management dashboard',
+};
+
+
 export default async function DashboardPage() {
   // Fetch data in parallel for better performance
   const [projects, recentTasks] = await Promise.all([
@@ -84,25 +92,6 @@ export default async function DashboardPage() {
           />
         </div>
       </div>
-
-      {/* Quick Actions 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-        <div className="flex gap-4">
-          <Link
-            href="/tasks/new"
-            className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
-          >
-            + Add Quick Task
-          </Link>
-          <Link
-            href="/projects/new"
-            className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
-          >
-            + Start New Project
-          </Link>
-        </div>
-      </div>*/}
     </div>
   );
 }
