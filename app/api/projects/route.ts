@@ -1,55 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import { generateId } from '@/app/lib/utilities';
+import { Project } from '@/app/lib/definitions';
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { name, description, hexColor, icon } = body;
-
-    // Validate required fields
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Project name is required' },
-        { status: 400 }
-      );
-    }
-
-    // Generate a project ID
-    const projectId = generateId('PRO');
-    
-    // Create the project using your existing db function
-    const project = await db.projects.create(
-      projectId,
-      name,
-      description,
-      hexColor,
-      icon
-    );
-
-    return NextResponse.json(
-      { success: true, project },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error('Failed to create project:', error);
-    return NextResponse.json(
-      { error: 'Failed to create project' },
-      { status: 500 }
-    );
-  }
+// Mapping function: snake_case DB fields to camelCase Project type
+function mapProjectDbToType(projectFromDb: any): Project {
+    return {
+        id: projectFromDb.id,
+        name: projectFromDb.name,
+        description: projectFromDb.description,
+        hexColor: projectFromDb.hex_color,
+        icon: projectFromDb.icon,
+        creationDateTime: projectFromDb.creation_date_time,
+        lastModifiedDateTime: projectFromDb.last_modified_date_time,
+    };
 }
 
-// Optional: Add GET handler to fetch all projects
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json();
+        const { name, description, hexColor, icon } = body;
+
+        if (!name) {
+            return NextResponse.json(
+                { error: 'Project name is required' },
+                { status: 400 }
+            );
+        }
+
+        const projectId = generateId('PRO');
+        const dbProject = await db.projects.create(
+            projectId,
+            name,
+            description,
+            hexColor,
+            icon
+        );
+
+        // Map DB result to camelCase
+        const project = mapProjectDbToType(dbProject);
+
+        return NextResponse.json(
+            { success: true, project },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error('Failed to create project:', error);
+        return NextResponse.json(
+            { error: 'Failed to create project' },
+            { status: 500 }
+        );
+    }
+}
+
 export async function GET() {
-  try {
-    const projects = await db.projects.getAll();
-    return NextResponse.json({ success: true, projects });
-  } catch (error) {
-    console.error('Failed to fetch projects:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch projects' },
-      { status: 500 }
-    );
-  }
+    try {
+        const dbProjects = await db.projects.getAll();
+        // Map all projects to camelCase
+        const projects = dbProjects.map(mapProjectDbToType);
+        return NextResponse.json({ success: true, projects });
+    } catch (error) {
+        console.error('Failed to fetch projects:', error);
+        return NextResponse.json(
+            { error: 'Failed to fetch projects' },
+            { status: 500 }
+        );
+    }
 }

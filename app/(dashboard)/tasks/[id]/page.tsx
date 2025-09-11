@@ -9,18 +9,22 @@ interface TaskDetailPageProps {
   }>;
 }
 
-async function getTask(taskId: string) {
+async function getTask(id: string) {
   try {
-    const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
-      next: { revalidate: 30 },
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'nextjs-todo-lake.vercel.app' 
+      : 'http://localhost:3000';
+    
+    const response = await fetch(`${baseUrl}/api/tasks/${id}`, {
+      next: { revalidate: 60 },
     });
     
     if (!response.ok) {
-      return null;
+      throw new Error('Failed to fetch task');
     }
     
     const data = await response.json();
-    return data.task;
+    return data.task || data.data || null;
   } catch (error) {
     console.error('Error fetching task:', error);
     return null;
@@ -32,6 +36,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { id } = await params;
   
   const task = await getTask(id);  // Use the awaited id
+  console.log('Fetched task:', task);
 
   if (!task) {
     notFound();
@@ -41,7 +46,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
     <div className="max-w-4xl mx-auto p-8">
       {/* Header with Back Button */}
       <div className="mb-8">
-        <Link 
+        <Link
           href="/tasks"
           className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group"
         >
