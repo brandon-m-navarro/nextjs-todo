@@ -11,10 +11,8 @@ interface ProjectPageProps {
 
 async function getProject(projectId: string) {
   try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === 'production'
-      ? 'https://nextjs-todo-lake.vercel.app'
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://nextjs-todo-lake.vercel.app' 
       : 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/projects/${projectId}`, {
@@ -35,10 +33,8 @@ async function getProject(projectId: string) {
 
 async function getProjectTasks(projectId: string) {
   try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === 'production'
-      ? 'https://nextjs-todo-lake.vercel.app'
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://nextjs-todo-lake.vercel.app' 
       : 'http://localhost:3000';
     
     const response = await fetch(`${baseUrl}/api/projects/${projectId}/tasks`, {
