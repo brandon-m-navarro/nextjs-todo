@@ -5,7 +5,6 @@ import { manrope } from "@/app/components/ui/fonts";
 import SelectBox from "../ui/select-box";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "../ui/button";
-import SimpleAnimation from "../ui/animation";
 import SpinnerComponent  from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
@@ -32,7 +31,8 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
     hideSpinner,
     showSpinnerLoading,
     showSpinnerSuccess,
-    showSpinnerError
+    showSpinnerError,
+    resetSpinner
   } = useSpinner();
 
   // Find the initial project name based on the initialProjectId
@@ -40,7 +40,9 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const initialProjectName = initialProject ? initialProject.name : '';
 
   const handleSubmit = async (e: React.FormEvent) => {
+    resetSpinner();
     showSpinner();
+    showSpinnerLoading();
 
     e.preventDefault();
     if (!title.trim() || !selectedProjectId) return;
@@ -68,8 +70,16 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
         throw new Error(errorData.error || 'Failed to create task');
       }
 
-      // showSpinnerSuccess();
-      showSpinnerLoading();
+      setTimeout(() => {
+        showSpinnerSuccess();
+        setTimeout(() => {
+          hideSpinner();
+          setTimeout(() => {
+            resetSpinner();
+          }, 300);
+        }, 1000);
+      }, 500);
+      // showSpinnerLoading();
 
       // Construct Task object from response
       const data = await response.json();
@@ -92,6 +102,7 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
           ? error.message
           : 'Failed to create task. Please try again.';
       setError(errorMessage);
+      showSpinnerError();
     } finally {
       setIsSubmitting(false);
     }

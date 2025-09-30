@@ -1,6 +1,4 @@
-import useState from "react";
 import Link from "next/link";
-import { Task } from "@/app/lib/definitions";
 import { TaskManager } from "@/app/components/tasks/TaskManager";
 
 interface ProjectPageProps {

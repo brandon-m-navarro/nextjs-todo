@@ -25,7 +25,7 @@ export function TaskManager({ initialTasks, project }: TaskManagerProps) {
   return (
     <div className="bg-white rounded-lg shadow">
         <TaskFormAccordion projectId={project.id} projects={[project]} taskSubmitCallback={handleAddTask} />
-        <TaskList initialTasks={tasks} showProject={false} />
+        <TaskList initialTasks={tasks}/>
     </div>
   );
 }

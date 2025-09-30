@@ -48,13 +48,21 @@ export function useSpinner() {
         arcPercentage: 100
     });
 
+    const resetSpinner = () => setSpinnerState(prev => ({
+        ...prev,
+        isSuccess: false,
+        isError: false,
+        arcPercentage: 15
+    }));
+
     return {
         spinnerState,
         showSpinner,
         hideSpinner,
         showSpinnerLoading,
         showSpinnerSuccess,
-        showSpinnerError
+        showSpinnerError,
+        resetSpinner
     };
 }
 
@@ -64,12 +72,12 @@ export default function SpinnerComponent({ spinnerState, size = 80 }: { spinnerS
     const [isCompletingRotation, setIsCompletingRotation] = useState(false);
     const rotationRef = useRef(0);
     const animationRef = useRef<number | null>(null);
-    const isLoadingRef = useRef(isLoading); // ← Add this ref
+    const isLoadingRef = useRef(isLoading);
 
     // Handle rotation animation
     useEffect(() => {
-        isLoadingRef.current = isLoading; // ← Keep ref in sync
-        
+        isLoadingRef.current = isLoading;
+
         if (isLoading) {
             setIsCompletingRotation(false);
             
@@ -94,7 +102,7 @@ export default function SpinnerComponent({ spinnerState, size = 80 }: { spinnerS
                 
                 animationRef.current = requestAnimationFrame(animate);
             };
-            
+
             animationRef.current = requestAnimationFrame(animate);
         } else if (!isCompletingRotation && rotationRef.current !== 0) {
             console.log('Stopping loading animation');
@@ -131,7 +139,7 @@ export default function SpinnerComponent({ spinnerState, size = 80 }: { spinnerS
                     // After completing rotation, smoothly return to start
                     setTimeout(() => {
                         // setCurrentRotation(0);
-                        // rotationRef.current = 0;
+                        rotationRef.current = 0;
                         setIsCompletingRotation(false);
                     }, 200);
                 }
@@ -194,7 +202,7 @@ export default function SpinnerComponent({ spinnerState, size = 80 }: { spinnerS
                         }}
                     >
                         {/* Background circle */}
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" strokeWidth="8"/>
                         {/* Animated arc with rounded ends */}
                         <circle
                             cx="50"

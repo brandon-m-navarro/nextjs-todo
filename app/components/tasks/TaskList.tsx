@@ -12,18 +12,13 @@ interface TaskListProps {
   projects?: Project[];
 }
 
-export function TaskList({ initialTasks, showProject = false }: TaskListProps) {
+export function TaskList({ initialTasks }: TaskListProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
   // Sync internal state with prop changes
   useEffect(() => {
     setTasks(initialTasks);
   }, [initialTasks]);
-
-  // Function to add a new task
-  const addTask = (newTask: Task) => {
-    setTasks(prevTasks => [newTask, ...prevTasks]);
-  };
 
   if (tasks.length === 0) {
     return (
@@ -59,17 +54,6 @@ export function TaskList({ initialTasks, showProject = false }: TaskListProps) {
                 {task.description && (
                   <p className="text-gray-600 text-sm mt-2">{task.description}</p>
                 )}
-                
-                {/* {showProject && (
-                  <div className="flex items-center space-x-2 mt-3">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: `#${task.projectColor || '3B82F6'}` }}
-                    />
-                    <span className="text-xs text-gray-500">{task.projectName || 'Not found'}</span>
-                  </div>
-                )} */}
-                
                 {task.expectedCompletionDateTime && (
                   <div className="text-xs text-gray-500 mt-2">
                     Due: {new Date(task.expectedCompletionDateTime).toLocaleDateString()}
