@@ -9,6 +9,7 @@ type DatePickerProps = {
   name: string;
   value?: string;
   onChange?: (date: string) => void;
+  className?: string;
 };
 
 const DatePicker = ({ name, value, onChange }: DatePickerProps) => {
@@ -18,7 +19,7 @@ const DatePicker = ({ name, value, onChange }: DatePickerProps) => {
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    
+
     // Convert Date object to ISO string and call the onChange callback
     if (onChange) {
       onChange(date ? date.toISOString() : '');

@@ -1,15 +1,30 @@
 // components/tasks/TaskList.tsx
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { TaskWithProject } from '@/app/lib/definitions';
+import { Task } from '@/app/lib/definitions';
+import { Project } from '@/app/lib/definitions';
 
 interface TaskListProps {
-  tasks: TaskWithProject[];
+  initialTasks: Task[];
   showProject?: boolean;
+  projects?: Project[];
 }
 
-export function TaskList({ tasks, showProject = false }: TaskListProps) {
+export function TaskList({ initialTasks, showProject = false }: TaskListProps) {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  // Sync internal state with prop changes
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
+
+  // Function to add a new task
+  const addTask = (newTask: Task) => {
+    setTasks(prevTasks => [newTask, ...prevTasks]);
+  };
+
   if (tasks.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500">
@@ -17,8 +32,6 @@ export function TaskList({ tasks, showProject = false }: TaskListProps) {
       </div>
     );
   }
-
-  console.log('Rendering TaskList with tasks:', tasks);
 
   return (
     <div className="divide-y divide-gray-200">
@@ -47,15 +60,15 @@ export function TaskList({ tasks, showProject = false }: TaskListProps) {
                   <p className="text-gray-600 text-sm mt-2">{task.description}</p>
                 )}
                 
-                {showProject && (
+                {/* {showProject && (
                   <div className="flex items-center space-x-2 mt-3">
                     <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: `#${task.projectColor || '3B82F6'}` }}
                     />
-                    <span className="text-xs text-gray-500">{task.projectName}</span>
+                    <span className="text-xs text-gray-500">{task.projectName || 'Not found'}</span>
                   </div>
-                )}
+                )} */}
                 
                 {task.expectedCompletionDateTime && (
                   <div className="text-xs text-gray-500 mt-2">

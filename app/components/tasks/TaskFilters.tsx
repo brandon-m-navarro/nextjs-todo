@@ -15,7 +15,7 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
 
   const updateUrl = (updates: Record<string, string>) => {
     const params = new URLSearchParams(window.location.search);
-    
+  
     Object.entries(updates).forEach(([key, value]) => {
       if (value) {
         params.set(key, value);
@@ -23,7 +23,7 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
         params.delete(key);
       }
     });
-    
+  
     router.push(`/tasks?${params.toString()}`);
   };
 

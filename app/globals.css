@@ -98,3 +98,108 @@ body {
 .left   { transform: rotateY(-90deg) translateZ(50px); }
 .top    { transform: rotateX(90deg) translateZ(50px); }
 .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+
+/* Animations */
+
+/* Success Animation (2.5s) */
+@theme {
+  --animate-grow-shrink: grow-shrink 1.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+
+  @keyframes grow-shrink {
+    0% {
+      min-height: 40px;
+      min-width: 40px;
+      
+      height: 40px;
+      width: 40px;
+    }
+    33% {
+      min-height: 60px;
+      min-width: 60px;
+
+      height: 60px;
+      width: 60px;
+    }
+    50% {
+      min-height: 60px;
+      min-width: 60px;
+
+      height: 60px;
+      width: 60px;
+    }
+    75% {
+      min-height: 40px;
+      min-width: 40px;
+
+      height: 40px;
+      width: 40px;
+    }
+    100% {
+      min-height: 40px;
+      min-width: 40px;
+
+      height: 40px;
+      width: 40px;
+    }
+  }
+
+  --animate-grow-shrink-outer: grow-shrink-outer 1.5s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+  @keyframes grow-shrink-outer {
+    0% {
+      min-height: var(--spinner-outer-size, 40px);
+      min-width: var(--spinner-outer-size, 40px);
+
+      height: var(--spinner-outer-size, 40px);
+      width: var(--spinner-outer-size, 40px);
+    }
+    33% {
+      min-height: var(--spinner-outer-size-pulsed, 100px);
+      min-width: var(--spinner-outer-size-pulsed, 100px);
+
+      height: var(--spinner-outer-size-pulsed, 100px);
+      width: var(--spinner-outer-size-pulsed, 100px);
+    }
+    50% {
+      min-height: var(--spinner-outer-size-pulsed, 100px);
+      min-width: var(--spinner-outer-size-pulsed, 100px);
+
+      height: var(--spinner-outer-size-pulsed, 100px);
+      width: var(--spinner-outer-size-pulsed, 100px);
+    }
+    75% {
+      min-height: var(--spinner-outer-size, 40px);
+      min-width: var(--spinner-outer-size, 40px);
+
+      height: var(--spinner-outer-size, 40px);
+      width: var(--spinner-outer-size, 40px);
+    }
+    100% {
+      min-height: var(--spinner-outer-size, 40px);
+      min-width: var(--spinner-outer-size, 40px);
+
+      height: var(--spinner-outer-size, 40px);
+      width: var(--spinner-outer-size, 40px);
+    }
+  }
+
+  --animate-fade-in: fade-in 0.5s ease-in-out forwards;
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  --animate-fade-out: fade-out 0.5s ease-in-out forwards;
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}

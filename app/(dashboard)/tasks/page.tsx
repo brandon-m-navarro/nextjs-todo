@@ -63,7 +63,7 @@ export default async function TasksPage({
 }) {
   // Await the searchParams promise
   const resolvedSearchParams = await searchParams;
-  
+
   // Fetch data from API routes
   const [allTasks, projects] = await Promise.all([
     getTasks(),
@@ -76,7 +76,7 @@ export default async function TasksPage({
     if (resolvedSearchParams?.project && task.projectId !== resolvedSearchParams.project) {
       return false;
     }
-    
+  
     // Status filter
     if (resolvedSearchParams?.status === 'active' && task.isDone) {
       return false;
