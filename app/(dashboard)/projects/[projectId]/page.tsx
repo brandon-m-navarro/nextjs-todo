@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { TaskManager } from "@/app/components/tasks/TaskManager";
 import { BackButton } from "@/app/components/ui/back-button";
 
@@ -63,13 +62,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     getProject(projectId),
     getProjectTasks(projectId),
   ]);
-
-  // Add project info to each task
-  // const tasksWithProject = tasks.map((task: Task) => ({
-  //   ...task,
-  //   projectName: project.name,
-  //   projectColor: project.hexColor,
-  // }));
 
   return (
     <div className="p-8 text-black">
