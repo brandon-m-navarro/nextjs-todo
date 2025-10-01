@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { TaskDetail } from '@/app/components/tasks/TaskDetails';
+import { BackButton } from '@/app/components/ui/back-button';
 
 // Update interface to match Next.js 15 expectations
 interface TaskDetailPageProps {
@@ -22,7 +23,7 @@ async function getTask(id: string) {
     if (!response.ok) {
       throw new Error('Failed to fetch task');
     }
-    
+
     const data = await response.json();
     return data.task || data.data || null;
   } catch (error) {
@@ -46,20 +47,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
     <div className="max-w-4xl mx-auto p-8">
       {/* Header with Back Button */}
       <div className="mb-8">
-        <Link
-          href="/tasks"
-          className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group"
-        >
-          <svg 
-            className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to All Tasks
-        </Link>
+      <BackButton/>
         
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Task Details</h1>

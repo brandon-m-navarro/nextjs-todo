@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TaskManager } from "@/app/components/tasks/TaskManager";
+import { BackButton } from "@/app/components/ui/back-button";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -63,33 +64,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     getProjectTasks(projectId),
   ]);
 
-  if (!project) {
-    return (
-      <div className="p-8">
-        <Link
-          href="/projects"
-          className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors"
-        >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          Back to Projects
-        </Link>
-        <h1 className="text-2xl font-bold text-red-600">Project not found</h1>
-      </div>
-    );
-  }
-
   // Add project info to each task
   // const tasksWithProject = tasks.map((task: Task) => ({
   //   ...task,
@@ -99,26 +73,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <div className="p-8 text-black">
-      {/* Back Button */}
-      <Link
-        href="/projects"
-        className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group"
-      >
-        <svg
-          className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-        Back to All Projects
-      </Link>
+      <BackButton text="All Projects" />
 
       {/* Project Header */}
       <div className="flex items-center justify-between mb-6">

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { TaskList } from '@/app/components/tasks/TaskList';
 import { TaskFilters } from '@/app/components/tasks/TaskFilters';
 import { Task, Project } from '@/app/lib/definitions';
+import { BackButton } from '@/app/components/ui/back-button';
 
 async function getTasks() {
   try {
@@ -110,12 +111,7 @@ export default async function TasksPage({
     <div className="max-w-6xl mx-auto text-black">
       {/* Header */}
       <div className="mb-8">
-        <Link 
-          href="/"
-          className="text-blue-500 hover:text-blue-700 mb-4 inline-block"
-        >
-          ← Back to Dashboard
-        </Link>
+        <BackButton text="Dashboard"/>
         
         <div className="flex justify-between items-center">
           <div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { BackButton } from '@/app/components/ui/back-button';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function NewProjectPage() {
       const result = await response.json();
       
       // Redirect to the new project's page
-      router.push(`/projects/${result.project.id}`);
+      router.replace(`/projects/${result.project.id}`);
       router.refresh(); // Refresh the server components
 
     } catch (error) {
@@ -75,12 +76,7 @@ export default function NewProjectPage() {
     <div className="max-w-2xl mx-auto text-black">
       {/* Header */}
       <div className="mb-8">
-        <Link 
-          href="/"
-          className="text-blue-500 hover:text-blue-700 mb-4 inline-block"
-        >
-          ← Back to Dashboard
-        </Link>
+        <BackButton />
         <h1 className="text-3xl font-bold text-gray-900">Create New Project</h1>
         <p className="text-gray-600 mt-2">Start organizing your tasks with a new project</p>
       </div>

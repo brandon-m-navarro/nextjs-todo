@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-interface Task {
+interface TaskDetails {
   id: string;
   title: string;
   description?: string | null;
@@ -17,7 +17,7 @@ interface Task {
 }
 
 interface TaskDetailProps {
-  task: Task;
+  task: TaskDetails;
 }
 
 export function TaskDetail({ task }: TaskDetailProps) {
@@ -118,19 +118,18 @@ export function TaskDetail({ task }: TaskDetailProps) {
 
       {/* Quick Actions */}
       <div className="mt-8 flex gap-4 pt-6 border-t border-gray-200">
-        <Link
-          href={`/tasks/${task.id}/edit`}
+        <button
+          // onClick={handleDelete}
+          className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+        >
+          Delete Task
+        </button>
+        <button
+          // onClick={markAsDone}
           className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
-          Edit Task
-        </Link>
-        
-        <Link
-          href={`/projects/${task.projectId}`}
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          View Project Tasks
-        </Link>
+          {task.isDone ? 'Mark as Undone' : 'Mark as Done'}
+        </button>
       </div>
     </div>
   );

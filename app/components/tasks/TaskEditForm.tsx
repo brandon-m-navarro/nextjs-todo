@@ -50,7 +50,7 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
     
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked 
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked
               : type === 'number' ? Number(value)
               : value
     }));
@@ -61,6 +61,8 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
     setIsSubmitting(true);
     setError('');
 
+    console.log('Submitting form data:', formData);
+
     try {
       const response = await fetch(`/api/tasks/${task.id}`, {
         method: 'PUT',
@@ -68,9 +70,12 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          description: formData.description || null,
+          is_done: formData.isDone,
+          project_id: formData.projectId,
           ordinal: formData.ordinal ? Number(formData.ordinal) : null,
-          expectedCompletionDateTime: formData.expectedCompletionDateTime 
+          expected_completion_date_time: formData.expectedCompletionDateTime 
             ? new Date(formData.expectedCompletionDateTime).toISOString()
             : null
         }),
@@ -82,8 +87,9 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
       }
 
       // Redirect to task detail page on success
-      router.push(`/tasks/${task.id}`);
-      router.refresh();
+      router.replace(`/tasks/${task.id}`); // Use replace to avoid going back to edit on back button
+      router.back(); // Go back to the previous page
+      router.refresh(); // Refresh the server components
     } catch (error) {
       console.error('Error updating task:', error);
       setError(error instanceof Error ? error.message : 'Failed to update task');

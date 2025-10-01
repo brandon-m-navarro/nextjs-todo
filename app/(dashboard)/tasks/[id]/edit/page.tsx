@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import React from 'react';
 import { notFound } from 'next/navigation';
 import { TaskEditForm } from '@/app/components/tasks/TaskEditForm';
+import { BackButton } from '@/app/components/ui/back-button';
 
 interface TaskEditPageProps {
   params: Promise<{
@@ -57,21 +58,8 @@ export default async function TaskEditPage({ params }: TaskEditPageProps) {
     <div className="max-w-4xl mx-auto p-8 text-black">
       {/* Header with Back Button */}
       <div className="mb-8">
-        <Link 
-          href={`/tasks/${id}`}
-          className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group"
-        >
-          <svg 
-            className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Task
-        </Link>
-        
+        <BackButton text="Task Details"/>
+
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Task</h1>
         <p className="text-gray-600">Update the task details below</p>
       </div>
