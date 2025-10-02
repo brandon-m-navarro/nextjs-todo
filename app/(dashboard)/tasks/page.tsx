@@ -170,7 +170,7 @@ export default async function TasksPage({
         </div>
 
         {filteredTasks.length > 0 ? (
-          <TaskList initialTasks={sortedTasks}/>
+          <TaskList/>
         ) : (
           <div className="p-12 text-center">
             <div className="text-gray-400 text-6xl mb-4">📝</div>
