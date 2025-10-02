@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Task } from '@/app/lib/definitions';
 
 interface Project {
   id: string;
@@ -8,19 +9,19 @@ interface Project {
   hexColor?: string;
 }
 
-interface Task {
-  id: string;
-  title: string;
-  description?: string | null;
-  isDone: boolean;
-  ordinal?: number | null;
-  expectedCompletionDateTime?: Date | null;
-  creationDateTime: Date;
-  lastModifiedDateTime: Date;
-  projectId: string;
-  projectName: string;
-  projectColor?: string | null;
-}
+// interface Task {
+//   id: string;
+//   title: string;
+//   description?: string | null;
+//   isDone: boolean;
+//   ordinal?: number | null;
+//   expectedCompletionDateTime?: Date | null;
+//   creationDateTime: Date;
+//   lastModifiedDateTime: Date;
+//   projectId: string;
+//   projectName: string;
+//   projectColor?: string | null;
+// }
 
 interface TaskEditFormProps {
   task: Task;

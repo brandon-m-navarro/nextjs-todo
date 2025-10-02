@@ -27,19 +27,6 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   const task = getTaskById(taskId);
   const [taskState, setTaskState] = useState<TaskDetails>(task);
 
-  // // Sync with context when tasks change
-  // useEffect(() => {
-  //   const currentTaskFromContext = tasks.find(t => t.id === task.id);
-  //   if (currentTaskFromContext) {
-  //     const taskState1 = {
-  //       ...currentTaskFromContext,
-  //       projectName: task.projectName,
-  //       projectColor: task.projectColor
-  //     }
-  //     setTaskState(taskState1);
-  //   }
-  // }, [tasks, task.id]);
-
   // Handle marking task as done/undone
   const handleToggleDone = () => {
     const updatedTask = {
@@ -49,22 +36,17 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
     };
     
     setTaskState(updatedTask);
-
-    // console.log('Task updated: ', updatedTask);
-    updateTask(updatedTask);
-
-    // Remove project-related fields before updating context
-    // delete updatedTask.projectColor;
-    // delete updatedTask.projectName;
-    // delete updatedTask.projectId;
-
+    updateTask(
+      updatedTask,
+      () => { setTaskState(updatedTask) }
+    );
   };
 
   // Handle delete
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this task?')) {
       deleteTask(taskState.id);
-      // You might want to redirect after deletion
+      // Might want to redirect after deletion
       // router.push('/projects/' + task.projectId);
     }
   };
