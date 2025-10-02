@@ -20,6 +20,12 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
     }
   }, [isOpen]);
 
+  const resize = function () {
+    if (contentRef.current) {
+      setContentHeight(isOpen ? contentRef.current.scrollHeight : 0);
+    }
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden transition-all duration-300 hover:shadow-md">
       {/* Header Button */}
@@ -44,6 +50,7 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
                 setIsOpen(false);
               },750)}
             }
+            onError={resize}
           />
         </div>
       </div>

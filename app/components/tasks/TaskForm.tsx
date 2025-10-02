@@ -15,9 +15,10 @@ interface TaskFormProps {
   projects: Project[];
   initialProjectId?: string;
   onTaskCreated?: (task: Task) => void;
+  onError?: () => void;
 }
 
-export default function TaskForm({ projects, initialProjectId = '', onTaskCreated }: TaskFormProps) {
+export default function TaskForm({ projects, initialProjectId = '', onTaskCreated, onError }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -40,14 +41,13 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const initialProjectName = initialProject ? initialProject.name : '';
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('New Task');
     resetSpinner();
     showSpinner();
     showSpinnerLoading();
 
     e.preventDefault();
     if (!title.trim() || !selectedProjectId) return;
-    
+
     setIsSubmitting(true);
     setError('');
 
@@ -80,7 +80,6 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
           }, 300);
         }, 1000);
       }, 500);
-      // showSpinnerLoading();
 
       // Construct Task object from response
       const data = await response.json();
@@ -102,6 +101,11 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
           : 'Failed to create task. Please try again.';
       setError(errorMessage);
       showSpinnerError();
+
+      // Delay sending error to accordion to allow time for error UI to render
+      setTimeout(() => {
+        onError?.();
+      }, 10);
     } finally {
       setIsSubmitting(false);
     }
