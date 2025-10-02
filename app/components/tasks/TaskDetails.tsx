@@ -4,20 +4,21 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useTaskContext } from '@/app/contexts/TaskContext';
 import { useRouter } from 'next/navigation';
+import { Task } from '@/app/lib/definitions';
 
-interface TaskDetails {
-  id: string;
-  title: string;
-  description: string | null;
-  isDone: boolean;
-  ordinal: number;
-  expectedCompletionDateTime: Date | null;
-  creationDateTime: Date;
-  lastModifiedDateTime: Date;
-  projectId: string;
-  // projectName: string;
-  // projectColor?: string | null;
-}
+// interface TaskDetails {
+//   id: string;
+//   title: string;
+//   description: string | null;
+//   isDone: boolean;
+//   ordinal: number;
+//   expectedCompletionDateTime: Date | null;
+//   creationDateTime: Date;
+//   lastModifiedDateTime: Date;
+//   projectId: string;
+//   // projectName: string;
+//   // projectColor?: string | null;
+// }
 
 interface TaskDetailProps {
   taskId: string;
@@ -27,7 +28,10 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   const { updateTask, deleteTask, getTaskById } = useTaskContext();
   const router = useRouter();
   const task = getTaskById(taskId);
-  const [taskState, setTaskState] = useState<TaskDetails>(task);
+
+  if (!task) throw Error('ERROR: Unable to fund Task - ' + taskId);
+
+  const [taskState, setTaskState] = useState<Task>(task);
 
   // Handle marking task as done/undone
   const handleToggleDone = () => {
