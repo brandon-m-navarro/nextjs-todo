@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { Task } from '@/app/lib/definitions';
 
 interface TaskContextType {
@@ -37,7 +37,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
-    console.log('Tasks after update:', tasks);
   };
 
   const deleteTask = (taskId: string) => {

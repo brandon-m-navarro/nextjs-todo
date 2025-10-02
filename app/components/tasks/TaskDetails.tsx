@@ -14,17 +14,18 @@ interface TaskDetails {
   creationDateTime: Date;
   lastModifiedDateTime: Date;
   projectId: string;
-  projectName: string;
-  projectColor?: string | null;
+  // projectName: string;
+  // projectColor?: string | null;
 }
 
 interface TaskDetailProps {
-  task: TaskDetails;
+  taskId: string;
 }
 
-export function TaskDetail({ task }: TaskDetailProps) {
+export function TaskDetail({ taskId }: TaskDetailProps) {
+  const { updateTask, deleteTask, getTaskById } = useTaskContext();
+  const task = getTaskById(taskId);
   const [taskState, setTaskState] = useState<TaskDetails>(task);
-  const { updateTask, deleteTask } = useTaskContext();
 
   // // Sync with context when tasks change
   // useEffect(() => {
@@ -49,12 +50,14 @@ export function TaskDetail({ task }: TaskDetailProps) {
     
     setTaskState(updatedTask);
 
-    // Remove project-related fields before updating context
-    delete updatedTask.projectColor;
-    delete updatedTask.projectColor;
-    delete updatedTask.projectColor;
-
+    // console.log('Task updated: ', updatedTask);
     updateTask(updatedTask);
+
+    // Remove project-related fields before updating context
+    // delete updatedTask.projectColor;
+    // delete updatedTask.projectName;
+    // delete updatedTask.projectId;
+
   };
 
   // Handle delete

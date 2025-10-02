@@ -1,6 +1,5 @@
 import { TaskManager } from "@/app/components/tasks/TaskManager";
 import { BackButton } from "@/app/components/ui/back-button";
-import { TaskProvider } from "@/app/contexts/TaskContext";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -59,13 +58,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = await params;
 
   // Fetch both project and tasks from API routes
-  const [project, tasks] = await Promise.all([
+  const [project] = await Promise.all([
     getProject(projectId),
     getProjectTasks(projectId),
   ]);
 
   return (
-    <TaskProvider initialTasks={tasks}>
       <div className="p-8 text-black">
         <BackButton text="All Projects" />
 
@@ -81,6 +79,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {/* Task Manager */}
         <TaskManager project={project} />
       </div>
-    </TaskProvider>
   );
 }
