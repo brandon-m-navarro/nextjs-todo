@@ -1,5 +1,6 @@
 // app/projects/layout.tsx
 import { TaskProvider } from '@/app/contexts/TaskContext';
+import { ProjectProvider } from '@/app/contexts/ProjectContext';
 
 async function getAllTasks() {
   try {
@@ -25,16 +26,43 @@ async function getAllTasks() {
   }
 }
 
+async function getAllProjects() {
+  try {
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://nextjs-todo-lake.vercel.app"
+        : "http://localhost:3000";
+
+    const response = await fetch(`${baseUrl}/api/projects`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch projects");
+    }
+
+    const data = await response.json();
+    // Return just the projects array from the response
+    return data.projects || data.data || [];
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    return [];
+  }
+}
+
 export default async function ProjectsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const tasks = await getAllTasks(); // Or fetch initial data
+  const tasks = await getAllTasks();
+  const projects = await getAllProjects();
   
   return (
-    <TaskProvider initialTasks={tasks}>
-      {children}
-    </TaskProvider>
+    <ProjectProvider initialProjects={projects}>
+      <TaskProvider initialTasks={tasks}>
+        {children}
+      </TaskProvider>
+    </ProjectProvider>
   );
 }

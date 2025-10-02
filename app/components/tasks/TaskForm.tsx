@@ -80,7 +80,6 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
           hideSpinner();
           setTimeout(() => {
             resetSpinner();
-            // router.refresh();
           }, 300);
         }, 1000);
       }, 500);

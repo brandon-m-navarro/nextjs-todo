@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { Task } from '@/app/lib/definitions';
 
 interface TaskContextType {
@@ -7,7 +7,6 @@ interface TaskContextType {
   addTask: (task: Task, callback?: (response?: Response) => void) => void;
   updateTask: (task: Task, callback?: (response?: Response) => void) => void;
   deleteTask: (taskId: string, callback?: (response?: Response) => void) => void;
-  setInitialTasks: (tasks: Task[]) => void;
   getTaskById: (taskId: string) => Task | undefined;
 }
 
@@ -23,11 +22,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   initialTasks = [] 
 }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
-// Optional: Sync if initialTasks changes
-//   useEffect(() => {
-//     setTasks(initialTasks);
-//   }, [initialTasks]);
 
   const addTask = async (task: Task, callback?: Function) => {
     setTasks((prevTasks) => [task, ...prevTasks]);
@@ -127,16 +121,12 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     }
   };
 
-  const setInitialTasks = (initialTasks: Task[]) => {
-    setTasks(initialTasks);
-  }
-
   const getTaskById = (taskId: string): Task | undefined => {
     return tasks.find(task => task.id === taskId);
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask, setInitialTasks, getTaskById }}>
+    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask, getTaskById }}>
       {children}
     </TaskContext.Provider>
   );
