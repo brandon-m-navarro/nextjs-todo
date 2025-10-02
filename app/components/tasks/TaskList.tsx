@@ -1,24 +1,10 @@
 // components/tasks/TaskList.tsx
 'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Task } from '@/app/lib/definitions';
-import { Project } from '@/app/lib/definitions';
+import { useTaskContext } from '@/app/contexts/TaskContext';
 
-interface TaskListProps {
-  initialTasks: Task[];
-  showProject?: boolean;
-  projects?: Project[];
-}
-
-export function TaskList({ initialTasks }: TaskListProps) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
-  // Sync internal state with prop changes
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
+export function TaskList() {
+  const { tasks } = useTaskContext();
 
   if (tasks.length === 0) {
     return (

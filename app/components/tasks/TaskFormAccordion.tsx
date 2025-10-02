@@ -2,15 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import TaskForm from './TaskForm';
-import { Project, Task } from '@/app/lib/definitions';
+import { Project } from '@/app/lib/definitions';
 
 interface TaskFormAccordionProps {
   projectId: string;
   projects: Project[];
-  taskSubmitCallback: (task: Task) => void;
 }
 
-export function TaskFormAccordion({ projectId, projects, taskSubmitCallback }: TaskFormAccordionProps) {
+export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -20,10 +19,6 @@ export function TaskFormAccordion({ projectId, projects, taskSubmitCallback }: T
       setContentHeight(isOpen ? contentRef.current.scrollHeight : 0);
     }
   }, [isOpen]);
-
-  function onTaskCreatedCallback(task: Task) {
-    taskSubmitCallback(task);
-  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden transition-all duration-300 hover:shadow-md">
@@ -44,7 +39,11 @@ export function TaskFormAccordion({ projectId, projects, taskSubmitCallback }: T
           <TaskForm 
             projects={projects} 
             initialProjectId={projectId}
-            onTaskCreated={onTaskCreatedCallback}
+            onTaskCreated={() => {
+              setTimeout(() => { // Delay to let success animation
+                setIsOpen(false);
+              },750)}
+            }
           />
         </div>
       </div>

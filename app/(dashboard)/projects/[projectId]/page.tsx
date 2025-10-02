@@ -1,5 +1,6 @@
 import { TaskManager } from "@/app/components/tasks/TaskManager";
 import { BackButton } from "@/app/components/ui/back-button";
+import { TaskProvider } from "@/app/contexts/TaskContext";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -64,21 +65,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   ]);
 
   return (
-    <div className="p-8 text-black">
-      <BackButton text="All Projects" />
+    <TaskProvider initialTasks={tasks}>
+      <div className="p-8 text-black">
+        <BackButton text="All Projects" />
 
-      {/* Project Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Project: {project.name}</h1>
-        {project.description && (
-          <p className="text-gray-600 text-sm max-w-md">
-            {project.description}
-          </p>
-        )}
+        {/* Project Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Project: {project.name}</h1>
+          {project.description && (
+            <p className="text-gray-600 text-sm max-w-md">
+              {project.description}
+            </p>
+          )}
+        </div>
+        {/* Task Manager */}
+        <TaskManager project={project} />
       </div>
-
-      {/* Task Form Accordion */}
-      <TaskManager project={project} initialTasks={tasks} />
-    </div>
+    </TaskProvider>
   );
 }

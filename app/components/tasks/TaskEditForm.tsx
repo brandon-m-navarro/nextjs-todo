@@ -1,8 +1,6 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface Project {
   id: string;
@@ -38,7 +36,7 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
     title: task.title,
     description: task.description || '',
     isDone: task.isDone,
-    ordinal: task.ordinal || '',
+    ordinal: task.ordinal || null,
     expectedCompletionDateTime: task.expectedCompletionDateTime 
       ? new Date(task.expectedCompletionDateTime).toISOString().slice(0, 16)
       : '',
@@ -85,6 +83,23 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to update task');
       }
+      console.log('ASYNC: Task updated successfully', await response.json());
+
+
+      // Create Task from response
+      // const updatedTask = {
+      //   ...formData,
+      //   id: task.id,
+      //   ordinal: formData.ordinal ? Number(formData.ordinal) : null,
+      //   expectedCompletionDateTime: formData.expectedCompletionDateTime
+      //     ? new Date(formData.expectedCompletionDateTime)
+      //     : null,
+      //   creationDateTime: task.creationDateTime,
+      //   lastModifiedDateTime: new Date(),
+      //   projectName: projects.find(p => p.id === formData.projectId)?.name || '',
+      //   projectColor: projects.find(p => p.id === formData.projectId)?.hexColor || ''
+      // };
+      // setTaskState(updatedTask);
 
       // Redirect to task detail page on success
       router.replace(`/tasks/${task.id}`); // Use replace to avoid going back to edit on back button
@@ -182,7 +197,7 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
             type="number"
             id="ordinal"
             name="ordinal"
-            value={formData.ordinal}
+            value={formData.ordinal + ''}
             onChange={handleChange}
             min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -206,12 +221,13 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
 
         {/* Form Actions */}
         <div className="flex gap-4 pt-6 border-t border-gray-200">
-          <Link
-            href={`/tasks/${task.id}`}
+          <button
+            type="button"
+            onClick={() => router.back()}
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Cancel
-          </Link>
+          </button>
           <button
             type="submit"
             disabled={isSubmitting}

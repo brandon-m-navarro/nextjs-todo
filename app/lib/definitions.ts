@@ -37,7 +37,6 @@ export interface ProjectFromDb {
 }
 
 export interface TaskWithProject {
-    projectId: string;
     id: string;
     title: string;
     description: string | null;
@@ -46,7 +45,8 @@ export interface TaskWithProject {
     expectedCompletionDateTime?: Date | null;
     creationDateTime: Date;
     lastModifiedDateTime: Date;
-
+    
+    projectId: string;
     projectName: string;
     projectColor?: string | null;
 }

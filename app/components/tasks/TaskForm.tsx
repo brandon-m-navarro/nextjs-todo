@@ -40,6 +40,7 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const initialProjectName = initialProject ? initialProject.name : '';
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('New Task');
     resetSpinner();
     showSpinner();
     showSpinnerLoading();
@@ -85,15 +86,13 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
       const data = await response.json();
       const newTask = data.task;
 
-      // Show the task was created
-
+      // Run callback if specfied
       onTaskCreated?.(newTask);
 
       // Clear the form
       setTitle('');
       setDescription('');
       setDueDate('');
-      setSelectedProjectId('');
 
     } catch (error) {
       console.error("Error creating task:", error);
@@ -134,16 +133,18 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
 
         {/* Form Section */}
         <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-6 pt-8 w-full">
-          <div className="flex lg:hidden justify-center mb-6">
+          {/* <div className="flex lg:hidden justify-center mb-6">
             <div className="w-[150px] h-[150px]">
-              {/* <SimpleAnimation /> */}
               <SpinnerComponent spinnerState={spinnerState} />
             </div>
-          </div>
+          </div> */}
 
-          <h1 className={`${manrope.className} text-2xl md:text-3xl lg:text-[36px] mb-6 text-center lg:text-left`}>
-            Add New Task
-          </h1>
+          <div className="flex align-center mb-6">
+            <h1 className={`${manrope.className} text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}>
+              Add New Task
+            </h1>
+            <SpinnerComponent spinnerState={spinnerState} size={40} />
+          </div>
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">

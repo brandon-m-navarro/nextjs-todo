@@ -1,11 +1,14 @@
 // Generate a random ID
-export function generateId(prefix:string, length: number = 8): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+export function generateId(prefix: string, length: number = 12): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklumpqrstuvwxyz0123456789';
+    const randomValues = new Uint8Array(length);
+    crypto.getRandomValues(randomValues); // Cryptographically secure
+    
     let result = '';
-    for (let i = 0; i<length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    for (let i = 0; i < length; i++) {
+        result += chars[randomValues[i] % chars.length];
     }
-    return prefix + '-' + result;
+    return `${prefix}-${result}`;
 }
 
 // Format a timestamp to a readable date string
