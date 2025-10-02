@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Task } from '@/app/lib/definitions';
+import { useTaskContext } from '@/app/contexts/TaskContext';
 
 interface Project {
   id: string;
@@ -9,29 +10,19 @@ interface Project {
   hexColor?: string;
 }
 
-// interface Task {
-//   id: string;
-//   title: string;
-//   description?: string | null;
-//   isDone: boolean;
-//   ordinal?: number | null;
-//   expectedCompletionDateTime?: Date | null;
-//   creationDateTime: Date;
-//   lastModifiedDateTime: Date;
-//   projectId: string;
-//   projectName: string;
-//   projectColor?: string | null;
-// }
-
 interface TaskEditFormProps {
-  task: Task;
+  taskId: string;
   projects: Project[];
 }
 
-export function TaskEditForm({ task, projects }: TaskEditFormProps) {
+export function TaskEditForm({ taskId, projects }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const { getTaskById, updateTask } = useTaskContext();
+  const task = getTaskById(taskId);
+
+  if (!task) throw new Error('Could not get task! - ' + taskId);
 
   const [formData, setFormData] = useState({
     title: task.title,
@@ -46,7 +37,6 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked
@@ -60,52 +50,27 @@ export function TaskEditForm({ task, projects }: TaskEditFormProps) {
     setIsSubmitting(true);
     setError('');
 
-    console.log('Submitting form data:', formData);
-
     try {
-      const response = await fetch(`/api/tasks/${task.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description || null,
-          is_done: formData.isDone,
-          project_id: formData.projectId,
-          ordinal: formData.ordinal ? Number(formData.ordinal) : null,
-          expected_completion_date_time: formData.expectedCompletionDateTime 
-            ? new Date(formData.expectedCompletionDateTime).toISOString()
-            : null
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update task');
+      const updatedTask: Task = {
+        ...task,
+        id: task.id,
+        title: formData.title,
+        description: formData.description || null,
+        isDone: formData.isDone,
+        projectId: formData.projectId,
+        ordinal: formData.ordinal ? Number(formData.ordinal) : null,
+        expectedCompletionDateTime: formData.expectedCompletionDateTime 
+          ? new Date(formData.expectedCompletionDateTime)
+          : null
       }
-      console.log('ASYNC: Task updated successfully', await response.json());
+      updateTask(updatedTask, (response) => {
+        console.log('ASYNC: Task updated successfully', response);
 
-
-      // Create Task from response
-      // const updatedTask = {
-      //   ...formData,
-      //   id: task.id,
-      //   ordinal: formData.ordinal ? Number(formData.ordinal) : null,
-      //   expectedCompletionDateTime: formData.expectedCompletionDateTime
-      //     ? new Date(formData.expectedCompletionDateTime)
-      //     : null,
-      //   creationDateTime: task.creationDateTime,
-      //   lastModifiedDateTime: new Date(),
-      //   projectName: projects.find(p => p.id === formData.projectId)?.name || '',
-      //   projectColor: projects.find(p => p.id === formData.projectId)?.hexColor || ''
-      // };
-      // setTaskState(updatedTask);
-
-      // Redirect to task detail page on success
-      router.replace(`/tasks/${task.id}`); // Use replace to avoid going back to edit on back button
-      router.back(); // Go back to the previous page
-      router.refresh(); // Refresh the server components
+        // Redirect to task detail page on success
+        router.replace(`/tasks/${task.id}`); // Use replace to avoid going back to edit on back button
+        router.back(); // Go back to the previous page
+        router.refresh(); // Refresh the server components
+      })
     } catch (error) {
       console.error('Error updating task:', error);
       setError(error instanceof Error ? error.message : 'Failed to update task');

@@ -15,20 +15,6 @@ function getBaseUrl() {
         : 'http://localhost:3000';
 }
 
-async function getTask(taskId: string) {
-    try {
-        const response = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
-            next: { revalidate: 30 },
-        });
-        if (!response.ok) return null;
-        const data = await response.json();
-        return data.task;
-    } catch (error) {
-        console.error('Error fetching task:', error);
-        return null;
-    }
-}
-
 async function getProjects() {
     try {
         const response = await fetch(`${getBaseUrl()}/api/projects`, {
@@ -45,12 +31,11 @@ async function getProjects() {
 
 export default async function TaskEditPage({ params }: TaskEditPageProps) {
   const { id } = await params;
-  const [task, projects] = await Promise.all([
-    getTask(id),
+  const [projects] = await Promise.all([
     getProjects()
   ]);
 
-  if (!task) {
+  if (!id) {
     notFound();
   }
 
@@ -65,7 +50,7 @@ export default async function TaskEditPage({ params }: TaskEditPageProps) {
       </div>
 
       {/* Edit Form */}
-      <TaskEditForm task={task} projects={projects} />
+      <TaskEditForm taskId={id} projects={projects} />
     </div>
   );
 }

@@ -9,7 +9,7 @@ interface TaskManagerProps {
 }
 
 export function TaskManager({ project }: TaskManagerProps) {
-  console.log('Project set in TaskManager - ', project)
+  // console.log('Project set in TaskManager - ', project)
   return (
     <div className="bg-white rounded-lg shadow">
         <TaskFormAccordion projectId={project.id} projects={[project]} />

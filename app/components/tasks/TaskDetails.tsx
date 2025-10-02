@@ -36,7 +36,7 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
       isDone: !taskState.isDone,
       lastModifiedDateTime: new Date()
     };
-    
+
     setTaskState(updatedTask);
     updateTask(
       updatedTask,
@@ -69,7 +69,7 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
             {taskState.title}
           </h2>
         </div>
-        
+
         <span className={`px-3 py-1 rounded-full text-sm font-medium ${
           taskState.isDone 
             ? 'bg-green-100 text-green-800' 
@@ -132,14 +132,14 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
               {new Date(taskState.creationDateTime).toLocaleDateString()}
             </p>
           </div>
-          
+
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-1">Last Updated</h3>
             <p className="text-gray-900">
               {new Date(taskState.lastModifiedDateTime).toLocaleDateString()}
             </p>
           </div>
-          
+
           {taskState.ordinal !== null && taskState.ordinal !== undefined && (
             <div>
               <h3 className="text-sm font-medium text-gray-500 mb-1">Priority</h3>

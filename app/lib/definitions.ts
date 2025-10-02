@@ -4,7 +4,7 @@ export type Task = {
     title: string;
     description: string | null;
     isDone: boolean;
-    ordinal: number;
+    ordinal: number | null;
     expectedCompletionDateTime: Date | null;
     // complexityRating?: number; // 1-5
     // effortRating?: number; // 1-5
