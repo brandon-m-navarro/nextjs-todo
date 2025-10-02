@@ -4,7 +4,7 @@ import { Task } from '@/app/lib/definitions';
 
 interface TaskContextType {
   tasks: Task[];
-  addTask: (task: Task) => void;
+  addTask: (task: Task, callback?: (response?: Response) => void) => void;
   updateTask: (task: Task, callback?: (response?: Response) => void) => void;
   deleteTask: (taskId: string, callback?: (response?: Response) => void) => void;
   setInitialTasks: (tasks: Task[]) => void;
@@ -29,8 +29,42 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
 //     setTasks(initialTasks);
 //   }, [initialTasks]);
 
-  const addTask = (task: Task) => {
+  const addTask = async (task: Task, callback?: Function) => {
     setTasks((prevTasks) => [task, ...prevTasks]);
+
+    // try {
+    //   const response = await fetch(`/api/tasks/${task.id}`, {
+    //     method: 'PUT',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       projectId: task.projectId,
+    //       id: task.id,
+    //       title: task.title,
+    //       description: task.description || null,
+    //       is_done: task.isDone,
+    //       project_id: task.projectId,
+    //       ordinal: task.ordinal ? Number(task.ordinal) : null,
+    //       expected_completion_date_time: task.expectedCompletionDateTime 
+    //         ? new Date(task.expectedCompletionDateTime)
+    //         : null,
+    //       creation_date_time: new Date(),
+    //       last_modified_date_time: new Date()
+    //     }),
+    //   });
+
+    //   if (!response.ok) {
+    //     const errorData = await response.json();
+    //     throw new Error(errorData.error || 'Failed to update task');
+    //   }
+
+    //   if (callback) {
+    //     await callback(response);
+    //   }
+    // } catch (error) {
+    //   throw new Error('Failed to add task!' + error);
+    // }
   };
 
   const updateTask = async (updatedTask: Task, callback?: Function) => {

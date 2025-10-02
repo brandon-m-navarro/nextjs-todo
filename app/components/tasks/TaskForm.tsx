@@ -8,8 +8,9 @@ import { Button } from "../ui/button";
 import SpinnerComponent  from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
-import { Project } from "@/app/lib/definitions";
-import { Task } from "@/app/lib/definitions";
+import { Project, Task } from "@/app/lib/definitions";
+import { useRouter } from 'next/navigation';
+import { useTaskContext } from "@/app/contexts/TaskContext";
 
 interface TaskFormProps {
   projects: Project[];
@@ -25,6 +26,8 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const [selectedProjectId, setSelectedProjectId] = useState<string>(initialProjectId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const { addTask } = useTaskContext()
+  const router = useRouter();
 
   const {
     spinnerState,
@@ -77,6 +80,7 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
           hideSpinner();
           setTimeout(() => {
             resetSpinner();
+            // router.refresh();
           }, 300);
         }, 1000);
       }, 500);
@@ -84,6 +88,9 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
       // Construct Task object from response
       const data = await response.json();
       const newTask = data.task;
+
+      // Update context
+      addTask(newTask);
 
       // Run callback if specfied
       onTaskCreated?.(newTask);
@@ -128,20 +135,9 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
       className="text-black w-full max-w-6xl mx-auto"
     >
       <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-        {/* Animation Section - Visible on larger screens */}
-        {/* <div className="hidden lg:flex flex-col items-center justify-center flex-shrink-0">
-          <div className="w-[250px] h-[250px]">
-            <SimpleAnimation />
-          </div>
-        </div> */}
 
         {/* Form Section */}
         <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-6 pt-8 w-full">
-          {/* <div className="flex lg:hidden justify-center mb-6">
-            <div className="w-[150px] h-[150px]">
-              <SpinnerComponent spinnerState={spinnerState} />
-            </div>
-          </div> */}
 
           <div className="flex align-center mb-6">
             <h1 className={`${manrope.className} text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}>

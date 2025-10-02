@@ -15,9 +15,7 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (contentRef.current) {
-      setContentHeight(isOpen ? contentRef.current.scrollHeight : 0);
-    }
+    resize();
   }, [isOpen]);
 
   const resize = function () {
@@ -45,7 +43,7 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
           <TaskForm 
             projects={projects} 
             initialProjectId={projectId}
-            onTaskCreated={() => {
+            onTaskCreated={(task) => {
               setTimeout(() => { // Delay to let success animation
                 setIsOpen(false);
               },750)}
