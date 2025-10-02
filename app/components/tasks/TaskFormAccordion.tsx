@@ -46,7 +46,7 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
             projects={projects} 
             initialProjectId={projectId}
             onTaskCreated={() => {
-              setTimeout(() => { // Delay to let success animation
+              setTimeout(() => { // Delay to let success animation finish
                 setIsOpen(false);
               },750)}
             }

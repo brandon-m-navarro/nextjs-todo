@@ -101,9 +101,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           <div className="flex items-center space-x-3">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: taskState.projectColor || '#3B82F6' }}
+              style={{ backgroundColor: /*taskState.projectColor ||*/ '#3B82F6' }}
             />
-            <span className="text-gray-700">{taskState.projectName}</span>
+            {/* <span className="text-gray-700">{taskState.projectName}</span> */}
             <Link
               href={`/projects/${taskState.projectId}`}
               className="text-blue-500 hover:text-blue-700 text-sm"
