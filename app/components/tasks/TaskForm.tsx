@@ -9,7 +9,6 @@ import SpinnerComponent  from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
 import { Project, Task } from "@/app/lib/definitions";
-import { useRouter } from 'next/navigation';
 import { useTaskContext } from "@/app/contexts/TaskContext";
 
 interface TaskFormProps {
@@ -27,7 +26,6 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const { addTask } = useTaskContext()
-  const router = useRouter();
 
   const {
     spinnerState,

@@ -23,8 +23,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
 }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
-  const addTask = async (task: Task, callback?: Function) => {
+  const addTask = async (task: Task, callback?: (response?: Response) => void) => {
     setTasks((prevTasks) => [task, ...prevTasks]);
+    callback?.();
 
     // try {
     //   const response = await fetch(`/api/tasks/${task.id}`, {
@@ -61,7 +62,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     // }
   };
 
-  const updateTask = async (updatedTask: Task, callback?: Function) => {
+  const updateTask = async (updatedTask: Task, callback?: (response?: Response) => void) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
@@ -90,14 +91,14 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       }
 
       if (callback) {
-        await callback(response);
+        callback(response);
       }
     } catch (error) {
-        throw new Error('Failed to update task');
+        throw new Error('Failed to update task - ' + error);
     }
   };
 
-  const deleteTask = async (taskId: string, callback?: Function) => {
+  const deleteTask = async (taskId: string, callback?: (response?: Response) => void) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
 
     try {
@@ -114,10 +115,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       }
 
       if (callback) {
-        await callback(response);
+        callback(response);
       }
     } catch (error) {
-        throw new Error('Failed to delete task');
+        throw new Error('Failed to delete task - ' + error);
     }
   };
 

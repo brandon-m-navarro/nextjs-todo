@@ -6,7 +6,7 @@ interface ProjectContextType {
     projects: Project[];
     addProject: (project: Project, callback?: (response?: Response) => void) => void;
     updateProject: (project: Project, callback?: (response?: Response) => void) => void;
-    deleteProject: (project: Project, callback?: (response?: Response) => void) => void;
+    deleteProject: (project: string, callback?: (response?: Response) => void) => void;
     getProjectById: (id: string) => Project | undefined;
 }
 
@@ -25,13 +25,21 @@ export const ProjectProvider:React.FC<ProjectProviderProps> = ({
     const [projects, setProjects] = useState<Project[]>(initialProjects);
     
     const addProject = (project: Project) => {
-        setProjects((prevProjects)=>[project, ...projects])
+        setProjects((prevProjects)=>[project, ...prevProjects]);
+
+        // Server/Route/DB to persist
     }
-    const updateProject = (project: Project) => {
-        setProjects((prevProjects)=>[project, ...projects])
+    const updateProject = (updatedProject: Project) => {
+        setProjects((prevProjects) =>
+            prevProjects.map((project) => (project.id === updatedProject.id ? updatedProject : project))
+        );
+
+        // Server/Route/DB to persist
     }
-    const deleteProject = (project: Project) => {
-        setProjects((prevProjects)=>[project, ...projects])
+    const deleteProject = (projectId: string) => {
+        setProjects((prevProjects) => prevProjects.filter((project) => project.id !== projectId));
+
+        // Server/Route/DB to persist
     }
     const getProjectById = (id: string) => {
         return projects.find(project => project.id === id);
