@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTaskContext } from '@/app/contexts/TaskContext';
+import { useRouter } from 'next/navigation';
 
 interface TaskDetails {
   id: string;
@@ -24,6 +25,7 @@ interface TaskDetailProps {
 
 export function TaskDetail({ taskId }: TaskDetailProps) {
   const { updateTask, deleteTask, getTaskById } = useTaskContext();
+  const router = useRouter();
   const task = getTaskById(taskId);
   const [taskState, setTaskState] = useState<TaskDetails>(task);
 
@@ -45,9 +47,10 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   // Handle delete
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this task?')) {
-      deleteTask(taskState.id);
-      // Might want to redirect after deletion
-      // router.push('/projects/' + task.projectId);
+      deleteTask(taskState.id, (res) => {
+        console.log('Deleted! - ', res);
+        router.back();
+      });
     }
   };
 

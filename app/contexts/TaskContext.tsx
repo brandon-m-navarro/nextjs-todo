@@ -5,8 +5,8 @@ import { Task } from '@/app/lib/definitions';
 interface TaskContextType {
   tasks: Task[];
   addTask: (task: Task) => void;
-  updateTask: (task: Task, callback?: (response?: Response) => void) => void; // Add callback type
-  deleteTask: (taskId: string) => void;
+  updateTask: (task: Task, callback?: (response?: Response) => void) => void;
+  deleteTask: (taskId: string, callback?: (response?: Response) => void) => void;
   setInitialTasks: (tasks: Task[]) => void;
   getTaskById: (taskId: string) => Task | undefined;
 }
@@ -69,8 +69,28 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     }
   };
 
-  const deleteTask = (taskId: string) => {
+  const deleteTask = async (taskId: string, callback?: Function) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update task');
+      }
+
+      if (callback) {
+        await callback(response);
+      }
+    } catch (error) {
+        throw new Error('Failed to delete task');
+    }
   };
 
   const setInitialTasks = (initialTasks: Task[]) => {
