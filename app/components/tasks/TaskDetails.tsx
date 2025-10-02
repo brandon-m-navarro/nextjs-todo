@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTaskContext } from '@/app/contexts/TaskContext';
 import { useRouter } from 'next/navigation';
 import { Task } from '@/app/lib/definitions';
+import { useProjectContext } from '@/app/contexts/ProjectContext';
 
 // interface TaskDetails {
 //   id: string;
@@ -26,10 +27,15 @@ interface TaskDetailProps {
 
 export function TaskDetail({ taskId }: TaskDetailProps) {
   const { updateTask, deleteTask, getTaskById } = useTaskContext();
+  const { getProjectById } = useProjectContext();
   const router = useRouter();
   const task = getTaskById(taskId);
+  
+  if (!task) throw Error('ERROR: Unable to find Task - ' + taskId);
 
-  if (!task) throw Error('ERROR: Unable to fund Task - ' + taskId);
+  const associatedProject = getProjectById(task?.projectId);
+
+  if (!associatedProject) throw Error('ERROR: Unable to find associated Project - ' + task.projectId);
 
   const [taskState, setTaskState] = useState<Task>(task);
 
@@ -101,9 +107,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           <div className="flex items-center space-x-3">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: /*taskState.projectColor ||*/ '#3B82F6' }}
+              style={{ backgroundColor: '#' + associatedProject.hexColor || '#3B82F6' }}
             />
-            {/* <span className="text-gray-700">{taskState.projectName}</span> */}
+            <span className="text-gray-700">{associatedProject.name}</span>
             <Link
               href={`/projects/${taskState.projectId}`}
               className="text-blue-500 hover:text-blue-700 text-sm"
