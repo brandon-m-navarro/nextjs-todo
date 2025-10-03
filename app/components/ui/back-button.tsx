@@ -5,15 +5,25 @@ import { useRouter } from 'next/navigation';
 
 interface BackButtonProps {
     text?: string;
+    overrideRouter?: string | null;
 }
 
 export function BackButton(backButtonProps: BackButtonProps) {
   const router = useRouter();
-  const { text = '' } = backButtonProps || {};
+  const { text = '', overrideRouter = null } = backButtonProps || {};
+
+  const onClickHandler = function () {
+    if (overrideRouter !== null) {
+      router.replace(overrideRouter);
+      router.refresh();
+    } else {
+      router.back();
+    }
+  }
 
   return (
     <button
-      onClick={() => router.back()}
+      onClick={onClickHandler}
       className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 transition-colors group cursor-pointer"
     >
       <svg 

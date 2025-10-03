@@ -122,7 +122,7 @@ export default async function TasksPage({
     <div className="max-w-6xl mx-auto text-black">
       {/* Header */}
       <div className="mb-8">
-        <BackButton text="Dashboard" />
+        <BackButton text="Dashboard" overrideRouter={'/'} />
 
         <div className="flex justify-between items-center">
           <div>
