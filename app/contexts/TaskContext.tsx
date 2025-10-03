@@ -8,6 +8,7 @@ interface TaskContextType {
   updateTask: (task: Task, callback?: (response?: Response) => void) => void;
   deleteTask: (taskId: string, callback?: (response?: Response) => void) => void;
   getTaskById: (taskId: string) => Task | undefined;
+  getTasksForProject: (projectId: string) => Task[];
 }
 
 interface TaskProviderProps {
@@ -126,9 +127,13 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   const getTaskById = (taskId: string): Task | undefined => {
     return tasks.find(task => task.id === taskId);
   }
+  
+  const getTasksForProject = (projectId: string): Task[] => {
+    return tasks.filter((task) => {return task.projectId == projectId})
+  }
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask, getTaskById }}>
+    <TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask, getTaskById, getTasksForProject }}>
       {children}
     </TaskContext.Provider>
   );
