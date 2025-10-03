@@ -99,8 +99,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   };
 
   const deleteTask = async (taskId: string, callback?: (response?: Response) => void) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'DELETE',
@@ -113,6 +111,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to update task');
       }
+
+      // Update context
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
 
       if (callback) {
         callback(response);

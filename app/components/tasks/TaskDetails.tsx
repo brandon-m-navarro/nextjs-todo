@@ -57,9 +57,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   // Handle delete
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this task?')) {
+      router.back();
       deleteTask(taskState.id, (res) => {
         console.log('Deleted! - ', res);
-        router.back();
       });
     }
   };
