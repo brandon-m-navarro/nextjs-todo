@@ -6,20 +6,7 @@ import { useTaskContext } from '@/app/contexts/TaskContext';
 import { useRouter } from 'next/navigation';
 import { Task } from '@/app/lib/definitions';
 import { useProjectContext } from '@/app/contexts/ProjectContext';
-
-// interface TaskDetails {
-//   id: string;
-//   title: string;
-//   description: string | null;
-//   isDone: boolean;
-//   ordinal: number;
-//   expectedCompletionDateTime: Date | null;
-//   creationDateTime: Date;
-//   lastModifiedDateTime: Date;
-//   projectId: string;
-//   // projectName: string;
-//   // projectColor?: string | null;
-// }
+import { Project } from '@/app/lib/definitions';
 
 interface TaskDetailProps {
   taskId: string;
@@ -33,7 +20,7 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   
   if (!task) throw Error('ERROR: Unable to find Task - ' + taskId);
 
-  const associatedProject = getProjectById(task?.projectId);
+  const associatedProject: Project | undefined = getProjectById(task?.projectId);
 
   if (!associatedProject) throw Error('ERROR: Unable to find associated Project - ' + task.projectId);
 
