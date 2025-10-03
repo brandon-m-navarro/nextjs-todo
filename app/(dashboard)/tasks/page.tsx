@@ -92,28 +92,28 @@ export default async function TasksPage({
   });
 
   // Apply sorting
-  // const sortedTasks = filteredTasks.sort((a: Task, b: Task) => {
-  //   switch (resolvedSearchParams?.sort) {
-  //     case "oldest":
-  //       return (
-  //         new Date(a.creationDateTime).getTime() -
-  //         new Date(b.creationDateTime).getTime()
-  //       );
-  //     case "due-date":
-  //       if (!a.expectedCompletionDateTime) return 1;
-  //       if (!b.expectedCompletionDateTime) return -1;
-  //       return (
-  //         new Date(a.expectedCompletionDateTime).getTime() -
-  //         new Date(b.expectedCompletionDateTime).getTime()
-  //       );
-  //     case "newest":
-  //     default:
-  //       return (
-  //         new Date(b.creationDateTime).getTime() -
-  //         new Date(a.creationDateTime).getTime()
-  //       );
-  //   }
-  // });
+  const sortedTasks = filteredTasks.sort((a: Task, b: Task) => {
+    switch (resolvedSearchParams?.sort) {
+      case "oldest":
+        return (
+          new Date(a.creationDateTime).getTime() -
+          new Date(b.creationDateTime).getTime()
+        );
+      case "due-date":
+        if (!a.expectedCompletionDateTime) return 1;
+        if (!b.expectedCompletionDateTime) return -1;
+        return (
+          new Date(a.expectedCompletionDateTime).getTime() -
+          new Date(b.expectedCompletionDateTime).getTime()
+        );
+      case "newest":
+      default:
+        return (
+          new Date(b.creationDateTime).getTime() -
+          new Date(a.creationDateTime).getTime()
+        );
+    }
+  });
 
   const activeTasks = allTasks.filter((task: Task) => !task.isDone);
   const completedTasks = allTasks.filter((task: Task) => task.isDone);
@@ -189,8 +189,8 @@ export default async function TasksPage({
           </h2>
         </div>
 
-        {filteredTasks.length > 0 ? (
-          <TaskList />
+        {sortedTasks.length > 0 ? (
+          <TaskList tasksToShow={sortedTasks} />
         ) : (
           <div className="p-12 text-center">
             <div className="text-gray-400 text-6xl mb-4">📝</div>
