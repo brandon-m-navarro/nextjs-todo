@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import TaskForm from './TaskForm';
-import { Project } from '@/app/lib/definitions';
 
 interface TaskFormAccordionProps {
   projectId: string;
