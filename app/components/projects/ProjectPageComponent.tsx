@@ -1,86 +1,66 @@
-/*
- * ProjectPage (/projects/[projectId]) needs to be asynchronous because its a dynamic
- * route (uses [ ] in route/path). This prevents it from being a client-component,
- * which is nescessary to use contexts (ProjectContext). To get around this, this
- * component needs to be made to encapsulate all client logic.
- */
-
-'use client';
+"use client";
 import { TaskManager } from "@/app/components/tasks/TaskManager";
 import { BackButton } from "@/app/components/ui/back-button";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
+import { Accordion } from "../ui/accordion";
 
 interface ProjectPageComponentProps {
-    projectId: string;
+  projectId: string;
 }
 
-// async function getProject(projectId: string) {
-//   try {
-//     const baseUrl =
-//       process.env.NODE_ENV === "production"
-//         ? "https://nextjs-todo-lake.vercel.app"
-//         : "http://localhost:3000";
+export default function ProjectPageComponent({
+  projectId,
+}: ProjectPageComponentProps) {
+  const { getProjectById } = useProjectContext();
+  const project = getProjectById(projectId);
 
-//     const response = await fetch(`${baseUrl}/api/projects/${projectId}`, {
-//       next: { revalidate: 60 },
-//     });
+  if (!project) throw new Error("Unable to get project - " + projectId);
 
-//     if (!response.ok) {
-//       return null;
-//     }
+  return (
+    <div className="p-8 text-black">
+      <BackButton text="All Projects" />
+      <Accordion
+        render={({ isOpen, toggle, contentHeight, contentRef }) => (
+          <>
+            <div
+              className="p-4 cursor-pointer flex justify-between items-center bg-blue-50"
+              onClick={toggle}
+            >
+              <h3 className="font-semibold text-blue-800">Custom Header</h3>
+              <span className="transform transition-transform duration-300">
+                {isOpen ? "▼" : "►"}
+              </span>
+            </div>
 
-//     const data = await response.json();
-//     return data.project;
-//   } catch (error) {
-//     console.error("Error fetching project:", error);
-//     return null;
-//   }
-// }
-
-// async function getProjectTasks(projectId: string) {
-//   try {
-//     const baseUrl =
-//       process.env.NODE_ENV === "production"
-//         ? "https://nextjs-todo-lake.vercel.app"
-//         : "http://localhost:3000";
-
-//     const response = await fetch(`${baseUrl}/api/projects/${projectId}/tasks`, {
-//       next: { revalidate: 30 },
-//     });
-
-//     if (!response.ok) {
-//       return [];
-//     }
-
-//     const data = await response.json();
-//     return data.tasks || [];
-//   } catch (error) {
-//     console.error("Error fetching tasks:", error);
-//     return [];
-//   }
-// }
-
-export default function ProjectPageComponent({ projectId }: ProjectPageComponentProps) {
-    const { getProjectById } = useProjectContext();
-    const project = getProjectById(projectId);
-
-    if (!project) throw new Error('Unabale to get project - ' + projectId);
-
-    return (
-        <div className="p-8 text-black">
-        <BackButton text="All Projects" />
-
-        {/* Project Header */}
-        <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">Project: {project.name}</h1>
+            <div
+              className="overflow-hidden transition-all duration-500 ease-in-out"
+              style={{ height: isOpen ? `${contentHeight}px` : "0px" }}
+            >
+              <div ref={contentRef} className="p-6 border-t border-gray-200">
+                <p>Your animated content here!</p>
+              </div>
+            </div>
+          </>
+        )}
+      />
+      {/* Project Header - No ref needed for static content
+      <Accordion>
+        {(isOpen, toggle, open, close) => (
+                <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold mb-2">Project: {project.name}</h1>
             {project.description && (
-            <p className="text-gray-600 text-sm max-w-md">
+              <p className="text-gray-600">
                 {project.description}
-            </p>
+              </p>
             )}
+          </div>
         </div>
-        {/* Task Manager */}
-        <TaskManager project={project} />
-        </div>
-    );
+        )}
+      </Accordion> */}
+
+      {/* Task Manager */}
+      <TaskManager project={project} />
+    </div>
+  );
 }
