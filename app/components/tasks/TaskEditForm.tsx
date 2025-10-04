@@ -1,25 +1,20 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Task } from '@/app/lib/definitions';
+import { Task, Project } from '@/app/lib/definitions';
 import { useTaskContext } from '@/app/contexts/TaskContext';
-
-interface Project {
-  id: string;
-  name: string;
-  hexColor?: string;
-}
+import { useProjectContext } from '@/app/contexts/ProjectContext';
 
 interface TaskEditFormProps {
   taskId: string;
-  projects: Project[];
 }
 
-export function TaskEditForm({ taskId, projects }: TaskEditFormProps) {
+export function TaskEditForm({ taskId }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const { getTaskById, updateTask } = useTaskContext();
+  const { projects } = useProjectContext();
   const task = getTaskById(taskId);
 
   if (!task) throw new Error('Could not get task! - ' + taskId);

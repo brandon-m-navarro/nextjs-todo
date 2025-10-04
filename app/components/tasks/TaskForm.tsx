@@ -10,15 +10,15 @@ import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
 import { Project, Task } from "@/app/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
+import { useProjectContext } from "@/app/contexts/ProjectContext";
 
 interface TaskFormProps {
-  projects: Project[];
   initialProjectId?: string;
   onTaskCreated?: (task: Task) => void;
   onError?: () => void;
 }
 
-export default function TaskForm({ projects, initialProjectId = '', onTaskCreated, onError }: TaskFormProps) {
+export default function TaskForm({ initialProjectId = '', onTaskCreated, onError }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -26,6 +26,7 @@ export default function TaskForm({ projects, initialProjectId = '', onTaskCreate
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const { addTask } = useTaskContext()
+  const { projects } = useProjectContext();
 
   const {
     spinnerState,

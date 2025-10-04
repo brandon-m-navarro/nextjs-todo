@@ -7,31 +7,8 @@ interface NewTaskPageProps {
   }>;
 }
 
-function getBaseUrl() {
-    return process.env.NODE_ENV === 'production'
-        ? 'https://nextjs-todo-lake.vercel.app'
-        : 'http://localhost:3000';
-}
-
-async function getProjects() {
-    try {
-        const response = await fetch(`${getBaseUrl()}/api/projects`, {
-            next: { revalidate: 3600 },
-        });
-        if (!response.ok) {
-            return [];
-        }
-        const data = await response.json();
-        return data.projects || data.data || [];
-    } catch (error) {
-        console.error('Error fetching projects:', error);
-        return [];
-    }
-}
-
 export default async function NewTaskPage({ params }: NewTaskPageProps) {
   const resolvedParams = await params;
-  const projects = await getProjects();
 
   // Optional: If you want to pre-select a project from URL params
   const initialProjectId = resolvedParams.id || '';
@@ -49,7 +26,6 @@ export default async function NewTaskPage({ params }: NewTaskPageProps) {
       {/* Task Form */}
       <div className="bg-white rounded-lg shadow p-6">
         <TaskForm 
-          projects={projects} 
           initialProjectId={initialProjectId} 
         />
       </div>
