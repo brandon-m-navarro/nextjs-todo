@@ -6,10 +6,9 @@ import { Project } from '@/app/lib/definitions';
 
 interface TaskFormAccordionProps {
   projectId: string;
-  projects: Project[];
 }
 
-export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProps) {
+export function TaskFormAccordion({ projectId }: TaskFormAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -43,7 +42,6 @@ export function TaskFormAccordion({ projectId, projects }: TaskFormAccordionProp
       >
         <div ref={contentRef} className="p-6 border-t border-gray-200">
           <TaskForm 
-            projects={projects} 
             initialProjectId={projectId}
             onTaskCreated={() => {
               setTimeout(() => { // Delay to let success animation finish
