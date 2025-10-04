@@ -37,8 +37,10 @@ export const ProjectProvider:React.FC<ProjectProviderProps> = ({
         // Server/Route/DB to persist
     }
     const deleteProject = (projectId: string) => {
+        console.log('Deleting project with ID:', projectId);
         setProjects((prevProjects) => prevProjects.filter((project) => project.id !== projectId));
 
+        console.log('Project deleted. Current projects:', projects);
         // Server/Route/DB to persist
     }
     const getProjectById = (id: string) => {

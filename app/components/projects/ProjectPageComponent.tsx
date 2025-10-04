@@ -3,7 +3,9 @@ import { TaskManager } from "@/app/components/tasks/TaskManager";
 import { BackButton } from "@/app/components/ui/back-button";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { Accordion } from "../ui/accordion";
-
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 interface ProjectPageComponentProps {
   projectId: string;
 }
@@ -11,14 +13,42 @@ interface ProjectPageComponentProps {
 export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
+  const router = useRouter();
   const { getProjectById } = useProjectContext();
   const project = getProjectById(projectId);
 
   if (!project) throw new Error("Unable to get project - " + projectId);
 
+  useEffect(() => {
+    // Only redirect if project doesn't exist after context is loaded
+    if (!project) {
+      router.push("/projects");
+    }
+  }, [project, router]);
+
+  // Show loading state
+  if (!project) {
+    return (
+      <div className="p-8 text-black">
+        <BackButton text="All Projects" />
+        <div>Loading project...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 text-black">
-      <BackButton text="All Projects" />
+      <div className="relative flex">
+        <BackButton text="All Projects" />
+        <Button
+          onClick={() => {
+            router.push(`/projects/${project.id}/edit`);
+          }}
+          className="text-lg w-full lg:w-auto min-w-[200px] h-12 cursor-pointer flex items-center justify-center gap-2 ml-auto mb-6 bg-amber-600!"
+        >
+          Edit Project
+        </Button>
+      </div>
       <Accordion
         render={({ isOpen, toggle, contentHeight, contentRef }) => (
           <>
@@ -26,7 +56,9 @@ export default function ProjectPageComponent({
               className="p-4 cursor-pointer flex justify-between items-center bg-blue-50"
               onClick={toggle}
             >
-              <h3 className="font-semibold text-blue-800">Custom Header</h3>
+              <h1 className="text-2xl font-bold mb-2">
+                Project: {project.name}
+              </h1>
               <span className="transform transition-transform duration-300">
                 {isOpen ? "▼" : "►"}
               </span>
@@ -37,27 +69,14 @@ export default function ProjectPageComponent({
               style={{ height: isOpen ? `${contentHeight}px` : "0px" }}
             >
               <div ref={contentRef} className="p-6 border-t border-gray-200">
-                <p>Your animated content here!</p>
+                {project.description && (
+                  <p className="text-gray-600">{project.description}</p>
+                )}
               </div>
             </div>
           </>
         )}
       />
-      {/* Project Header - No ref needed for static content
-      <Accordion>
-        {(isOpen, toggle, open, close) => (
-                <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-2">Project: {project.name}</h1>
-            {project.description && (
-              <p className="text-gray-600">
-                {project.description}
-              </p>
-            )}
-          </div>
-        </div>
-        )}
-      </Accordion> */}
 
       {/* Task Manager */}
       <TaskManager project={project} />
