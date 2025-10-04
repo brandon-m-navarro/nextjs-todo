@@ -7,13 +7,6 @@ import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { useSearchParams } from "next/navigation";
 
-// Define the search params type
-interface SearchParams {
-  project?: string;
-  status?: "all" | "active" | "completed";
-  sort?: "newest" | "oldest" | "due-date";
-}
-
 export default function TasksPageComponent() {
   const searchParams = useSearchParams();
 

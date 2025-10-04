@@ -2,16 +2,7 @@ import TasksPageComponent from "@/app/components/tasks/TasksPageComponent";
 import { BackButton } from "@/app/components/ui/back-button";
 import Link from "next/link";
 
-// Define the search params type
-interface SearchParams {
-  project?: string;
-  status?: "all" | "active" | "completed";
-  sort?: "newest" | "oldest" | "due-date";
-}
-
-export default function TasksPage({searchParams}: {
-  searchParams: SearchParams;
-}) {
+export default function TasksPage() {
   return (
     <div className="mb-8">
       <BackButton text="Dashboard" overrideRouter={'/'} />

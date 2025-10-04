@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Task, Project } from '@/app/lib/definitions';
+import { Task } from '@/app/lib/definitions';
 import { useTaskContext } from '@/app/contexts/TaskContext';
 import { useProjectContext } from '@/app/contexts/ProjectContext';
 

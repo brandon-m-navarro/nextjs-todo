@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import SpinnerComponent  from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
-import { Project, Task } from "@/app/lib/definitions";
+import { Task } from "@/app/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 
