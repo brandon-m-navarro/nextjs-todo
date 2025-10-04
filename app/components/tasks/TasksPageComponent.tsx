@@ -10,41 +10,36 @@ import { useSearchParams } from "next/navigation";
 export default function TasksPageComponent() {
   const searchParams = useSearchParams();
 
-  // Get individual params with proper typing
-  const project = searchParams.get('project') || undefined;
-  const status = searchParams.get('status') as "all" | "active" | "completed" | undefined;
-  const sort = searchParams.get('sort') as "newest" | "oldest" | "due-date" | undefined;
+  // Get individual params with safety checks
+  const project = searchParams?.get('project') || undefined;
+  const status = searchParams?.get('status') as "all" | "active" | "completed" | undefined;
+  const sort = searchParams?.get('sort') as "newest" | "oldest" | "due-date" | undefined;
 
-  const resolvedSearchParams = { project, status, sort };
-
-  // Fetch data from contexts
+  // Use individual params directly instead of creating a new object
   const { tasks } = useTaskContext();
   const { projects } = useProjectContext();
 
-  // Apply filters
+  // Apply filters - use individual params directly
   const filteredTasks = tasks.filter((task: Task) => {
     // Project filter
-    if (
-      resolvedSearchParams?.project &&
-      task.projectId !== resolvedSearchParams.project
-    ) {
+    if (project && task.projectId !== project) {
       return false;
     }
 
     // Status filter
-    if (resolvedSearchParams?.status === "active" && task.isDone) {
+    if (status === "active" && task.isDone) {
       return false;
     }
-    if (resolvedSearchParams?.status === "completed" && !task.isDone) {
+    if (status === "completed" && !task.isDone) {
       return false;
     }
 
     return true;
   });
 
-  // Apply sorting
-  const sortedTasks = filteredTasks.sort((a: Task, b: Task) => {
-    switch (resolvedSearchParams?.sort) {
+  // Apply sorting - use individual params directly
+  const sortedTasks = [...filteredTasks].sort((a: Task, b: Task) => {
+    switch (sort) {
       case "oldest":
         return (
           new Date(a.creationDateTime).getTime() -
@@ -69,9 +64,11 @@ export default function TasksPageComponent() {
   const activeTasks = tasks.filter((task: Task) => !task.isDone);
   const completedTasks = tasks.filter((task: Task) => task.isDone);
 
+  // Find project name safely
+  const currentProject = project ? projects.find((p: Project) => p.id === project) : null;
+
   return (
     <div className="max-w-6xl mx-auto text-black">
-
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
@@ -97,9 +94,9 @@ export default function TasksPageComponent() {
         <h3 className="text-lg font-semibold mb-4">Filters</h3>
         <TaskFilters
           projects={projects}
-          currentProject={resolvedSearchParams?.project}
-          currentStatus={resolvedSearchParams?.status}
-          currentSort={resolvedSearchParams?.sort}
+          currentProject={project}
+          currentStatus={status}
+          currentSort={sort}
         />
       </div>
 
@@ -108,14 +105,9 @@ export default function TasksPageComponent() {
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold">
             Tasks ({filteredTasks.length})
-            {resolvedSearchParams?.project && (
+            {project && currentProject && (
               <span className="text-gray-600 text-lg font-normal ml-2">
-                in{" "}
-                {
-                  projects.find(
-                    (p: Project) => p.id === resolvedSearchParams.project
-                  )?.name
-                }
+                in {currentProject.name}
               </span>
             )}
           </h2>

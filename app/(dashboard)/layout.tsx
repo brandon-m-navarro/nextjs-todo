@@ -1,6 +1,5 @@
 // app/projects/layout.tsx
-import { TaskProvider } from '@/app/contexts/TaskContext';
-import { ProjectProvider } from '@/app/contexts/ProjectContext';
+import ProvidersWrapper from '@/app/(dashboard)/providers-wrapper';
 
 async function getAllTasks() {
   try {
@@ -59,10 +58,8 @@ export default async function ProjectsLayout({
   const projects = await getAllProjects();
   
   return (
-    <ProjectProvider initialProjects={projects}>
-      <TaskProvider initialTasks={tasks}>
-        {children}
-      </TaskProvider>
-    </ProjectProvider>
+    <ProvidersWrapper initialTasks={tasks} initialProjects={projects}>
+      {children}
+    </ProvidersWrapper>
   );
 }
