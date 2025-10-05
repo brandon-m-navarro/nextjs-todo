@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/app/lib/definitions";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
@@ -12,18 +12,58 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [error, setError] = useState("");
   const { getProjectById, updateProject, deleteProject } = useProjectContext();
   const project = getProjectById(projectId);
 
-  if (!project) throw new Error("Could not get project! - " + projectId);
-
   const [formData, setFormData] = useState({
-    name: project.name,
-    description: project.description || "",
-    hexColor: project.hexColor || "",
-    icon: project.icon || "",
+    name: project?.name || "",
+    description: project?.description || "",
+    hexColor: project?.hexColor || "",
+    icon: project?.icon || "",
   });
+
+  // Initialize form data when project loads
+  useEffect(() => {
+    if (project) {
+      setFormData({
+        name: project.name,
+        description: project.description || "",
+        hexColor: project.hexColor || "",
+        icon: project.icon || "",
+      });
+    }
+  }, [project]);
+
+  // Prevent component from rendering if navigating away
+  if (isNavigating) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="text-center py-8">
+          <p className="text-gray-500">Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle project not found
+  if (!project) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="text-center py-8">
+          <p className="text-gray-500">Project not found.</p>
+          <button
+            onClick={() => router.push("/projects")}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Back to Projects
+          </button>
+        </div>
+      </div>
+    );
+  }
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,6 +92,8 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
       updateProject(updatedProject, (response) => {
         console.log("ASYNC: Project updated successfully", response);
 
+        setIsNavigating(true);
+
         // Redirect to project detail page on success
         router.replace(`/projects/${project.id}`);
         router.back(); // Go back to the previous page
@@ -72,16 +114,16 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
     setIsDeleting(true);
     setError("");
+    setIsNavigating(true); // Set navigating immediately
 
     try {
-      // Simulate async deletion
-    //   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      deleteProject(project.id);
+      // Use a small timeout to ensure navigation state is set
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Redirect to projects list on success
-      router.replace("/projects");
-      router.refresh(); // Refresh the server components
+      deleteProject(project.id, () => {
+        router.replace("/projects");
+      });
     } catch (error) {
       console.error("Error deleting project:", error);
       setError(

@@ -71,6 +71,9 @@ export const db = {
             await sql`
                 DELETE FROM projects WHERE id = ${id}
             `;
+            await sql`
+                DELETE FROM tasks WHERE project_id = ${id}
+            `;
             // Assume success if no error was thrown
             return true;
         },

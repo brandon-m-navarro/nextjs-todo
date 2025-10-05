@@ -51,3 +51,59 @@ export async function GET(
         );
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: RouteParams
+) {
+    try {
+        // Await the params first
+        const { projectId } = await params;
+
+        const deletedCount = await db.projects.delete(projectId);
+
+        console.log('Promise awaited: ', deletedCount);
+        // if (deletedCount === 0) {
+        //     return NextResponse.json(
+        //         { error: 'Project not found or already deleted' },
+        //         { status: 404 }
+        //     );
+        // }
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        return NextResponse.json(
+            { error: 'Failed to delete project' },
+            { status: 500 }
+        );
+    }
+}
+
+export async function PUT(
+    request: NextRequest,
+    { params }: RouteParams
+) {
+    try {
+        // Await the params first
+        const { projectId } = await params;
+        const body = await request.json();
+
+        const project = await db.projects.update(projectId, body);
+
+        if (!project) {
+            return NextResponse.json(
+                { error: 'Project not found' },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({ success: true, project });
+    } catch (error) {
+        console.error('Error updating project:', error);
+        return NextResponse.json(
+            { error: 'Failed to update project' },
+            { status: 500 }
+        );
+    }
+}

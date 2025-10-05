@@ -56,7 +56,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     //   }
 
     //   if (callback) {
-    //     await callback(response);
+    //     callback(response);
     //   }
     // } catch (error) {
     //   throw new Error('Failed to add task!' + error);
