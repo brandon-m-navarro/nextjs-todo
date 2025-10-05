@@ -96,7 +96,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
         // Redirect to project detail page on success
         router.replace(`/projects/${project.id}`);
-        router.back(); // Go back to the previous page
+        // router.back(); // Go back to the previous page
         router.refresh(); // Refresh the server components
       });
     } catch (error) {
@@ -122,7 +122,8 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
       // Redirect to projects list on success
       deleteProject(project.id, () => {
-        router.replace("/projects");
+        router.push("/projects");
+        router.refresh(); // Refresh the server components
       });
     } catch (error) {
       console.error("Error deleting project:", error);

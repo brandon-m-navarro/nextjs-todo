@@ -17,14 +17,15 @@ export default function ProjectPageComponent({
   const { getProjectById } = useProjectContext();
   const project = getProjectById(projectId);
 
-  if (!project) throw new Error("Unable to get project - " + projectId);
-
+  
   useEffect(() => {
     // Only redirect if project doesn't exist after context is loaded
     if (!project) {
       router.push("/projects");
     }
   }, [project, router]);
+
+  // if (!project) throw new Error("Unable to get project - " + projectId);
 
   // Show loading state
   if (!project) {
@@ -42,7 +43,7 @@ export default function ProjectPageComponent({
         <BackButton text="All Projects" />
         <Button
           onClick={() => {
-            router.push(`/projects/${project.id}/edit`);
+            router.replace(`/projects/${project.id}/edit`);
           }}
           className="text-lg w-full lg:w-auto min-w-[200px] h-12 cursor-pointer flex items-center justify-center gap-2 ml-auto mb-6 bg-amber-600!"
         >
