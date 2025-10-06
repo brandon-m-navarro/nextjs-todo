@@ -35,7 +35,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   const [projects, setProjects] = useState<Project[]>(initialProjects);
 
   const addProject = async (
-    project: Project,
+    project: Project
     // callback?: (response?: Response) => void
   ) => {
     setProjects((prevProjects) => [project, ...prevProjects]);
@@ -73,16 +73,30 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const updateProject = async (
     updatedProject: Project,
-    callback?: (response?: Response) => void
+    callback?: (response: Response) => void
   ) => {
-    setProjects((prevProjects) =>
-      prevProjects.map((project) =>
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
+    let rollback: (() => void) | null = null;
 
-    // Server/Route/DB to persist
     try {
+      // Store rollback function
+      rollback = () => {
+        setProjects((prevProjects) =>
+          prevProjects.map((project) =>
+            project.id === updatedProject.id
+              ? // Find the original project to restore it
+                prevProjects.find((p) => p.id === updatedProject.id) || project
+              : project
+          )
+        );
+      };
+
+      // Optimistic update
+      setProjects((prevProjects) =>
+        prevProjects.map((project) =>
+          project.id === updatedProject.id ? updatedProject : project
+        )
+      );
+
       const response = await fetch(`/api/projects/${updatedProject.id}`, {
         method: "PUT",
         headers: {
@@ -93,23 +107,36 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           description: updatedProject.description || null,
           hex_color: updatedProject.hexColor,
           icon: updatedProject.icon,
+          last_modified_date_time: new Date().toISOString(), // Don't forget this!
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update project");
+        throw new Error(
+          errorData.error || `Failed to update project: ${response.status}`
+        );
       }
 
-      if (callback) {
-        callback(response);
-      }
+      callback?.(response);
+      return response;
     } catch (error) {
-      throw new Error("Failed to update project - " + error);
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+
+      console.error("Failed to update project:", error);
+      throw error instanceof Error
+        ? error
+        : new Error("Failed to update project");
     }
   };
 
-  const deleteProject = async (projectId: string, callback?: (response?: Response) => void) => {
+  const deleteProject = async (
+    projectId: string,
+    callback?: (response?: Response) => void
+  ) => {
     try {
       const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",

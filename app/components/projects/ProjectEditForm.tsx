@@ -81,14 +81,15 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     setError("");
 
     try {
+      console.log("Submitting form data:", formData);
       const updatedProject: Project = {
         ...project,
         name: formData.name,
-        description: formData.description || undefined,
+        description: formData.description === "" ? null : formData.description,
         hexColor: formData.hexColor || null,
         icon: formData.icon || null,
       };
-
+console.log("Updated project object:", updatedProject);
       updateProject(updatedProject, (response) => {
         console.log("ASYNC: Project updated successfully", response);
 

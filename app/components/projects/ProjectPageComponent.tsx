@@ -43,7 +43,7 @@ export default function ProjectPageComponent({
         <BackButton text="All Projects" />
         <Button
           onClick={() => {
-            router.replace(`/projects/${project.id}/edit`);
+            router.push(`/projects/${project.id}/edit`);
           }}
           className="text-lg w-full lg:w-auto min-w-[200px] h-12 cursor-pointer flex items-center justify-center gap-2 ml-auto mb-6 bg-amber-600!"
         >
