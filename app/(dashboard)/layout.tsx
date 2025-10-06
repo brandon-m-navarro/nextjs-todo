@@ -5,7 +5,7 @@ async function getAllTasks() {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? "http://nextjs-todo-lake.vercel.app"
+        ? "https://nextjs-todo-lake.vercel.app"
         : "http://localhost:3000";
 
     const response = await fetch(`${baseUrl}/api/tasks`, {
@@ -29,11 +29,11 @@ async function getAllProjects() {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? "http://nextjs-todo-lake.vercel.app"
+        ? "https://nextjs-todo-lake.vercel.app"
         : "http://localhost:3000";
 
     const response = await fetch(`${baseUrl}/api/projects`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 10 },
     });
 
     if (!response.ok) {
