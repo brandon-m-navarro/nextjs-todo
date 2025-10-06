@@ -64,7 +64,6 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     );
   }
 
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -86,10 +85,11 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         ...project,
         name: formData.name,
         description: formData.description === "" ? null : formData.description,
-        hexColor: formData.hexColor || null,
+        hexColor: formData.hexColor !== '' ? formData.hexColor.slice(1) : null,
         icon: formData.icon || null,
       };
-console.log("Updated project object:", updatedProject);
+
+      console.log("Updated project object:", updatedProject);
       updateProject(updatedProject, (response) => {
         console.log("ASYNC: Project updated successfully", response);
 
@@ -119,7 +119,7 @@ console.log("Updated project object:", updatedProject);
 
     try {
       // Use a small timeout to ensure navigation state is set
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Redirect to projects list on success
       deleteProject(project.id, () => {

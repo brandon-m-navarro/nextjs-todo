@@ -49,17 +49,18 @@ export const db = {
       updates: {
         name?: string;
         description?: string | null;
-        hexColor?: string;
+        hex_color: string;
         icon?: string;
       }
     ): Promise<ProjectFromDb | null> => {
       const now = new Date();
+
       const result = await sql`
         UPDATE projects
         SET 
             name = ${updates.name ?? undefined},
             description = ${updates.description ?? undefined},
-            hex_color = ${updates.hexColor ?? undefined},
+            hex_color = ${updates.hex_color ?? undefined},
             icon = ${updates.icon ?? undefined},
             last_modified_date_time = ${now}
         WHERE id = ${id}

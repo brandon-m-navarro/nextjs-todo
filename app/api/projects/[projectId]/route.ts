@@ -88,6 +88,11 @@ export async function PUT(
         // Await the params first
         const { projectId } = await params;
         const body = await request.json();
+        // body.hex_color = body.hexColor;
+        // delete body.hexColor;
+        console.log('=================================DEBUG=================================')
+        console.log('Updating project with body:', body);
+
 
         const project = await db.projects.update(projectId, body);
 
