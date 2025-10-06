@@ -85,7 +85,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         ...project,
         name: formData.name,
         description: formData.description === "" ? null : formData.description,
-        hexColor: formData.hexColor !== '' ? formData.hexColor.slice(1) : null,
+        hexColor: formData.hexColor !== '' ? formData.hexColor.replace('#', '') : null,
         icon: formData.icon || null,
       };
 

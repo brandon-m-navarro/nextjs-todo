@@ -1,20 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/app/lib/db';
+import { db, mapProjectDbToType } from '@/app/lib/db';
 import { generateId } from '@/app/lib/utilities';
-import { Project, ProjectFromDb } from '@/app/lib/definitions';
-
-// Mapping function: snake_case DB fields to camelCase Project type
-function mapProjectDbToType(projectFromDb: ProjectFromDb): Project {
-    return {
-        id: projectFromDb.id,
-        name: projectFromDb.name,
-        description: projectFromDb.description,
-        hexColor: projectFromDb.hex_color,
-        icon: projectFromDb.icon,
-        creationDateTime: projectFromDb.creation_date_time,
-        lastModifiedDateTime: projectFromDb.last_modified_date_time,
-    };
-}
 
 export async function POST(request: NextRequest) {
     try {

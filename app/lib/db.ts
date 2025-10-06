@@ -1,9 +1,37 @@
 import "server-only";
 
 import { neon } from "@neondatabase/serverless";
-import type { TaskFromDb, ProjectFromDb } from "@/app/lib/definitions";
+import type { TaskFromDb, ProjectFromDb, Project, Task } from "@/app/lib/definitions";
 
 const sql = neon(process.env.DATABASE_URL!);
+
+// Mapping function: snake_case DB fields to camelCase Project type
+export function mapProjectDbToType(projectFromDb: ProjectFromDb): Project {
+    return {
+        id: projectFromDb.id,
+        name: projectFromDb.name,
+        description: projectFromDb.description,
+        hexColor: projectFromDb.hex_color,
+        icon: projectFromDb.icon,
+        creationDateTime: projectFromDb.creation_date_time,
+        lastModifiedDateTime: projectFromDb.last_modified_date_time,
+    };
+}
+
+// Mapping function: snake_case DB fields to camelCase Task type
+export function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
+    return {
+        projectId: taskFromDb.project_id,
+        id: taskFromDb.id,
+        title: taskFromDb.title,
+        description: taskFromDb.description,
+        isDone: taskFromDb.is_done,
+        ordinal: taskFromDb.ordinal,
+        expectedCompletionDateTime: taskFromDb.expected_completion_date_time,
+        creationDateTime: taskFromDb.creation_date_time,
+        lastModifiedDateTime: taskFromDb.last_modified_date_time,
+    };
+}
 
 export const db = {
   /* Project operations */

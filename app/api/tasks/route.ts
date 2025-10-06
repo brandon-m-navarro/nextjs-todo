@@ -1,23 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/app/lib/db';
+import { db, mapTaskDbToType } from '@/app/lib/db';
 import { generateId } from '@/app/lib/utilities';
-import { Task } from '@/app/lib/definitions';
-import { TaskFromDb } from '@/app/lib/definitions';
-
-function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
-    return {
-        projectId: taskFromDb.project_id,
-        id: taskFromDb.id,
-        title: taskFromDb.title,
-        description: taskFromDb.description,
-        isDone: taskFromDb.is_done,
-        ordinal: taskFromDb.ordinal,
-        expectedCompletionDateTime: taskFromDb.expected_completion_date_time,
-        creationDateTime: taskFromDb.creation_date_time,
-        lastModifiedDateTime: taskFromDb.last_modified_date_time,
-        // Add other fields as needed
-    };
-}
 
 export async function POST(request: NextRequest) {
     try {

@@ -1,22 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/app/lib/db';
+import { db, mapTaskDbToType } from '@/app/lib/db';
 import { generateId } from '@/app/lib/utilities';
-import { Task, TaskFromDb } from '@/app/lib/definitions';
-
-// Mapping function: snake_case DB fields to camelCase Task type
-function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
-    return {
-        projectId: taskFromDb.project_id,
-        id: taskFromDb.id,
-        title: taskFromDb.title,
-        description: taskFromDb.description,
-        isDone: taskFromDb.is_done,
-        ordinal: taskFromDb.ordinal,
-        expectedCompletionDateTime: taskFromDb.expected_completion_date_time,
-        creationDateTime: taskFromDb.creation_date_time,
-        lastModifiedDateTime: taskFromDb.last_modified_date_time,
-    };
-}
 
 // Update to expect a Promise for params
 interface RouteParams {

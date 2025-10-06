@@ -1,24 +1,15 @@
 // app/projects/layout.tsx
 import ProvidersWrapper from '@/app/(dashboard)/providers-wrapper';
+import { db, mapProjectDbToType, mapTaskDbToType } from '@/app/lib/db';
+import { Project, Task } from '@/app/lib/definitions';
 
 async function getAllTasks() {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? "https://nextjs-todo-lake.vercel.app"
-        : "http://localhost:3000";
-
-    const response = await fetch(`${baseUrl}/api/tasks`, {
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch tasks");
-    }
-
-    const data = await response.json();
-    // Return just the tasks array from the response
-    return data.tasks || data.data || [];
+    // Direct database call - always fresh, no caching issues
+    const tasksFromDb = await db.tasks.getAll();
+    const tasks: Task[] = tasksFromDb.map((task) => mapTaskDbToType(task));
+    
+    return tasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
     return [];
@@ -27,22 +18,10 @@ async function getAllTasks() {
 
 async function getAllProjects() {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? "https://nextjs-todo-lake.vercel.app"
-        : "http://localhost:3000";
-
-    const response = await fetch(`${baseUrl}/api/projects`, {
-      next: { revalidate: 10 },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch projects");
-    }
-
-    const data = await response.json();
-    // Return just the projects array from the response
-    return data.projects || data.data || [];
+    // Direct database call - always fresh, no caching issues
+    const projectsFromDb = await db.projects.getAll();
+    const projects: Project[] = projectsFromDb.map((project) => mapProjectDbToType(project));
+    return projects;
   } catch (error) {
     console.error("Error fetching projects:", error);
     return [];
