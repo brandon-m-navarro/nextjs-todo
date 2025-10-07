@@ -3,6 +3,9 @@ import ProvidersWrapper from '@/app/(dashboard)/providers-wrapper';
 import { db, mapProjectDbToType, mapTaskDbToType } from '@/app/lib/db';
 import { Project, Task } from '@/app/lib/definitions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getAllTasks() {
   try {
     // Direct database call - always fresh, no caching issues
