@@ -34,7 +34,7 @@ export default function ProjectPageComponent({
           onClick={() => {
             router.push(`/projects/${project.id}/edit`);
           }}
-          className="text-lg max-w-[200px] cursor-pointer flex items-center justify-center gap-2 ml-auto bg-amber-600!"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ml-auto"
         >
           Edit Project
         </Button>
