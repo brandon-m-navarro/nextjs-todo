@@ -4,8 +4,8 @@ import Link from "next/link";
 
 export default function ProjectsPage() {
   return (
-    <div className="mb-8">
-      <BackButton />
+    <div className="p-8 max-w-6xl mx-auto">
+        <BackButton />
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">All Projects</h1>

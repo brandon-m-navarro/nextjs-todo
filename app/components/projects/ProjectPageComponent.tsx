@@ -27,14 +27,14 @@ export default function ProjectPageComponent({
   }
 
   return (
-    <div className="p-8 text-black">
+    <div className="p-8 text-black max-w-6xl mx-auto">
       <div className="relative flex">
         <BackButton text="All Projects" />
         <Button
           onClick={() => {
             router.push(`/projects/${project.id}/edit`);
           }}
-          className="text-lg w-full lg:w-auto min-w-[200px] h-12 cursor-pointer flex items-center justify-center gap-2 ml-auto mb-6 bg-amber-600!"
+          className="text-lg max-w-[200px] cursor-pointer flex items-center justify-center gap-2 ml-auto bg-amber-600!"
         >
           Edit Project
         </Button>

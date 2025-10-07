@@ -15,7 +15,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { id } = await params;
 
   return (
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-6xl mx-auto p-8">
         {/* Header with Back Button */}
         <div className="mb-8">
           <BackButton/>

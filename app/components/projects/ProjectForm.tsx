@@ -75,7 +75,7 @@ export default function ProjectForm() {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto text-black">
+    <div className="max-w-6xl p-8 mx-auto text-black">
       {/* Header */}
       <div className="mb-8">
         <BackButton />

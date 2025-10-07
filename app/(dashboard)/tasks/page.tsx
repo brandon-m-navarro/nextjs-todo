@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function TasksPage() {
   return (
-    <div className="mb-8">
+    <div className="mb-8 max-w-6xl mx-auto p-8 text-black">
       <BackButton text="Dashboard" overrideRouter={'/'} />
 
       <div className="flex justify-between items-center">

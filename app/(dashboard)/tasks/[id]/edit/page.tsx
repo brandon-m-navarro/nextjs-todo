@@ -16,7 +16,7 @@ export default async function TaskEditPage({ params }: TaskEditPageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8 text-black">
+    <div className="max-w-6xl mx-auto p-8 text-black">
       {/* Header with Back Button */}
       <div className="mb-8">
         <BackButton text="Task Details"/>
