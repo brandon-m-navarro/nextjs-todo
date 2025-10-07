@@ -20,15 +20,16 @@ export default function HomePage() {
             <SimpleAnimation />
           </div>
           <div className="flex gap-4 justify-center">
-            <Link
+            {/* <Link
               href="/"
               className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
             >
               Get Started
-            </Link>
+            </Link> */}
             <Link
               href="/projects"
-              className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-white transition-colors text-lg font-semibold"
+              // className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-white transition-colors text-lg font-semibold"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
             >
               View Projects
             </Link>
