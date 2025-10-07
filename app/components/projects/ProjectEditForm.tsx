@@ -123,7 +123,8 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
       // Redirect to projects list on success
       deleteProject(project.id, () => {
-        router.push("/projects");
+        router.back();
+        router.back();
         router.refresh(); // Refresh the server components
       });
     } catch (error) {
@@ -326,7 +327,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors ml-auto"
           >
             {isDeleting ? "Deleting..." : "Delete Project"}
           </button>

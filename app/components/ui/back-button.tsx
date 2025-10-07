@@ -14,8 +14,7 @@ export function BackButton(backButtonProps: BackButtonProps) {
 
   const onClickHandler = function () {
     if (overrideRouter !== null) {
-      router.replace(overrideRouter);
-      router.refresh();
+      router.push(overrideRouter);
     } else {
       router.back();
     }

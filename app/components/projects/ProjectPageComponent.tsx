@@ -5,7 +5,6 @@ import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { Accordion } from "../ui/accordion";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 interface ProjectPageComponentProps {
   projectId: string;
 }
@@ -16,16 +15,6 @@ export default function ProjectPageComponent({
   const router = useRouter();
   const { getProjectById } = useProjectContext();
   const project = getProjectById(projectId);
-
-  
-  useEffect(() => {
-    // Only redirect if project doesn't exist after context is loaded
-    if (!project) {
-      router.push("/projects");
-    }
-  }, [project, router]);
-
-  // if (!project) throw new Error("Unable to get project - " + projectId);
 
   // Show loading state
   if (!project) {

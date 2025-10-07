@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { BackButton } from '@/app/components/ui/back-button';
 import { useProjectContext } from '@/app/contexts/ProjectContext';
 
 export default function ProjectChooser() {
@@ -8,24 +7,6 @@ export default function ProjectChooser() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <BackButton overrideRouter={'/'} />
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">All Projects</h1>
-            <p className="text-gray-600 mt-2">
-              Manage your projects and organize your tasks
-            </p>
-          </div>
-          <Link
-            href="/projects/new"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            + New Project
-          </Link>
-        </div>
-      </div>
 
       {/* Projects Grid */}
       {projects.length === 0 ? (
