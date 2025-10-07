@@ -3,6 +3,9 @@ import { db } from '@/app/lib/db';
 import SimpleAnimation from '@/app/components/ui/animation';
 import { TaskWithProject } from './lib/definitions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   // Fetch some data to showcase
   const [projects, recentTasks] = await Promise.allSettled([
