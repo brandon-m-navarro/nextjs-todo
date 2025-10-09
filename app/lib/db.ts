@@ -151,7 +151,7 @@ export const db = {
                     ${task.ordinal || null}, 
                     ${
                       task.expected_completion_date_time
-                        ? new Date(task.expected_completion_date_time)
+                        ? new Date(task.expected_completion_date_time).toISOString()
                         : null
                     },
                     ${now}, ${now}

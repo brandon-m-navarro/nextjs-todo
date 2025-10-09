@@ -83,10 +83,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           title: task.title,
           description: task.description || null,
           ordinal: task.ordinal || null,
-          expected_completion_date_Time: task.expectedCompletionDateTime
+          expectedCompletionDateTime: task.expectedCompletionDateTime
             ? new Date(task.expectedCompletionDateTime).toISOString()
             : null,
-          is_done: task.isDone,
+          isDone: task.isDone,
         }),
       });
 
@@ -179,11 +179,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         throw new Error(errorData.error || "Failed to update task");
       }
 
-      // Parse response ONCE
+      // Call callback with success data
       const data = await response.json();
       const serverTask: Task = data.task;
-
-      // Call callback with success data
       callback?.({ success: true, task: serverTask });
 
       return serverTask;
@@ -237,11 +235,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         throw new Error(errorData.error || "Failed to update task");
       }
 
-      // Parse response ONCE
+      // Call callback with success data
       const data = await response.json();
       const serverTask: Task = data.task;
-
-      // Call callback with success data
       callback?.({ success: true, task: serverTask });
 
       return serverTask;
