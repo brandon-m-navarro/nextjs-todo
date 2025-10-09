@@ -67,7 +67,7 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
           ? new Date(formData.expectedCompletionDateTime)
           : null,
       };
-      updateTask(updatedTask, (response) => {
+      updateTask(updatedTask, () => {
         router.replace(`/tasks/${task.id}`);
         router.back();
         router.refresh();

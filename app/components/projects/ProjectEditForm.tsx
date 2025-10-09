@@ -90,7 +90,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         icon: formData.icon || null,
       };
 
-      updateProject(updatedProject, (response) => {
+      updateProject(updatedProject, () => {
         setIsNavigating(true);
 
         router.replace(`/projects/${project.id}`);
