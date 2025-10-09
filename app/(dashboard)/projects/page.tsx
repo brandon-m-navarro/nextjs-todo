@@ -1,6 +1,6 @@
-import ProjectChooser from "@/app/components/projects/ProjectChooser";
-import { BackButton } from "@/app/components/ui/back-button";
+import BackButton from "@/app/components/ui/back-button";
 import Link from "next/link";
+import ProjectChooser from "@/app/components/projects/ProjectChooser";
 
 export default function ProjectsPage() {
   return (

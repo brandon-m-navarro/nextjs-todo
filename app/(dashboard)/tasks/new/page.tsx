@@ -1,5 +1,5 @@
+import BackButton from "@/app/components/ui/back-button";
 import TaskForm from "@/app/components/tasks/TaskForm";
-import { BackButton } from "@/app/components/ui/back-button";
 
 interface NewTaskPageProps {
   params: Promise<{

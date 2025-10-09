@@ -1,6 +1,6 @@
+import BackButton from "@/app/components/ui/back-button";
 import Link from "next/link";
 import { TaskDetail } from "@/app/components/tasks/TaskDetails";
-import { BackButton } from "@/app/components/ui/back-button";
 
 interface TaskDetailPageProps {
   params: Promise<{

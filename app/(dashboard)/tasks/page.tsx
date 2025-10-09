@@ -1,6 +1,6 @@
-import TasksPageComponent from "@/app/components/tasks/TasksPageComponent";
-import { BackButton } from "@/app/components/ui/back-button";
+import BackButton from "@/app/components/ui/back-button";
 import Link from "next/link";
+import TasksPageComponent from "@/app/components/tasks/TasksPageComponent";
 
 export default function TasksPage() {
   return (

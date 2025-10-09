@@ -6,7 +6,7 @@ interface BackButtonProps {
   overrideRouter?: string | null;
 }
 
-export function BackButton(backButtonProps: BackButtonProps) {
+export default function BackButton(backButtonProps: BackButtonProps) {
   const router = useRouter();
   const { text = "", overrideRouter = null } = backButtonProps || {};
 

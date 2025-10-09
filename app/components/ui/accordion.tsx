@@ -22,7 +22,7 @@ interface AccordionProps {
   ref?: React.Ref<AccordionHandle>;
 }
 
-export function Accordion({
+export default function Accordion({
   children,
   render,
   defaultOpen = false,
