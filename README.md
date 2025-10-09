@@ -1,9 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+The latest version is deployed here: [https://nextjs-todo-lake.vercel.app/](https://nextjs-todo-lake.vercel.app/).
 
-## Getting Started
+## Getting Started (Locally)
 
-First, run the development server:
+First, clone the repo, then run the development server from the top-level of the project:
 
 ```bash
 npm run dev
