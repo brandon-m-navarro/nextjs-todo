@@ -88,8 +88,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       const data = await response.json();
       const serverProject: Project = data.project;
 
-      console.log("Server project:", serverProject);
-
       // Replace temporary project with server version
       setProjects((prev) =>
         prev.map((p) => (p.id === tempProject.id ? serverProject : p))

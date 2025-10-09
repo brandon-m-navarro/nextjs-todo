@@ -51,7 +51,7 @@ export default function ProjectForm() {
       });
     } catch (error) {
       // This will catch any errors thrown by addProject
-      setError("Failed to create project");
+      setError("Failed to create project - " + error);
       setIsSubmitting(false);
     }
   };
