@@ -14,12 +14,20 @@ interface ProjectContextType {
   ) => Promise<Project | void>;
   updateProject: (
     project: Project,
-    callback?: (response?: Response) => void
-  ) => Promise<Response>;
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
+  ) => Promise<Project | void>;
   deleteProject: (
     project: string,
-    callback?: (response?: Response) => void
-  ) => Promise<void>;
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
+  ) => Promise<Project | void>;
   getProjectById: (id: string) => Project | undefined;
 }
 
@@ -117,7 +125,11 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Update Project with optimistic update and rollback on failure
   const updateProject = async (
     updatedProject: Project,
-    callback?: (response: Response) => void
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
   ) => {
     let rollback: (() => void) | null = null;
     try {
@@ -150,7 +162,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           description: updatedProject.description || null,
           hex_color: updatedProject.hexColor || null,
           icon: updatedProject.icon,
-          last_modified_date_time: new Date().toISOString(), // Don't forget this!
+          last_modified_date_time: new Date().toISOString(),
         }),
       });
 
@@ -161,8 +173,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         );
       }
 
-      callback?.(response);
-      return response;
+      // Call callback with success data
+      const data = await response.json();
+      const serverProject: Project = data.project;
+      callback?.({ success: true, project: serverProject });
+
+      return serverProject;
     } catch (error) {
       // Rollback on error
       if (rollback) {
@@ -170,17 +186,40 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
 
       console.error("Failed to update project:", error);
-      throw error instanceof Error
-        ? error
-        : new Error("Failed to update project");
+      callback?.({
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Failed to update Project",
+      });
     }
   };
 
   const deleteProject = async (
     projectId: string,
-    callback?: (response?: Response) => void
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
   ) => {
+    let rollback: (() => void) | null = null;
+
     try {
+      const projectToDelete = projects.find((p) => p.id === projectId);
+      if (!projectToDelete) {
+        throw new Error("Project not found for deletion");
+      }
+
+      // Define rollback function
+      rollback = () => {
+        setProjects((prevProjects) => [projectToDelete, ...prevProjects]);
+      };
+
+      // Optimistically remove project from context
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project.id !== projectId)
+      );
+
       const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
         headers: {
@@ -193,16 +232,26 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         throw new Error(errorData.error || "Failed to update project");
       }
 
-      // Update context
-      setProjects((prevProjects) =>
-        prevProjects.filter((project) => project.id !== projectId)
-      );
+      // Call callback with success data
+      const data = await response.json();
+      const serverProject: Project = data.project;
+      callback?.({ success: true, project: serverProject });
 
-      if (callback) {
-        callback(response);
-      }
+      return serverProject;
     } catch (error) {
-      throw new Error("Failed to delete project - " + error);
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+      console.error("Failed to delete project:", error);
+      callback?.({
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Failed to delete Project",
+      });
+      throw error instanceof Error
+        ? error
+        : new Error("Failed to delete project");
     }
   };
 

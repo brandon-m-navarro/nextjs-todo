@@ -67,10 +67,15 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
           ? new Date(formData.expectedCompletionDateTime)
           : null,
       };
-      updateTask(updatedTask, () => {
-        router.replace(`/tasks/${task.id}`);
-        router.back();
-        router.refresh();
+      updateTask(updatedTask, (res) => {
+        if (res?.success === false) {
+          setError(res.error || "Failed to update task");
+          return;
+        } else if (res?.task) {
+          router.replace(`/tasks/${task.id}`);
+          router.back();
+          router.refresh();
+        }
       });
     } catch (error) {
       console.error("Error updating task:", error);

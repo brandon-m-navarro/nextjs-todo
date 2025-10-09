@@ -12,11 +12,22 @@ interface TaskContextType {
       error?: string;
     }) => void
   ) => Promise<Task | void>;
-  updateTask: (task: Task, callback?: (response?: Response) => void) => void;
+  updateTask: (
+    task: Task,
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
+  ) => Promise<Task | void>;
   deleteTask: (
     taskId: string,
-    callback?: (response?: Response) => void
-  ) => void;
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
+  ) => Promise<Task | void>;
   getTaskById: (taskId: string) => Task | undefined;
   getTasksForProject: (projectId: string) => Task[];
 }
@@ -56,9 +67,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     try {
       // Store rollback function
       rollback = () => {
-        setTasks((prevTasks) =>
-          prevTasks.filter((t) => t.id !== tempTask.id)
-        );
+        setTasks((prevTasks) => prevTasks.filter((t) => t.id !== tempTask.id));
       };
 
       // Optimistic update
@@ -74,7 +83,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           title: task.title,
           description: task.description || null,
           ordinal: task.ordinal || null,
-          expected_completion_date_Time: task.expectedCompletionDateTime || null
+          expected_completion_date_Time: task.expectedCompletionDateTime
+            ? new Date(task.expectedCompletionDateTime).toISOString()
+            : null,
+          is_done: task.isDone,
         }),
       });
 
@@ -115,13 +127,36 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
 
   const updateTask = async (
     updatedTask: Task,
-    callback?: (response?: Response) => void
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
   ) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    );
-
+    let rollback: (() => void) | null = null;
     try {
+      // Store previous state for potential rollback
+      const previousTask = tasks.find((task) => task.id === updatedTask.id);
+      if (!previousTask) {
+        throw new Error("Task not found for update");
+      }
+
+      // Define rollback function
+      rollback = () => {
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === previousTask.id ? previousTask : task
+          )
+        );
+      };
+
+      // Update context optimistically
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+
       const response = await fetch(`/api/tasks/${updatedTask.id}`, {
         method: "PUT",
         headers: {
@@ -144,19 +179,52 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         throw new Error(errorData.error || "Failed to update task");
       }
 
-      if (callback) {
-        callback(response);
-      }
+      // Parse response ONCE
+      const data = await response.json();
+      const serverTask: Task = data.task;
+
+      // Call callback with success data
+      callback?.({ success: true, task: serverTask });
+
+      return serverTask;
     } catch (error) {
-      throw new Error("Failed to update task - " + error);
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+      callback?.({
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to update task",
+      });
+      console.error("Failed to update task:", error);
     }
   };
 
   const deleteTask = async (
     taskId: string,
-    callback?: (response?: Response) => void
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
   ) => {
+    let rollback: (() => void) | null = null;
+
     try {
+      // Store previous state for potential rollback
+      const previousTask = tasks.find((task) => task.id === taskId);
+      if (!previousTask) {
+        throw new Error("Task not found for deletion");
+      }
+
+      // Define rollback function
+      rollback = () => {
+        setTasks((prevTasks) => [previousTask!, ...prevTasks]);
+      };
+
+      // Update context optimistically
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
@@ -169,14 +237,25 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         throw new Error(errorData.error || "Failed to update task");
       }
 
-      // Update context
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      // Parse response ONCE
+      const data = await response.json();
+      const serverTask: Task = data.task;
 
-      if (callback) {
-        callback(response);
-      }
+      // Call callback with success data
+      callback?.({ success: true, task: serverTask });
+
+      return serverTask;
     } catch (error) {
-      throw new Error("Failed to delete task - " + error);
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+      console.error("Failed to delete task:", error);
+      callback?.({
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to delete task",
+      });
+      throw error instanceof Error ? error : new Error("Failed to delete task");
     }
   };
 
