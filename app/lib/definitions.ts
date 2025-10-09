@@ -29,7 +29,7 @@ export interface TaskFromDb {
 export interface ProjectFromDb {
   id: string;
   name: string;
-  description?: string | null;
+  description: string | null;
   hex_color: string | null;
   icon: string | null;
   creation_date_time: Date;
@@ -41,7 +41,7 @@ export interface TaskWithProject {
   title: string;
   description: string | null;
   isDone: boolean;
-  ordinal?: number | null;
+  ordinal: number | null;
   expectedCompletionDateTime?: Date | null;
   creationDateTime: Date;
   lastModifiedDateTime: Date;
@@ -54,7 +54,7 @@ export interface TaskWithProject {
 export type Project = {
   id: string;
   name: string;
-  description?: string | null;
+  description: string | null;
   hexColor: string | null;
   icon: string | null;
   creationDateTime: Date;

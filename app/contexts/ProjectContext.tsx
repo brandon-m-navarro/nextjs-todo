@@ -5,17 +5,21 @@ import { Project } from "@/app/lib/definitions";
 interface ProjectContextType {
   projects: Project[];
   addProject: (
-    project: Project,
-    callback?: (response?: Response) => void
-  ) => void;
+    project: Omit<Project, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
+  ) => Promise<Project | void>;
   updateProject: (
     project: Project,
     callback?: (response?: Response) => void
-  ) => void;
+  ) => Promise<Response>;
   deleteProject: (
     project: string,
     callback?: (response?: Response) => void
-  ) => void;
+  ) => Promise<void>;
   getProjectById: (id: string) => Project | undefined;
 }
 
@@ -34,54 +38,90 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 }) => {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
 
+  // Add Project with optimistic update and rollback on failure
   const addProject = async (
-    project: Project
-    // callback?: (response?: Response) => void
+    project: Omit<Project, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
   ) => {
-    setProjects((prevProjects) => [project, ...prevProjects]);
+    let rollback: (() => void) | null = null;
+    const tempProject: Project = {
+      ...project,
+      id: `PRO-temp-${crypto.randomUUID()}`,
+      creationDateTime: new Date(),
+      lastModifiedDateTime: new Date(),
+    };
 
-    // Server/Route/DB to persist
-    // try {
-    //   const response = await fetch(`/api/projects/${project.id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       id: project.id,
-    //       name: project.name,
-    //       description: project.description || null,
-    //       hex_color: project.hexColor,
-    //       icon: project.icon,
-    //       creation_date_time: new Date(),
-    //       last_modified_date_time: new Date(),
-    //     }),
-    //   });
+    try {
+      // Store rollback function
+      rollback = () => {
+        setProjects((prevProjects) =>
+          prevProjects.filter((p) => p.id !== tempProject.id)
+        );
+      };
 
-    //   if (!response.ok) {
-    //     const errorData = await response.json();
-    //     throw new Error(errorData.error || "Failed to update task");
-    //   }
+      // Optimistic update
+      setProjects((prevProjects) => [tempProject, ...prevProjects]);
 
-    //   if (callback) {
-    //     callback(response);
-    //   }
-    // } catch (error) {
-    //   throw new Error("Failed to add task!" + error);
-    // }
+      const response = await fetch(`/api/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: project.name,
+          description: project.description || null,
+          hex_color: project.hexColor || null,
+          icon: project.icon || null,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create project");
+      }
+
+      // Parse response ONCE
+      const data = await response.json();
+      const serverProject: Project = data.project;
+
+      console.log("Server project:", serverProject);
+
+      // Replace temporary project with server version
+      setProjects((prev) =>
+        prev.map((p) => (p.id === tempProject.id ? serverProject : p))
+      );
+
+      // Call callback with success data
+      callback?.({ success: true, project: serverProject });
+
+      return serverProject;
+    } catch (error) {
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+
+      console.error("Failed to add project:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add project";
+
+      // Call callback with error
+      callback?.({ success: false, error: errorMessage });
+
+      throw error;
+    }
   };
 
+  // Update Project with optimistic update and rollback on failure
   const updateProject = async (
     updatedProject: Project,
     callback?: (response: Response) => void
   ) => {
     let rollback: (() => void) | null = null;
-    console.log(
-      "Sending hex_color:",
-      updatedProject.hexColor,
-      "Type:",
-      typeof updatedProject.hexColor
-    );
     try {
       // Store rollback function
       rollback = () => {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
+import { Project } from "@/app/lib/definitions";
 
 export default function ProjectForm() {
   const router = useRouter();
@@ -20,37 +21,37 @@ export default function ProjectForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      setError("Project name is required");
+      return;
+    }
+    
     setIsSubmitting(true);
     setError("");
 
+    // Create Project with FormData
+    const projectToCreate: Omit<
+      Project,
+      "id" | "creationDateTime" | "lastModifiedDateTime"
+    > = {
+      ...formData,
+    };
+
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      await addProject(projectToCreate, (result) => {
+        if (result?.success && result.project) {
+          // Success - redirect to project page
+          router.replace(`/projects/${result.project.id}`);
+        } else if (result?.error) {
+          // Error from callback
+          setError(result.error);
+          setIsSubmitting(false);
+        }
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create project");
-      }
-
-      const result = await response.json();
-      addProject(result.project);
-
-      // Redirect to the new project's page
-      router.replace(`/projects/${result.project.id}`);
-      router.refresh();
     } catch (error) {
-      console.error("Failed to create project:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to create project. Please try again.";
-      setError(errorMessage);
-    } finally {
+      // This will catch any errors thrown by addProject
+      setError("Failed to create project");
       setIsSubmitting(false);
     }
   };
