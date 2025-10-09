@@ -20,14 +20,12 @@ interface AccordionProps {
     contentRef: React.RefObject<HTMLDivElement>;
   }) => React.ReactNode;
   defaultOpen?: boolean;
-  ref?: React.Ref<AccordionHandle>;
 }
 
 export default function Accordion({
   children,
   render,
-  defaultOpen = false,
-  ref,
+  defaultOpen = false
 }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [contentHeight, setContentHeight] = useState(0);

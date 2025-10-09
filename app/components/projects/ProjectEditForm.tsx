@@ -80,7 +80,8 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     setError("");
 
     try {
-      console.log("Submitting form data:", formData);
+      setIsNavigating(true);
+
       const updatedProject: Project = {
         ...project,
         name: formData.name,
@@ -91,9 +92,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
       };
 
       updateProject(updatedProject, () => {
-        setIsNavigating(true);
-
-        router.replace(`/projects/${project.id}`);
+        router.back();
         router.refresh();
       });
     } catch (error) {
@@ -103,6 +102,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
       );
     } finally {
       setIsSubmitting(false);
+      setIsNavigating(false);
     }
   };
 
