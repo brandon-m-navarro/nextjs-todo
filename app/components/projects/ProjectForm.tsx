@@ -1,77 +1,77 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { BackButton } from '@/app/components/ui/back-button';
-import { useProjectContext } from '@/app/contexts/ProjectContext';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { BackButton } from "@/app/components/ui/back-button";
+import { useProjectContext } from "@/app/contexts/ProjectContext";
 
 export default function ProjectForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const { addProject } = useProjectContext();
-  
+
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    hexColor: '3B82F6', // Default blue color
-    icon: ''
+    name: "",
+    description: "",
+    hexColor: "3B82F6", // Default blue color
+    icon: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
-      // Send POST request to your API route
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      const response = await fetch("/api/projects", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create project');
+        throw new Error(errorData.error || "Failed to create project");
       }
 
       const result = await response.json();
-      addProject(result.project)
+      addProject(result.project);
 
       // Redirect to the new project's page
       router.replace(`/projects/${result.project.id}`);
-      router.refresh(); // Refresh the server components
-
+      router.refresh();
     } catch (error) {
-      console.error('Failed to create project:', error);
+      console.error("Failed to create project:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Failed to create project. Please try again.';
+          : "Failed to create project. Please try again.";
       setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const colorOptions = [
-    { value: 'EF4444', label: 'Red', color: 'bg-red-500' },
-    { value: 'F59E0B', label: 'Amber', color: 'bg-amber-500' },
-    { value: '10B981', label: 'Emerald', color: 'bg-emerald-500' },
-    { value: '3B82F6', label: 'Blue', color: 'bg-blue-500' },
-    { value: '8B5CF6', label: 'Violet', color: 'bg-violet-500' },
-    { value: 'EC4899', label: 'Pink', color: 'bg-pink-500' },
+    { value: "EF4444", label: "Red", color: "bg-red-500" },
+    { value: "F59E0B", label: "Amber", color: "bg-amber-500" },
+    { value: "10B981", label: "Emerald", color: "bg-emerald-500" },
+    { value: "3B82F6", label: "Blue", color: "bg-blue-500" },
+    { value: "8B5CF6", label: "Violet", color: "bg-violet-500" },
+    { value: "EC4899", label: "Pink", color: "bg-pink-500" },
   ];
 
   return (
@@ -80,7 +80,9 @@ export default function ProjectForm() {
       <div className="mb-8">
         <BackButton />
         <h1 className="text-3xl font-bold text-gray-900">Create New Project</h1>
-        <p className="text-gray-600 mt-2">Start organizing your tasks with a new project</p>
+        <p className="text-gray-600 mt-2">
+          Start organizing your tasks with a new project
+        </p>
       </div>
 
       {/* Error Message */}
@@ -91,11 +93,17 @@ export default function ProjectForm() {
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+      >
         <div className="space-y-6">
           {/* Project Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Project Name *
             </label>
             <input
@@ -112,7 +120,10 @@ export default function ProjectForm() {
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Description
             </label>
             <textarea
@@ -136,7 +147,9 @@ export default function ProjectForm() {
                 <label
                   key={option.value}
                   className={`relative cursor-pointer rounded-full p-1 ${
-                    formData.hexColor === option.value ? 'ring-2 ring-offset-2 ring-blue-500' : ''
+                    formData.hexColor === option.value
+                      ? "ring-2 ring-offset-2 ring-blue-500"
+                      : ""
                   }`}
                 >
                   <input
@@ -161,7 +174,10 @@ export default function ProjectForm() {
 
           {/* Icon (Optional) */}
           <div>
-            <label htmlFor="icon" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="icon"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Icon (Optional)
             </label>
             <input
@@ -188,7 +204,7 @@ export default function ProjectForm() {
               disabled={isSubmitting || !formData.name.trim()}
               className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? 'Creating...' : 'Create Project'}
+              {isSubmitting ? "Creating..." : "Create Project"}
             </button>
           </div>
         </div>
@@ -196,7 +212,9 @@ export default function ProjectForm() {
 
       {/* Preview */}
       <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Preview</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Project Preview
+        </h3>
         <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
           {formData.hexColor && (
             <div
@@ -206,7 +224,7 @@ export default function ProjectForm() {
           )}
           <div>
             <h4 className="font-medium text-gray-900">
-              {formData.name || 'Project Name'}
+              {formData.name || "Project Name"}
             </h4>
             {formData.description && (
               <p className="text-sm text-gray-600 mt-1">

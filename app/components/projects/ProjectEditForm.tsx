@@ -24,7 +24,7 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     icon: project?.icon || "",
   });
 
-  // Initialize form data when project loads
+  // Sync form data when project changes
   useEffect(() => {
     if (project) {
       setFormData({
@@ -85,20 +85,16 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         ...project,
         name: formData.name,
         description: formData.description === "" ? null : formData.description,
-        hexColor: formData.hexColor !== '' ? formData.hexColor.replace('#', '') : null,
+        hexColor:
+          formData.hexColor !== "" ? formData.hexColor.replace("#", "") : null,
         icon: formData.icon || null,
       };
 
-      console.log("Updated project object:", updatedProject);
       updateProject(updatedProject, (response) => {
-        console.log("ASYNC: Project updated successfully", response);
-
         setIsNavigating(true);
 
-        // Redirect to project detail page on success
         router.replace(`/projects/${project.id}`);
-        // router.back(); // Go back to the previous page
-        router.refresh(); // Refresh the server components
+        router.refresh();
       });
     } catch (error) {
       console.error("Error updating project:", error);
@@ -121,11 +117,10 @@ export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
       // Use a small timeout to ensure navigation state is set
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Redirect to projects list on success
       deleteProject(project.id, () => {
         router.back();
         router.back();
-        router.refresh(); // Refresh the server components
+        router.refresh();
       });
     } catch (error) {
       console.error("Error deleting project:", error);

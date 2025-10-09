@@ -7,8 +7,7 @@ interface ProjectPageProps {
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
+  // Dynamic routes must be awaited
   const { projectId } = await params;
-  return (
-    <ProjectPageComponent projectId={projectId}></ProjectPageComponent>
-  );
+  return <ProjectPageComponent projectId={projectId}></ProjectPageComponent>;
 }

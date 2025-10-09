@@ -1,7 +1,5 @@
-// components/tasks/TaskFilters.tsx
-'use client';
-
-import { useRouter } from 'next/navigation';
+"use client";
+import { useRouter } from "next/navigation";
 
 interface TaskFiltersProps {
   projects: Array<{ id: string; name: string }>;
@@ -10,12 +8,16 @@ interface TaskFiltersProps {
   currentSort?: string;
 }
 
-export function TaskFilters({ projects, currentProject, currentStatus, currentSort }: TaskFiltersProps) {
+export function TaskFilters({
+  projects,
+  currentProject,
+  currentStatus,
+  currentSort,
+}: TaskFiltersProps) {
   const router = useRouter();
-
+  const safeProjects = projects || [];
   const updateUrl = (updates: Record<string, string>) => {
     const params = new URLSearchParams(window.location.search);
-  
     Object.entries(updates).forEach(([key, value]) => {
       if (value) {
         params.set(key, value);
@@ -23,30 +25,27 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
         params.delete(key);
       }
     });
-  
+
     router.push(`/tasks?${params.toString()}`);
   };
 
-  // Add null/undefined check before mapping
-  const safeProjects = projects || [];
-
   return (
     <div className="flex flex-wrap gap-4 text-black">
-      <select 
-        value={currentProject || ''}
+      <select
+        value={currentProject || ""}
         onChange={(e) => updateUrl({ project: e.target.value })}
         className="px-3 py-2 border border-gray-300 rounded-md"
       >
         <option value="">All Projects</option>
-        {safeProjects.map(project => (
+        {safeProjects.map((project) => (
           <option key={project.id} value={project.id}>
             {project.name}
           </option>
         ))}
       </select>
 
-      <select 
-        value={currentStatus || 'all'}
+      <select
+        value={currentStatus || "all"}
         onChange={(e) => updateUrl({ status: e.target.value })}
         className="px-3 py-2 border border-gray-300 rounded-md"
       >
@@ -55,8 +54,8 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
         <option value="completed">Completed Only</option>
       </select>
 
-      <select 
-        value={currentSort || 'newest'}
+      <select
+        value={currentSort || "newest"}
         onChange={(e) => updateUrl({ sort: e.target.value })}
         className="px-3 py-2 border border-gray-300 rounded-md"
       >
@@ -67,7 +66,7 @@ export function TaskFilters({ projects, currentProject, currentStatus, currentSo
 
       {(currentProject || currentStatus || currentSort) && (
         <button
-          onClick={() => router.push('/tasks')}
+          onClick={() => router.push("/tasks")}
           className="px-3 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
         >
           Clear Filters

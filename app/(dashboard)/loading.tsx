@@ -8,7 +8,7 @@ export default function DashboardLoading() {
           <div className="h-10 w-32 bg-gray-200 rounded animate-pulse" />
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
           <div key={i} className="bg-white p-6 rounded-lg shadow">

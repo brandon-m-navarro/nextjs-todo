@@ -1,7 +1,7 @@
-import { db } from '@/app/lib/db';
-import { TaskWithProject } from '@/app/lib/definitions';
+import { db } from "@/app/lib/db";
+import { TaskWithProject } from "@/app/lib/definitions";
+import { NextResponse, NextRequest } from "next/server";
 
-// Helper function to get recent tasks with project info
 async function getRecentTasksPreview() {
   try {
     const projects = await db.projects.getAll();
@@ -9,7 +9,7 @@ async function getRecentTasksPreview() {
 
     for (const project of projects) {
       const tasks = await db.tasks.getByProjectId(project.id);
-      const tasksWithProject = tasks.map(task => ({
+      const tasksWithProject = tasks.map((task) => ({
         ...task,
         projectId: task.project_id,
         isDone: task.is_done,
@@ -22,22 +22,27 @@ async function getRecentTasksPreview() {
     }
 
     return allTasks
-      .sort((a, b) => new Date(b.creationDateTime).getTime() - new Date(a.creationDateTime).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.creationDateTime).getTime() -
+          new Date(a.creationDateTime).getTime()
+      )
       .slice(0, 5);
   } catch (error) {
-    console.error('Error fetching tasks preview:', error);
+    console.error("Error fetching tasks preview:", error);
     return [];
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  // searchParams is used to get the limit query parameter
   const { searchParams } = new URL(request.url);
-  const limit = parseInt(searchParams.get('limit') || '5');
-  
-  // Your existing getRecentTasksPreview logic here
+
+  // limit is optional, default to 5
+  const limit = parseInt(searchParams.get("limit") || "5");
+
+  // Fetch recent tasks with project info
   const tasks = await getRecentTasksPreview();
-  return Response.json({ 
-    tasks: tasks.slice(0, limit),
-    generatedAt: new Date().toISOString()
-  });
+
+  return NextResponse.json({ success: true, tasks: tasks.slice(0, limit) });
 }

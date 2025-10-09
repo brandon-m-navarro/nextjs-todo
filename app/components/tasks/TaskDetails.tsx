@@ -1,12 +1,11 @@
-'use client';
-
-import Link from 'next/link';
-import { useState } from 'react';
-import { useTaskContext } from '@/app/contexts/TaskContext';
-import { useRouter } from 'next/navigation';
-import { Task } from '@/app/lib/definitions';
-import { useProjectContext } from '@/app/contexts/ProjectContext';
-import { Project } from '@/app/lib/definitions';
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { useTaskContext } from "@/app/contexts/TaskContext";
+import { useRouter } from "next/navigation";
+import { Task } from "@/app/lib/definitions";
+import { useProjectContext } from "@/app/contexts/ProjectContext";
+import { Project } from "@/app/lib/definitions";
 
 interface TaskDetailProps {
   taskId: string;
@@ -17,43 +16,47 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
   const { getProjectById } = useProjectContext();
   const router = useRouter();
   const task = getTaskById(taskId);
-  
-  if (!task) throw Error('ERROR: Unable to find Task - ' + taskId);
 
-  const associatedProject: Project | undefined = getProjectById(task?.projectId);
+  if (!task) {
+    throw Error("ERROR: Unable to find Task - " + taskId);
+  }
 
-  if (!associatedProject) throw Error('ERROR: Unable to find associated Project - ' + task.projectId);
+  const associatedProject: Project | undefined = getProjectById(
+    task?.projectId
+  );
+
+  if (!associatedProject) {
+    throw Error("ERROR: Unable to find associated Project - " + task.projectId);
+  }
 
   const [taskState, setTaskState] = useState<Task>(task);
 
-  // Handle marking task as done/undone
   const handleToggleDone = () => {
     const updatedTask = {
       ...taskState,
       isDone: !taskState.isDone,
-      lastModifiedDateTime: new Date()
+      lastModifiedDateTime: new Date(),
     };
 
     setTaskState(updatedTask);
-    updateTask(
-      updatedTask,
-      () => { setTaskState(updatedTask) }
-    );
+    updateTask(updatedTask, () => {
+      setTaskState(updatedTask);
+    });
   };
 
-  // Handle delete
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this task?')) {
+    if (confirm("Are you sure you want to delete this task?")) {
       router.back();
       deleteTask(taskState.id, (res) => {
-        console.log('Deleted! - ', res);
+        console.log("Deleted! - ", res);
       });
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      {/* Task Header */}
+
+      {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center space-x-4">
           <input
@@ -67,21 +70,26 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           </h2>
         </div>
 
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-          taskState.isDone 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-blue-100 text-blue-800'
-        }`}>
-          {taskState.isDone ? 'Completed' : 'Active'}
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-medium ${
+            taskState.isDone
+              ? "bg-green-100 text-green-800"
+              : "bg-blue-100 text-blue-800"
+          }`}
+        >
+          {taskState.isDone ? "Completed" : "Active"}
         </span>
       </div>
 
       {/* Task Content */}
       <div className="space-y-6">
+
         {/* Description */}
         {taskState.description && (
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Description
+            </h3>
             <p className="text-gray-600 bg-gray-50 p-4 rounded-lg">
               {taskState.description}
             </p>
@@ -94,7 +102,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           <div className="flex items-center space-x-3">
             <div
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: '#' + associatedProject.hexColor || '#3B82F6' }}
+              style={{
+                backgroundColor: "#" + associatedProject.hexColor || "#3B82F6",
+              }}
             />
             <span className="text-gray-700">{associatedProject.name}</span>
             <Link
@@ -111,11 +121,13 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Due Date</h3>
             <p className="text-gray-600">
-              {new Date(taskState.expectedCompletionDateTime).toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+              {new Date(
+                taskState.expectedCompletionDateTime
+              ).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
             </p>
           </div>
@@ -131,7 +143,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Last Updated</h3>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">
+              Last Updated
+            </h3>
             <p className="text-gray-900">
               {new Date(taskState.lastModifiedDateTime).toLocaleDateString()}
             </p>
@@ -139,7 +153,9 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
 
           {taskState.ordinal !== null && taskState.ordinal !== undefined && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Priority</h3>
+              <h3 className="text-sm font-medium text-gray-500 mb-1">
+                Priority
+              </h3>
               <p className="text-gray-900">#{taskState.ordinal + 1}</p>
             </div>
           )}
@@ -158,7 +174,7 @@ export function TaskDetail({ taskId }: TaskDetailProps) {
           onClick={handleToggleDone}
           className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
-          {taskState.isDone ? 'Mark as Undone' : 'Mark as Done'}
+          {taskState.isDone ? "Mark as Undone" : "Mark as Done"}
         </button>
       </div>
     </div>

@@ -1,9 +1,9 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Task } from '@/app/lib/definitions';
-import { useTaskContext } from '@/app/contexts/TaskContext';
-import { useProjectContext } from '@/app/contexts/ProjectContext';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Task } from "@/app/lib/definitions";
+import { useTaskContext } from "@/app/contexts/TaskContext";
+import { useProjectContext } from "@/app/contexts/ProjectContext";
 
 interface TaskEditFormProps {
   taskId: string;
@@ -12,38 +12,47 @@ interface TaskEditFormProps {
 export function TaskEditForm({ taskId }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { getTaskById, updateTask } = useTaskContext();
   const { projects } = useProjectContext();
   const task = getTaskById(taskId);
 
-  if (!task) throw new Error('Could not get task! - ' + taskId);
+  if (!task) {
+    throw new Error("Could not get task! - " + taskId);
+  }
 
   const [formData, setFormData] = useState({
     title: task.title,
-    description: task.description || '',
+    description: task.description || "",
     isDone: task.isDone,
     ordinal: task.ordinal || null,
-    expectedCompletionDateTime: task.expectedCompletionDateTime 
+    expectedCompletionDateTime: task.expectedCompletionDateTime
       ? new Date(task.expectedCompletionDateTime).toISOString().slice(0, 16)
-      : '',
-    projectId: task.projectId
+      : "",
+    projectId: task.projectId,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked
-              : type === 'number' ? Number(value)
-              : value
+      [name]:
+        type === "checkbox"
+          ? (e.target as HTMLInputElement).checked
+          : type === "number"
+          ? Number(value)
+          : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       const updatedTask: Task = {
@@ -54,21 +63,20 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
         isDone: formData.isDone,
         projectId: formData.projectId,
         ordinal: formData.ordinal ? Number(formData.ordinal) : null,
-        expectedCompletionDateTime: formData.expectedCompletionDateTime 
+        expectedCompletionDateTime: formData.expectedCompletionDateTime
           ? new Date(formData.expectedCompletionDateTime)
-          : null
-      }
+          : null,
+      };
       updateTask(updatedTask, (response) => {
-        console.log('ASYNC: Task updated successfully', response);
-
-        // Redirect to task detail page on success
-        router.replace(`/tasks/${task.id}`); // Use replace to avoid going back to edit on back button
-        router.back(); // Go back to the previous page
-        router.refresh(); // Refresh the server components
-      })
+        router.replace(`/tasks/${task.id}`);
+        router.back();
+        router.refresh();
+      });
     } catch (error) {
-      console.error('Error updating task:', error);
-      setError(error instanceof Error ? error.message : 'Failed to update task');
+      console.error("Error updating task:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to update task"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -83,9 +91,13 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+
         {/* Title */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Title *
           </label>
           <input
@@ -101,7 +113,10 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Description
           </label>
           <textarea
@@ -116,7 +131,10 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
 
         {/* Project Selection */}
         <div>
-          <label htmlFor="projectId" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="projectId"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Project
           </label>
           <select
@@ -126,7 +144,7 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            {projects.map(project => (
+            {projects.map((project) => (
               <option key={project.id} value={project.id}>
                 {project.name}
               </option>
@@ -151,14 +169,17 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
 
         {/* Priority */}
         <div>
-          <label htmlFor="ordinal" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="ordinal"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Priority (lower number = higher priority)
           </label>
           <input
             type="number"
             id="ordinal"
             name="ordinal"
-            value={formData.ordinal + ''}
+            value={formData.ordinal + ""}
             onChange={handleChange}
             min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -167,7 +188,10 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
 
         {/* Due Date */}
         <div>
-          <label htmlFor="expectedCompletionDateTime" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="expectedCompletionDateTime"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Due Date
           </label>
           <input
@@ -194,7 +218,7 @@ export function TaskEditForm({ taskId }: TaskEditFormProps) {
             disabled={isSubmitting}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isSubmitting ? 'Updating...' : 'Update Task'}
+            {isSubmitting ? "Updating..." : "Update Task"}
           </button>
         </div>
       </form>

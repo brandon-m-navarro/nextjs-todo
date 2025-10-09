@@ -1,9 +1,7 @@
-'use client';
-
-import React, { useState } from 'react';
-import ReactDatePicker from 'react-datepicker';
-
-import 'react-datepicker/dist/react-datepicker.css';
+"use client";
+import React, { useState } from "react";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type DatePickerProps = {
   name: string;
@@ -13,16 +11,15 @@ type DatePickerProps = {
 };
 
 const DatePicker = ({ name, value, onChange }: DatePickerProps) => {
+
   // Convert string value to Date object if provided
   const initialDate = value ? new Date(value) : null;
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-
-    // Convert Date object to ISO string and call the onChange callback
     if (onChange) {
-      onChange(date ? date.toISOString() : '');
+      onChange(date ? date.toISOString() : "");
     }
   };
 

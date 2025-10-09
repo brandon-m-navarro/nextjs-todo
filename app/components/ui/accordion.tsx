@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 
 export interface AccordionHandle {
@@ -31,8 +30,11 @@ export function Accordion({
 }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [contentHeight, setContentHeight] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const contentRef = useRef<HTMLDivElement>(
+    null
+  ) as React.RefObject<HTMLDivElement>;
 
+  // Expose methods via ref
   useEffect(() => {
     if (ref) {
       if (typeof ref === "function") {
@@ -53,6 +55,7 @@ export function Accordion({
     }
   }, [ref, isOpen]);
 
+  // Adjust height on open/close
   useEffect(() => {
     if (contentRef.current) {
       setContentHeight(isOpen ? contentRef.current.scrollHeight : 0);

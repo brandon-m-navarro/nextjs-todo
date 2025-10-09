@@ -76,7 +76,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     callback?: (response: Response) => void
   ) => {
     let rollback: (() => void) | null = null;
-console.log("Sending hex_color:", updatedProject.hexColor, "Type:", typeof updatedProject.hexColor);
+    console.log(
+      "Sending hex_color:",
+      updatedProject.hexColor,
+      "Type:",
+      typeof updatedProject.hexColor
+    );
     try {
       // Store rollback function
       rollback = () => {

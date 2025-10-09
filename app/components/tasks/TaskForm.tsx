@@ -1,11 +1,9 @@
 "use client";
-
 import DatePicker from "../ui/datepicker";
-import { manrope } from "@/app/components/ui/fonts";
 import SelectBox from "../ui/select-box";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "../ui/button";
-import SpinnerComponent  from "../ui/spinner";
+import SpinnerComponent from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";
 import { Task } from "@/app/lib/definitions";
@@ -18,16 +16,20 @@ interface TaskFormProps {
   onError?: () => void;
 }
 
-export default function TaskForm({ initialProjectId = '', onTaskCreated, onError }: TaskFormProps) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState<string>('');
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(initialProjectId);
+export default function TaskForm({
+  initialProjectId = "",
+  onTaskCreated,
+  onError,
+}: TaskFormProps) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState<string>("");
+  const [selectedProjectId, setSelectedProjectId] =
+    useState<string>(initialProjectId);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const { addTask } = useTaskContext()
+  const [error, setError] = useState("");
+  const { addTask } = useTaskContext();
   const { projects } = useProjectContext();
-
   const {
     spinnerState,
     showSpinner,
@@ -35,29 +37,31 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
     showSpinnerLoading,
     showSpinnerSuccess,
     showSpinnerError,
-    resetSpinner
+    resetSpinner,
   } = useSpinner();
 
   // Find the initial project name based on the initialProjectId
-  const initialProject = projects.find(p => p.id === initialProjectId);
-  const initialProjectName = initialProject ? initialProject.name : '';
+  const initialProject = projects.find((p) => p.id === initialProjectId);
+  const initialProjectName = initialProject ? initialProject.name : "";
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Set up Spinner
     resetSpinner();
     showSpinner();
     showSpinnerLoading();
 
-    e.preventDefault();
     if (!title.trim() || !selectedProjectId) return;
 
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       const response = await fetch(`/api/projects/${selectedProjectId}/tasks`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           title,
@@ -70,9 +74,10 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
       if (!response.ok) {
         const errorData = await response.json();
         showSpinnerError();
-        throw new Error(errorData.error || 'Failed to create task');
+        throw new Error(errorData.error || "Failed to create task");
       }
 
+      // Show success spinner, then hide and reset
       setTimeout(() => {
         showSpinnerSuccess();
         setTimeout(() => {
@@ -94,16 +99,15 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
       onTaskCreated?.(newTask);
 
       // Clear the form
-      setTitle('');
-      setDescription('');
-      setDueDate('');
-
+      setTitle("");
+      setDescription("");
+      setDueDate("");
     } catch (error) {
       console.error("Error creating task:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Failed to create task. Please try again.';
+          : "Failed to create task. Please try again.";
       setError(errorMessage);
       showSpinnerError();
 
@@ -114,18 +118,18 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDateChange = (date: string) => {
     setDueDate(date);
-  }
+  };
 
   const handleProjectChange = (projectName: string) => {
-    const project = projects.find(p => p.name === projectName);
+    const project = projects.find((p) => p.name === projectName);
     if (project) {
       setSelectedProjectId(project.id);
     }
-  }
+  };
 
   return (
     <form
@@ -133,12 +137,11 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
       className="text-black w-full max-w-6xl mx-auto"
     >
       <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-
-        {/* Form Section */}
         <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-6 pt-8 w-full">
-
           <div className="flex align-center mb-6">
-            <h1 className={`${manrope.className} text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}>
+            <h1
+              className={`text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}
+            >
               Add New Task
             </h1>
             <SpinnerComponent spinnerState={spinnerState} size={40} />
@@ -158,7 +161,7 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
                 <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
                   <SelectBox
                     name="project"
-                    options={projects.map(p => p.name)}
+                    options={projects.map((p) => p.name)}
                     value={initialProjectName}
                     onChange={handleProjectChange}
                     required
@@ -207,7 +210,6 @@ export default function TaskForm({ initialProjectId = '', onTaskCreated, onError
             </div>
           </div>
 
-          {/* Full width button */}
           <div className="flex justify-center lg:justify-end">
             <Button
               className="text-lg w-full lg:w-auto min-w-[200px] h-12 cursor-pointer flex items-center justify-center gap-2"

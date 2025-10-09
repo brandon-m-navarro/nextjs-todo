@@ -1,94 +1,65 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db, mapProjectDbToType } from '@/app/lib/db';
+import { NextRequest, NextResponse } from "next/server";
+import { db, mapProjectDbToType } from "@/app/lib/db";
 
-// Update to expect a Promise for params
 interface RouteParams {
-    params: Promise<{
-        projectId: string;
-    }>;
+  params: Promise<{
+    projectId: string;
+  }>;
 }
 
-export async function GET(
-    request: NextRequest,
-    { params }: RouteParams
-) {
-    try {
-        // Await the params first
-        const { projectId } = await params;
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { projectId } = await params;
+    const dbProject = await db.projects.getById(projectId);
 
-        const dbProject = await db.projects.getById(projectId);
-
-        if (!dbProject) {
-            return NextResponse.json(
-                { error: 'Project not found' },
-                { status: 404 }
-            );
-        }
-
-        // Map DB result to camelCase
-        const project = mapProjectDbToType(dbProject);
-
-        return NextResponse.json({ success: true, project });
-    } catch (error) {
-        console.error('Error fetching project:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch project' },
-            { status: 500 }
-        );
+    if (!dbProject) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
+
+    // Map result (snake_case -> camelCase)
+    const project = mapProjectDbToType(dbProject);
+
+    return NextResponse.json({ success: true, project });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch project" },
+      { status: 500 }
+    );
+  }
 }
 
-export async function DELETE(
-    request: NextRequest,
-    { params }: RouteParams
-) {
-    try {
-        // Await the params first
-        const { projectId } = await params;
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { projectId } = await params;
+    await db.projects.delete(projectId);
 
-        const deletedCount = await db.projects.delete(projectId);
-
-        console.log('Promise awaited: ', deletedCount);
-        // if (deletedCount === 0) {
-        //     return NextResponse.json(
-        //         { error: 'Project not found or already deleted' },
-        //         { status: 404 }
-        //     );
-        // }
-
-        return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error('Error deleting project:', error);
-        return NextResponse.json(
-            { error: 'Failed to delete project' },
-            { status: 500 }
-        );
-    }
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return NextResponse.json(
+      { error: "Failed to delete project" },
+      { status: 500 }
+    );
+  }
 }
 
-export async function PUT(
-    request: NextRequest,
-    { params }: RouteParams
-) {
-    try {
-        // Await the params first
-        const { projectId } = await params;
-        const body = await request.json();
-        const project = await db.projects.update(projectId, body);
+export async function PUT(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { projectId } = await params;
+    const body = await request.json();
+    const project = await db.projects.update(projectId, body);
 
-        if (!project) {
-            return NextResponse.json(
-                { error: 'Project not found' },
-                { status: 404 }
-            );
-        }
-
-        return NextResponse.json({ success: true, project });
-    } catch (error) {
-        console.error('Error updating project:', error);
-        return NextResponse.json(
-            { error: 'Failed to update project' },
-            { status: 500 }
-        );
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
+
+    return NextResponse.json({ success: true, project });
+  } catch (error) {
+    console.error("Error updating project:", error);
+    return NextResponse.json(
+      { error: "Failed to update project" },
+      { status: 500 }
+    );
+  }
 }

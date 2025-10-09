@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Link from "next/link";
 import { TaskList } from "@/app/components/tasks/TaskList";
 import { TaskFilters } from "@/app/components/tasks/TaskFilters";
@@ -8,25 +8,28 @@ import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { useSearchParams } from "next/navigation";
 
 export default function TasksPageComponent() {
+  // Search and filter rely on URL params
   const searchParams = useSearchParams();
 
   // Get individual params with safety checks
-  const project = searchParams?.get('project') || undefined;
-  const status = searchParams?.get('status') as "all" | "active" | "completed" | undefined;
-  const sort = searchParams?.get('sort') as "newest" | "oldest" | "due-date" | undefined;
+  const project = searchParams?.get("project") || undefined;
+  const status = searchParams?.get("status") as
+    | "all"
+    | "active"
+    | "completed"
+    | undefined;
+  const sort = searchParams?.get("sort") as
+    | "newest"
+    | "oldest"
+    | "due-date"
+    | undefined;
 
-  // Use individual params directly instead of creating a new object
   const { tasks } = useTaskContext();
   const { projects } = useProjectContext();
-
-  // Apply filters - use individual params directly
   const filteredTasks = tasks.filter((task: Task) => {
-    // Project filter
     if (project && task.projectId !== project) {
       return false;
     }
-
-    // Status filter
     if (status === "active" && task.isDone) {
       return false;
     }
@@ -36,8 +39,6 @@ export default function TasksPageComponent() {
 
     return true;
   });
-
-  // Apply sorting - use individual params directly
   const sortedTasks = [...filteredTasks].sort((a: Task, b: Task) => {
     switch (sort) {
       case "oldest":
@@ -60,15 +61,15 @@ export default function TasksPageComponent() {
         );
     }
   });
-
   const activeTasks = tasks.filter((task: Task) => !task.isDone);
   const completedTasks = tasks.filter((task: Task) => task.isDone);
-
-  // Find project name safely
-  const currentProject = project ? projects.find((p: Project) => p.id === project) : null;
+  const currentProject = project
+    ? projects.find((p: Project) => p.id === project)
+    : null;
 
   return (
     <div className="max-w-6xl mx-auto text-black">
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">

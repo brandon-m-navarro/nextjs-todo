@@ -6,7 +6,13 @@ interface SelectBoxProps {
   required?: boolean;
 }
 
-export default function SelectBox({ name, options, value, onChange, required }: SelectBoxProps) {
+export default function SelectBox({
+  name,
+  options,
+  value,
+  onChange,
+  required,
+}: SelectBoxProps) {
   return (
     <select
       name={name}

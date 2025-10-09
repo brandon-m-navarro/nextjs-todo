@@ -16,11 +16,11 @@ export default function ProjectPageComponent({
   const { getProjectById } = useProjectContext();
   const project = getProjectById(projectId);
 
-  // Show loading state
+  // Show loading state if project is not yet available
   if (!project) {
     return (
       <div className="p-8 text-black">
-        <BackButton text="All Projects" overrideRouter={'/projects'} />
+        <BackButton text="All Projects" overrideRouter={"/projects"} />
         <div>Loading project...</div>
       </div>
     );
@@ -77,7 +77,6 @@ export default function ProjectPageComponent({
         </div>
       )}
 
-      {/* Task Manager */}
       <TaskManager project={project} />
     </div>
   );

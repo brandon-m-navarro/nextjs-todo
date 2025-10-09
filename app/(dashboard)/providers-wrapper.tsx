@@ -1,7 +1,7 @@
-'use client';
-import { TaskProvider } from '@/app/contexts/TaskContext';
-import { ProjectProvider } from '@/app/contexts/ProjectContext';
-import { Task, Project } from '@/app/lib/definitions';
+"use client";
+import { TaskProvider } from "@/app/contexts/TaskContext";
+import { ProjectProvider } from "@/app/contexts/ProjectContext";
+import { Task, Project } from "@/app/lib/definitions";
 
 interface ProvidersWrapperProps {
   children: React.ReactNode;
@@ -9,16 +9,14 @@ interface ProvidersWrapperProps {
   initialProjects: Project[];
 }
 
-export default function ProvidersWrapper({ 
-  children, 
-  initialTasks, 
-  initialProjects 
+export default function ProvidersWrapper({
+  children,
+  initialTasks,
+  initialProjects,
 }: ProvidersWrapperProps) {
   return (
     <ProjectProvider initialProjects={initialProjects}>
-      <TaskProvider initialTasks={initialTasks}>
-        {children}
-      </TaskProvider>
+      <TaskProvider initialTasks={initialTasks}>{children}</TaskProvider>
     </ProjectProvider>
   );
 }

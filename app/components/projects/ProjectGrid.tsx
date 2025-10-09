@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Project } from '@/app/lib/definitions';
+import Link from "next/link";
+import { Project } from "@/app/lib/definitions";
 
 interface ProjectGridProps {
   projects: Project[];
@@ -9,7 +9,9 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
   if (projects.length === 0) {
     return (
       <div className="bg-white p-6 rounded-lg shadow">
-        <p className="text-gray-500">No projects yet. Create your first project!</p>
+        <p className="text-gray-500">
+          No projects yet. Create your first project!
+        </p>
       </div>
     );
   }
@@ -26,9 +28,9 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
           {project.description && (
             <p className="text-gray-600 text-sm mb-3">{project.description}</p>
           )}
-          <div 
+          <div
             className="w-6 h-6 rounded-full"
-            style={{ backgroundColor: `#${project.hexColor || 'cccccc'}` }}
+            style={{ backgroundColor: `#${project.hexColor || "3B82F6"}` }}
           />
         </Link>
       ))}
