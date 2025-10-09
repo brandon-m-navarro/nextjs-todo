@@ -13,6 +13,7 @@ interface AccordionProps {
   render?: (props: {
     isOpen: boolean;
     toggle: () => void;
+    resize: () => void;
     open: () => void;
     close: () => void;
     contentHeight: number;
@@ -33,27 +34,11 @@ export default function Accordion({
   const contentRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>;
-
-  // Expose methods via ref
-  useEffect(() => {
-    if (ref) {
-      if (typeof ref === "function") {
-        ref({
-          open: () => setIsOpen(true),
-          close: () => setIsOpen(false),
-          toggle: () => setIsOpen((prev) => !prev),
-          isOpen,
-        });
-      } else if (ref && "current" in ref) {
-        ref.current = {
-          open: () => setIsOpen(true),
-          close: () => setIsOpen(false),
-          toggle: () => setIsOpen((prev) => !prev),
-          isOpen,
-        };
-      }
+  const resize = function () {
+    if (contentRef.current) {
+      setContentHeight(isOpen ? contentRef.current.scrollHeight : 0);
     }
-  }, [ref, isOpen]);
+  };
 
   // Adjust height on open/close
   useEffect(() => {
@@ -69,6 +54,7 @@ export default function Accordion({
         {render({
           isOpen,
           toggle: () => setIsOpen((prev) => !prev),
+          resize: () => resize(),
           open: () => setIsOpen(true),
           close: () => setIsOpen(false),
           contentHeight,
