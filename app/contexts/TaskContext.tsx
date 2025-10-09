@@ -4,7 +4,14 @@ import { Task } from "@/app/lib/definitions";
 
 interface TaskContextType {
   tasks: Task[];
-  addTask: (task: Task, callback?: (response?: Response) => void) => void;
+  addTask: (
+    task: Omit<Task, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
+  ) => Promise<Task | void>;
   updateTask: (task: Task, callback?: (response?: Response) => void) => void;
   deleteTask: (
     taskId: string,
@@ -29,46 +36,81 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
 }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
+  // Add Task with optimistic update and rollback on failure
   const addTask = async (
-    task: Task,
-    callback?: (response?: Response) => void
+    task: Omit<Task, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    callback?: (response?: {
+      success: boolean;
+      task?: Task;
+      error?: string;
+    }) => void
   ) => {
-    setTasks((prevTasks) => [task, ...prevTasks]);
-    callback?.();
+    let rollback: (() => void) | null = null;
+    const tempTask: Task = {
+      ...task,
+      id: `TSK-temp-${crypto.randomUUID()}`,
+      creationDateTime: new Date(),
+      lastModifiedDateTime: new Date(),
+    };
 
-    // try {
-    //   const response = await fetch(`/api/tasks/${task.id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       projectId: task.projectId,
-    //       id: task.id,
-    //       title: task.title,
-    //       description: task.description || null,
-    //       is_done: task.isDone,
-    //       project_id: task.projectId,
-    //       ordinal: task.ordinal ? Number(task.ordinal) : null,
-    //       expected_completion_date_time: task.expectedCompletionDateTime
-    //         ? new Date(task.expectedCompletionDateTime)
-    //         : null,
-    //       creation_date_time: new Date(),
-    //       last_modified_date_time: new Date()
-    //     }),
-    //   });
+    try {
+      // Store rollback function
+      rollback = () => {
+        setTasks((prevTasks) =>
+          prevTasks.filter((t) => t.id !== tempTask.id)
+        );
+      };
 
-    //   if (!response.ok) {
-    //     const errorData = await response.json();
-    //     throw new Error(errorData.error || 'Failed to update task');
-    //   }
+      // Optimistic update
+      setTasks((prevTasks) => [tempTask, ...prevTasks]);
 
-    //   if (callback) {
-    //     callback(response);
-    //   }
-    // } catch (error) {
-    //   throw new Error('Failed to add task!' + error);
-    // }
+      const response = await fetch(`/api/projects/${task.projectId}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          project_id: task.projectId,
+          title: task.title,
+          description: task.description || null,
+          ordinal: task.ordinal || null,
+          expected_completion_date_Time: task.expectedCompletionDateTime || null
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create project");
+      }
+
+      // Parse response ONCE
+      const data = await response.json();
+      const serverTask: Task = data.task;
+
+      // Replace temporary project with server version
+      setTasks((prev) =>
+        prev.map((t) => (t.id === tempTask.id ? serverTask : t))
+      );
+
+      // Call callback with success data
+      callback?.({ success: true, task: serverTask });
+
+      return serverTask;
+    } catch (error) {
+      // Rollback on error
+      if (rollback) {
+        rollback();
+      }
+
+      console.error("Failed to add task:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add task";
+
+      // Call callback with error
+      callback?.({ success: false, error: errorMessage });
+
+      throw error;
+    }
   };
 
   const updateTask = async (

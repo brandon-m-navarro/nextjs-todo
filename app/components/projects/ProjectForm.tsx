@@ -21,12 +21,10 @@ export default function ProjectForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!formData.name.trim()) {
       setError("Project name is required");
       return;
     }
-    
     setIsSubmitting(true);
     setError("");
 

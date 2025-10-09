@@ -58,45 +58,46 @@ export default function TaskForm({
     setError("");
 
     try {
-      const response = await fetch(`/api/projects/${selectedProjectId}/tasks`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          expectedCompletionDateTime: dueDate || null,
+      await addTask(
+        {
+          projectId: selectedProjectId,
+          title: title.trim(),
+          description: description.trim() || null,
           isDone: false,
-        }),
-      });
+          ordinal: null,
+          expectedCompletionDateTime: dueDate ? new Date(dueDate) : null,
+        },
+        (result) => {
+          if (result?.success && result.task) {
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        showSpinnerError();
-        throw new Error(errorData.error || "Failed to create task");
-      }
+            // Show success spinner, then hide and reset
+            setTimeout(() => {
+              showSpinnerSuccess();
+              setTimeout(() => {
+                hideSpinner();
+                setTimeout(() => {
+                  resetSpinner();
+                }, 300);
+              }, 1000);
+            }, 500);
 
-      // Show success spinner, then hide and reset
-      setTimeout(() => {
-        showSpinnerSuccess();
-        setTimeout(() => {
-          hideSpinner();
-          setTimeout(() => {
-            resetSpinner();
-          }, 300);
-        }, 1000);
-      }, 500);
+            // Call parent callback if provided
+            onTaskCreated?.(result.task);
+          } else if (result?.error) {
+            // Error from callback
+            setError(result.error);
+            showSpinnerError();
 
-      // Construct Task object from response
-      const data = await response.json();
-      const newTask = data.task;
+            // Delay sending error to accordion to allow time for error UI to render
+            setTimeout(() => {
+              onError?.();
+            }, 10);
+          }
+        }
+      );
 
-      // Update context
-      addTask(newTask);
-
-      // Run callback if specfied
-      onTaskCreated?.(newTask);
+      // If we reach here, the task was added successfully
+      setError("");
 
       // Clear the form
       setTitle("");
