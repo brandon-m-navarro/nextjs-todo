@@ -22,9 +22,9 @@ Project Structure
 ```
 app/
 ├── (dashboard)/                        # Route group for dashboard (not in URL)
-│   ├── layout.tsx                      # Dashboard layout
+│   ├── layout.tsx                      # Dashboard layout (<ContextProviders />)
 │   ├── loading.tsx                     # Loading state for Dashboard (LiveDataPreviews component)
-│   ├── providers-wrapper.tsx           # Wrapper for Project/Task Provider so layout can stay server
+│   ├── providers-wrapper.tsx           # Wrapper for Project/Task Provider so layout can stay server-component
 │   ├── tasks/
 │   │   ├── page.tsx                    # /(dashboard)/tasks - All tasks
 │   │   ├── new/
@@ -56,12 +56,17 @@ app/
 │   ├── dashboard/
 │   │   └── LiveDataPreviews.tsx
 │   ├── ui/                             # Shared UI components
+│   │   ├── accordion.tsx
+│   │   ├── animation.tsx
+│   │   ├── back-button.tsx
 │   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   └── animation.tsx
+│   │   ├── datepicker.tsx
+│   │   ├── fonts.ts
+│   │   ├── rubiks-cube.tsx             # Unused, just did as an exercise
+│   │   ├── select-box.tsx
+│   │   └── spinner.tsx
 │   ├── tasks/
-│   │   ├── TaskCard.tsx
+│   │   ├── TaskCard.tsx                # Unused
 │   │   ├── TaskDetails.tsx
 │   │   ├── TaskEditForm.tsx
 │   │   ├── TaskFilters.tsx
@@ -75,17 +80,17 @@ app/
 │       ├── ProjectChooser.tsx
 │       ├── ProjectEditForm.tsx
 │       ├── ProjectForm.tsx
-│       ├── ProjectGrid.tsx
+│       ├── ProjectGrid.tsx             # Unused
 │       └── ProjectPageComponent.tsx
-├── contexts/
+├── contexts/                           # Help manage state and keep UI components synced with data in the Context
 │   ├── ProjectContext.tsx
 │   └── TaskContext.tsx
 ├── lib/
 │   ├── db.ts                           # Database utilities
 │   ├── definitions.ts                  # Shared TypeScript types
 │   ├── ls.ts                           # LocalStorage helpers
-│   ├── placeholder-data.ts             #
-│   └── utilities.ts                    #
+│   ├── placeholder-data.ts             # Data used for seeding db
+│   └── utilities.ts                    # Shared utility functions
 ├── scripts/
 │   ├── create-tables.ts                # SQL table creation
 │   └── seed.ts                         # DB seeding script
