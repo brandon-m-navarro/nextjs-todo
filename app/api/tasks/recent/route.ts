@@ -11,12 +11,12 @@ async function getRecentTasksPreview() {
       const tasks = await db.tasks.getByProjectId(project.id);
       const tasksWithProject = tasks.map((task) => ({
         ...task,
-        projectId: task.project_id,
-        isDone: task.is_done,
-        creationDateTime: task.creation_date_time,
-        lastModifiedDateTime: task.last_modified_date_time,
+        projectId: task.projectId,
+        isDone: task.isDone,
+        creationDateTime: task.creationDateTime,
+        lastModifiedDateTime: task.lastModifiedDateTime,
         projectName: project.name,
-        projectColor: project.hex_color,
+        projectColor: project.hexColor,
       }));
       allTasks.push(...tasksWithProject);
     }

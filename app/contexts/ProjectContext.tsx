@@ -82,7 +82,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         body: JSON.stringify({
           name: project.name,
           description: project.description || null,
-          hex_color: project.hexColor || null,
+          hexColor: project.hexColor || null,
           icon: project.icon || null,
         }),
       });
@@ -160,9 +160,9 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         body: JSON.stringify({
           name: updatedProject.name,
           description: updatedProject.description || null,
-          hex_color: updatedProject.hexColor || null,
+          hexColor: updatedProject.hexColor || null,
           icon: updatedProject.icon,
-          last_modified_date_time: new Date().toISOString(),
+          lastModifiedDateTime: new Date().toISOString(),
         }),
       });
 

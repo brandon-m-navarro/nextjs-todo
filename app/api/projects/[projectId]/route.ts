@@ -10,14 +10,11 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
-    const dbProject = await db.projects.getById(projectId);
+    const project = await db.projects.getById(projectId);
 
-    if (!dbProject) {
+    if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
-
-    // Map result (snake_case -> camelCase)
-    const project = mapProjectDbToType(dbProject);
 
     return NextResponse.json({ success: true, project });
   } catch (error) {

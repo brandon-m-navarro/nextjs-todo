@@ -10,20 +10,19 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const dbTask = await db.tasks.getById(id);
+    const task = await db.tasks.getById(id);
 
-    if (!dbTask) {
+    if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
     // Map db result (snake_case -> camelCase)
-    const task = mapTaskDbToType(dbTask);
     const project = await db.projects.getById(task.projectId);
 
     const taskWithProject = {
       ...task,
       projectName: project?.name || "Unknown Project",
-      projectColor: project?.hex_color || null,
+      projectColor: project?.hexColor || null,
     };
 
     return NextResponse.json({ success: true, task: taskWithProject });

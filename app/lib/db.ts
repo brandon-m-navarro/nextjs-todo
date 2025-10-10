@@ -39,24 +39,26 @@ export function mapTaskDbToType(taskFromDb: TaskFromDb): Task {
 }
 
 export const db = {
-
   /* Project operations */
   projects: {
-
     // Get all projects
-    getAll: async (): Promise<ProjectFromDb[]> => {
+    getAll: async (): Promise<Project[]> => {
       const result = await sql`
                 SELECT * FROM projects ORDER BY creation_date_time DESC
             `;
-      return result as ProjectFromDb[];
+      const projectsFromDb = result as ProjectFromDb[];
+      const projectsMapped = projectsFromDb.map(mapProjectDbToType);
+      return projectsMapped;
     },
 
     // Get a project by ID
-    getById: async (id: string): Promise<ProjectFromDb | null> => {
+    getById: async (id: string): Promise<Project | null> => {
       const result = await sql`
                 SELECT * FROM projects WHERE id = ${id}
             `;
-      return result.length > 0 ? (result[0] as ProjectFromDb) : null;
+      const projectFromDb = result.length > 0 ? (result[0] as ProjectFromDb) : null;
+      const projectMapped = projectFromDb ? mapProjectDbToType(projectFromDb) : null;
+      return projectMapped;
     },
 
     // Create a new project
@@ -66,7 +68,7 @@ export const db = {
       description?: string,
       hexColor?: string,
       icon?: string
-    ): Promise<ProjectFromDb> => {
+    ): Promise<Project> => {
       const now = new Date();
       const result = await sql`
                 INSERT INTO projects (id, name, description, hex_color, icon, creation_date_time, last_modified_date_time)
@@ -75,7 +77,10 @@ export const db = {
       }, ${icon || null}, ${now}, ${now})
                 RETURNING *
             `;
-      return result[0] as ProjectFromDb;
+
+      const projectFromDb = result[0] as ProjectFromDb;
+      const projectMapped = mapProjectDbToType(projectFromDb);
+      return projectMapped;
     },
 
     // Update a project
@@ -84,10 +89,10 @@ export const db = {
       updates: {
         name?: string;
         description?: string | null;
-        hex_color: string;
+        hexColor: string;
         icon?: string;
       }
-    ): Promise<ProjectFromDb | null> => {
+    ): Promise<Project | null> => {
       const now = new Date();
 
       const result = await sql`
@@ -95,13 +100,15 @@ export const db = {
         SET 
             name = ${updates.name ?? undefined},
             description = ${updates.description ?? undefined},
-            hex_color = ${updates.hex_color ?? undefined},
+            hex_color = ${updates.hexColor ?? undefined},
             icon = ${updates.icon ?? undefined},
             last_modified_date_time = ${now}
         WHERE id = ${id}
         RETURNING *
     `;
-      return result.length > 0 ? (result[0] as ProjectFromDb) : null;
+      const projectFromDb = result.length > 0 ? (result[0] as ProjectFromDb) : null;
+      const projectMapped = projectFromDb ? mapProjectDbToType(projectFromDb) : null;
+      return projectMapped;
     },
 
     // Delete a project
@@ -119,80 +126,102 @@ export const db = {
 
   /* Task operations */
   tasks: {
-
     // Get task by ID
-    getById: async (id: string): Promise<TaskFromDb | null> => {
+    getById: async (id: string): Promise<Task | null> => {
       const result = await sql`
                 SELECT * FROM tasks WHERE id = ${id}
             `;
-      return result.length > 0 ? (result[0] as TaskFromDb) : null;
+      const taskFromDb = result.length > 0 ? (result[0] as TaskFromDb) : null;
+      const taskMapped = taskFromDb ? mapTaskDbToType(taskFromDb) : null;
+      return taskMapped;
     },
 
     // Get tasks by project ID
-    getByProjectId: async (projectId: string): Promise<TaskFromDb[]> => {
+    getByProjectId: async (projectId: string): Promise<Task[]> => {
       const result = await sql`
                 SELECT * FROM tasks WHERE project_id = ${projectId} ORDER BY creation_date_time DESC
             `;
-      return result as TaskFromDb[];
+      const projById = result as TaskFromDb[];
+      const projMapped = projById.map(mapTaskDbToType);
+      return projMapped;
     },
 
     // Create a new task
     create: async (
-      task: Omit<TaskFromDb, "creation_date_time" | "last_modified_date_time">
-    ): Promise<TaskFromDb> => {
+      task: Omit<Task, "creationDateTime" | "lastModifiedDateTime">
+    ): Promise<Task> => {
       const now = new Date();
       const result = await sql`
                 INSERT INTO tasks (
                     project_id, id, title, description, is_done, ordinal, 
                     expected_completion_date_time, creation_date_time, last_modified_date_time
                 ) VALUES (
-                    ${task.project_id}, ${task.id}, ${task.title}, 
-                    ${task.description || null}, ${task.is_done}, 
+                    ${task.projectId}, ${task.id}, ${task.title}, 
+                    ${task.description || null}, ${task.isDone}, 
                     ${task.ordinal || null}, 
                     ${
-                      task.expected_completion_date_time
-                        ? new Date(task.expected_completion_date_time).toISOString()
+                      task.expectedCompletionDateTime
+                        ? new Date(
+                            task.expectedCompletionDateTime
+                          ).toISOString()
                         : null
                     },
                     ${now}, ${now}
                 )
                 RETURNING *
             `;
-      return result[0] as TaskFromDb;
+      const taskFromDb = result[0] as TaskFromDb;
+      const taskMapped = mapTaskDbToType(taskFromDb);
+      return taskMapped;
     },
 
     // Update a task
     update: async (
       id: string,
-      updates: Partial<
-        Omit<TaskFromDb, "id" | "project_id" | "creation_date_time">
-      >
-    ): Promise<TaskFromDb | null> => {
+      updates: Partial<Task>
+    ): Promise<Task | null> => {
       const now = new Date();
+
+      // Validate non-nullable fields first
+      if (updates.title !== undefined) {
+        if (updates.title === null || updates.title.trim() === '') {
+          throw new Error('Title cannot be null or empty');
+        }
+      }
+      if (updates.isDone !== undefined && typeof updates.isDone !== 'boolean') {
+        throw new Error('is_done must be a boolean');
+      }
+
       const result = await sql`
-                UPDATE tasks
-                SET 
-                    title = COALESCE(${updates.title}, title),
-                    description = COALESCE(${updates.description}, description),
-                    is_done = COALESCE(${updates.is_done}, is_done),
-                    ordinal = COALESCE(${updates.ordinal}, ordinal),
-                    expected_completion_date_time = COALESCE(${
-                      updates.expected_completion_date_time
-                        ? new Date(updates.expected_completion_date_time)
-                        : null
-                    }, expected_completion_date_time),
-                    last_modified_date_time = ${now}
-                WHERE id = ${id}
-                RETURNING *
-            `;
-      return result.length > 0 ? (result[0] as TaskFromDb) : null;
+        UPDATE tasks
+        SET 
+          last_modified_date_time = ${now}
+          ${updates.projectId !== undefined ? sql`, project_id = ${updates.projectId}` : sql``}
+          ${updates.title !== undefined ? sql`, title = ${updates.title}` : sql``}
+          ${updates.description !== undefined ? sql`, description = ${updates.description}` : sql``}
+          ${updates.isDone !== undefined ? sql`, is_done = ${updates.isDone}` : sql``}
+          ${updates.ordinal !== undefined ? sql`, ordinal = ${updates.ordinal}` : sql``}
+          ${
+            updates.expectedCompletionDateTime !== undefined 
+              ? sql`, expected_completion_date_time = ${
+                  updates.expectedCompletionDateTime 
+                    ? new Date(updates.expectedCompletionDateTime)
+                    : null
+                }`
+              : sql``
+          }
+        WHERE id = ${id}
+        RETURNING *
+      `;
+
+      const taskFromDb = result.length > 0 ? (result[0] as TaskFromDb) : null;
+      const taskMapped = taskFromDb ? mapTaskDbToType(taskFromDb) : null;
+      return taskMapped;
     },
 
     // Delete a task
     delete: async (id: string): Promise<boolean> => {
-      await sql`
-                DELETE FROM tasks WHERE id = ${id}
-            `;
+      await sql`DELETE FROM tasks WHERE id = ${id}`;
       // Assume success if no error was thrown
       return true;
     },
@@ -210,11 +239,13 @@ export const db = {
     },
 
     // Get all tasks
-    getAll: async (): Promise<TaskFromDb[]> => {
+    getAll: async (): Promise<Task[]> => {
       const result = await sql`
                 SELECT * FROM tasks ORDER BY creation_date_time DESC
             `;
-      return result as TaskFromDb[];
+      const tasksFromDb = result as TaskFromDb[];
+      const tasksMapped = tasksFromDb.map(mapTaskDbToType);
+      return tasksMapped;
     },
   },
 };

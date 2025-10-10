@@ -15,16 +15,13 @@ export async function POST(request: NextRequest) {
     }
 
     const projectId = generateId("PRO");
-    const dbProject = await db.projects.create(
+    const project = await db.projects.create(
       projectId,
       name,
       description,
       hexColor,
       icon
     );
-
-    // Map db result (snake_case -> camelCase)
-    const project = mapProjectDbToType(dbProject);
 
     return NextResponse.json({ success: true, project }, { status: 201 });
   } catch (error) {
@@ -38,10 +35,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const dbProjects = await db.projects.getAll();
-
-    // Map all projects (snake_case -> camelCase)
-    const projects = dbProjects.map(mapProjectDbToType);
+    const projects = await db.projects.getAll();
 
     return NextResponse.json({ success: true, projects });
   } catch (error) {

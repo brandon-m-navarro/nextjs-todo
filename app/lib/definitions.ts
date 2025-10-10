@@ -14,6 +14,16 @@ export type Task = {
   lastModifiedDateTime: Date;
 };
 
+export type Project = {
+  id: string;
+  name: string;
+  description: string | null;
+  hexColor: string | null;
+  icon: string | null;
+  creationDateTime: Date;
+  lastModifiedDateTime: Date;
+};
+
 export interface TaskFromDb {
   project_id: string;
   id: string;
@@ -50,16 +60,6 @@ export interface TaskWithProject {
   projectName: string;
   projectColor?: string | null;
 }
-
-export type Project = {
-  id: string;
-  name: string;
-  description: string | null;
-  hexColor: string | null;
-  icon: string | null;
-  creationDateTime: Date;
-  lastModifiedDateTime: Date;
-};
 
 export type LS = {
   tasks: Task[];

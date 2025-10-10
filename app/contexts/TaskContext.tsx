@@ -79,7 +79,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          project_id: task.projectId,
           title: task.title,
           description: task.description || null,
           ordinal: task.ordinal || null,
@@ -165,10 +164,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         body: JSON.stringify({
           title: updatedTask.title,
           description: updatedTask.description || null,
-          is_done: updatedTask.isDone,
-          project_id: updatedTask.projectId,
+          isDone: updatedTask.isDone,
+          projectId: updatedTask.projectId,
           ordinal: updatedTask.ordinal ? Number(updatedTask.ordinal) : null,
-          expected_completion_date_time: updatedTask.expectedCompletionDateTime
+          expectedCompletionDateTime: updatedTask.expectedCompletionDateTime
             ? new Date(updatedTask.expectedCompletionDateTime).toISOString()
             : null,
         }),
@@ -183,8 +182,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       const data = await response.json();
       const serverTask: Task = data.task;
       callback?.({ success: true, task: serverTask });
-
-      return serverTask;
     } catch (error) {
       // Rollback on error
       if (rollback) {
@@ -239,8 +236,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       const data = await response.json();
       const serverTask: Task = data.task;
       callback?.({ success: true, task: serverTask });
-
-      return serverTask;
     } catch (error) {
       // Rollback on error
       if (rollback) {
@@ -251,7 +246,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         success: false,
         error: error instanceof Error ? error.message : "Failed to delete task",
       });
-      throw error instanceof Error ? error : new Error("Failed to delete task");
     }
   };
 
