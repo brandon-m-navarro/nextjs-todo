@@ -103,8 +103,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
       // Call callback with success data
       callback?.({ success: true, project: serverProject });
-
-      return serverProject;
     } catch (error) {
       // Rollback on error
       if (rollback) {
@@ -117,8 +115,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
       // Call callback with error
       callback?.({ success: false, error: errorMessage });
-
-      throw error;
     }
   };
 

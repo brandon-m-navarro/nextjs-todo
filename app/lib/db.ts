@@ -141,9 +141,9 @@ export const db = {
       const result = await sql`
                 SELECT * FROM tasks WHERE project_id = ${projectId} ORDER BY creation_date_time DESC
             `;
-      const projById = result as TaskFromDb[];
-      const projMapped = projById.map(mapTaskDbToType);
-      return projMapped;
+      const tasksFromDb = result as TaskFromDb[];
+      const tasksMapped = tasksFromDb.map(mapTaskDbToType);
+      return tasksMapped;
     },
 
     // Create a new task

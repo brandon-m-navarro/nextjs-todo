@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, mapTaskDbToType } from "@/app/lib/db";
+import { db } from "@/app/lib/db";
 
 interface RouteParams {
   params: Promise<{

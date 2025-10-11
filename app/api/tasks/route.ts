@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, mapTaskDbToType } from "@/app/lib/db";
+import { db } from "@/app/lib/db";
 import { generateId } from "@/app/lib/utilities";
 
 export async function POST(request: NextRequest) {

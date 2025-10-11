@@ -1,6 +1,5 @@
 import ProvidersWrapper from "@/app/(dashboard)/providers-wrapper";
-import { db, mapProjectDbToType, mapTaskDbToType } from "@/app/lib/db";
-import { Project, Task } from "@/app/lib/definitions";
+import { db } from "@/app/lib/db";
 
 // Ensure the layout is dynamic and does not cache data
 export const dynamic = "force-dynamic";
@@ -8,9 +7,7 @@ export const revalidate = 0;
 
 async function getAllTasks() {
   try {
-    const tasksFromDb = await db.tasks.getAll();
-    const tasks: Task[] = tasksFromDb.map((task) => mapTaskDbToType(task));
-
+    const tasks = await db.tasks.getAll();
     return tasks;
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -20,10 +17,7 @@ async function getAllTasks() {
 
 async function getAllProjects() {
   try {
-    const projectsFromDb = await db.projects.getAll();
-    const projects: Project[] = projectsFromDb.map((project) =>
-      mapProjectDbToType(project)
-    );
+    const projects = await db.projects.getAll();
     return projects;
   } catch (error) {
     console.error("Error fetching projects:", error);
@@ -38,7 +32,8 @@ export default async function ProjectsLayout({
 }) {
   const tasks = await getAllTasks();
   const projects = await getAllProjects();
-
+ console.log(projects);
+ console.log(tasks);
   return (
     <ProvidersWrapper initialTasks={tasks} initialProjects={projects}>
       {children}
