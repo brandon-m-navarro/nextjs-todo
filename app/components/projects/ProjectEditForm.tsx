@@ -8,7 +8,7 @@ interface ProjectEditFormProps {
   projectId: string;
 }
 
-export function ProjectEditForm({ projectId }: ProjectEditFormProps) {
+export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

@@ -1,6 +1,6 @@
-import { generateId } from "./utilities";
-const HOUR_MILLIS = 1000 * 60 * 60;
-const DAY_MILLIS = HOUR_MILLIS * 24;
+// import { generateId } from "./utilities";
+// const HOUR_MILLIS = 1000 * 60 * 60;
+// const DAY_MILLIS = HOUR_MILLIS * 24;
 
 export const Tasks = [
   {

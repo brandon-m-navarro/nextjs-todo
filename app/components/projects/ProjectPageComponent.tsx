@@ -1,9 +1,9 @@
 "use client";
 import Accordion from "../ui/accordion";
 import BackButton from "@/app/components/ui/back-button";
-import { TaskManager } from "@/app/components/tasks/TaskManager";
+import Button from "../ui/button";
+import TaskManager from "@/app/components/tasks/TaskManager";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 interface ProjectPageComponentProps {
   projectId: string;

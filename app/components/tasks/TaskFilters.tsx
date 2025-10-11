@@ -8,7 +8,7 @@ interface TaskFiltersProps {
   currentSort?: string;
 }
 
-export function TaskFilters({
+export default function TaskFilters({
   projects,
   currentProject,
   currentStatus,

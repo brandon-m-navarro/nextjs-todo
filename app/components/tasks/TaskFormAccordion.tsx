@@ -6,7 +6,7 @@ interface TaskFormAccordionProps {
   projectId: string;
 }
 
-export function TaskFormAccordion({ projectId }: TaskFormAccordionProps) {
+export default function TaskFormAccordion({ projectId }: TaskFormAccordionProps) {
   return (
     <div className="mb-8">
       <Accordion

@@ -9,7 +9,7 @@ interface TaskEditFormProps {
   taskId: string;
 }
 
-export function TaskEditForm({ taskId }: TaskEditFormProps) {
+export default function TaskEditForm({ taskId }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");

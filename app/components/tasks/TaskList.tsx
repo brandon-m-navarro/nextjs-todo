@@ -8,7 +8,7 @@ interface TaskListProps {
   tasksToShow?: Task[];
 }
 
-export function TaskList({
+export default function TaskList({
   projectId = null,
   tasksToShow = [],
 }: TaskListProps) {

@@ -1,7 +1,7 @@
 import BackButton from "@/app/components/ui/back-button";
 import React from "react";
 import { notFound } from "next/navigation";
-import { ProjectEditForm } from "@/app/components/projects/ProjectEditForm";
+import ProjectEditForm from "@/app/components/projects/ProjectEditForm";
 
 interface ProjectEditPageProps {
   params: Promise<{

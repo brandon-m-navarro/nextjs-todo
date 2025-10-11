@@ -2,7 +2,7 @@
 import DatePicker from "../ui/datepicker";
 import SelectBox from "../ui/select-box";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { Button } from "../ui/button";
+import Button from "../ui/button";
 import SpinnerComponent from "../ui/spinner";
 import { useSpinner } from "../ui/spinner";
 import { useState } from "react";

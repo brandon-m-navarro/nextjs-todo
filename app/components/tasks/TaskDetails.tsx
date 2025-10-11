@@ -11,7 +11,7 @@ interface TaskDetailProps {
   taskId: string;
 }
 
-export function TaskDetail({ taskId }: TaskDetailProps) {
+export default function TaskDetail({ taskId }: TaskDetailProps) {
   const { updateTask, deleteTask, getTaskById } = useTaskContext();
   const { getProjectById } = useProjectContext();
   const router = useRouter();
