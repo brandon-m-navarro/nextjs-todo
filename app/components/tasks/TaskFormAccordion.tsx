@@ -13,7 +13,7 @@ export default function TaskFormAccordion({
     <div className="mb-8">
       <Accordion
         render={({ isOpen, toggle, resize, contentHeight, contentRef }) => (
-          <>
+          <div>
             {/* Toggle Button */}
             <button
               onClick={toggle}
@@ -40,7 +40,7 @@ export default function TaskFormAccordion({
                 />
               </div>
             </div>
-          </>
+          </div>
         )}
       />
     </div>
