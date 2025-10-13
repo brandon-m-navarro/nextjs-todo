@@ -42,7 +42,7 @@ export default function ProjectPageComponent({
       {project.description && (
         <Accordion
           render={({ isOpen, toggle, contentHeight, contentRef }) => (
-            <>
+            <div>
               <div
                 className="p-4 cursor-pointer flex justify-between items-center bg-blue-50"
                 onClick={toggle}
@@ -65,7 +65,7 @@ export default function ProjectPageComponent({
                   )}
                 </div>
               </div>
-            </>
+            </div>
           )}
         />
       )}
