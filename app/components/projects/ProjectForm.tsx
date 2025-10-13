@@ -141,14 +141,14 @@ export default function ProjectForm() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Project Color
             </label>
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
               {colorOptions.map((option) => (
                 <label
                   key={option.value}
-                  className={`relative cursor-pointer rounded-full p-1 ${
+                  className={`relative cursor-pointer rounded-lg p-2 flex flex-col items-center space-y-2 border-2 transition-colors ${
                     formData.hexColor === option.value
-                      ? "ring-2 ring-offset-2 ring-blue-500"
-                      : ""
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-transparent hover:bg-gray-50"
                   }`}
                 >
                   <input
@@ -161,8 +161,8 @@ export default function ProjectForm() {
                   />
                   <div
                     className={`w-8 h-8 rounded-full ${option.color} border border-gray-300`}
-                    title={option.label}
                   />
+                  <span className="text-xs text-gray-600">{option.label}</span>
                 </label>
               ))}
             </div>
@@ -201,7 +201,7 @@ export default function ProjectForm() {
             <button
               type="submit"
               disabled={isSubmitting || !formData.name.trim()}
-              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? "Creating..." : "Create Project"}
             </button>
