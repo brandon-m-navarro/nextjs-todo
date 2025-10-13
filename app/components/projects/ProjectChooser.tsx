@@ -5,7 +5,6 @@ import ProjectCard from './ProjectCard';
 
 export default function ProjectChooser() {
   const { projects } = useProjectContext();
-  console.log(projects);
 
   return (
     <div className="max-w-6xl mx-auto">

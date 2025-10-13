@@ -26,8 +26,6 @@ export default function TasksPageComponent() {
 
   const { tasks } = useTaskContext();
   const { projects } = useProjectContext();
-  console.log(tasks);
-  console.log(projects);
   const filteredTasks = tasks.filter((task: Task) => {
     if (project && task.projectId !== project) {
       return false;
