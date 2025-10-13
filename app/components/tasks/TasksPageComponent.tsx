@@ -24,7 +24,7 @@ export default function TasksPageComponent() {
     | "due-date"
     | undefined;
 
-  const { tasks } = useTaskContext();
+  const { tasks, isLoading } = useTaskContext();
   const { projects } = useProjectContext();
   const filteredTasks = tasks.filter((task: Task) => {
     if (project && task.projectId !== project) {
@@ -69,24 +69,36 @@ export default function TasksPageComponent() {
 
   return (
     <div className="max-w-6xl mx-auto text-black">
-
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Total Tasks</h3>
-          <p className="text-3xl font-bold">{tasks.length}</p>
+          {isLoading && (
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+          )}
+          {!isLoading && <p className="text-3xl font-bold">{tasks.length}</p>}
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Active Tasks</h3>
-          <p className="text-3xl font-bold text-blue-600">
-            {activeTasks.length}
-          </p>
+          {isLoading && (
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+          )}
+          {!isLoading && (
+            <p className="text-3xl font-bold text-blue-600">
+              {activeTasks.length}
+            </p>
+          )}
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Completed</h3>
-          <p className="text-3xl font-bold text-green-600">
-            {completedTasks.length}
-          </p>
+          {isLoading && (
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+          )}
+          {!isLoading && (
+            <p className="text-3xl font-bold text-green-600">
+              {completedTasks.length}
+            </p>
+          )}
         </div>
       </div>
 
@@ -114,7 +126,11 @@ export default function TasksPageComponent() {
           </h2>
         </div>
 
-        {sortedTasks.length > 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+          </div>
+        ) : sortedTasks.length > 0 ? (
           <TaskList tasksToShow={sortedTasks} />
         ) : (
           <div className="p-12 text-center">
@@ -131,7 +147,7 @@ export default function TasksPageComponent() {
             </p>
             <Link
               href="/tasks/new"
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Create Task
             </Link>

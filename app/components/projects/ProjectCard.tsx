@@ -1,35 +1,46 @@
 import { Project } from "@/app/lib/definitions";
-import Link from "next/link";
 
 interface ProjectCardProps {
   project: Project;
+  isNavigating?: boolean;
+  onNavigate?: () => void;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, isNavigating = false, onNavigate }: ProjectCardProps) {
   return (
-    <Link
-      key={project.id}
-      href={`/projects/${project.id}`}
-      className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all"
+    <div 
+      onClick={onNavigate}
+      className={`
+        bg-white rounded-lg shadow-sm border border-gray-200 p-6 
+        cursor-pointer transition-all duration-200 
+        hover:shadow-md hover:border-blue-300
+        ${isNavigating ? 'opacity-50 scale-95' : 'hover:scale-105'}
+        ${isNavigating ? 'animate-pulse' : ''}
+      `}
     >
-      <div className="flex items-center space-x-3 mb-4">
-        <div
-          className="w-8 h-8 rounded-full flex-shrink-0"
-          style={{ backgroundColor: `#${project.hexColor || "3B82F6"}` }}
-        />
-        <h3 className="font-semibold text-lg text-gray-900">{project.name}</h3>
-      </div>
-
-      {project.description && (
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {project.description}
-        </p>
+      {isNavigating && (
+        <div className="flex justify-center mb-2">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+        </div>
       )}
-
-      <div className="flex justify-between items-center text-sm text-gray-500">
-        <span>View Details →</span>
-        <span>{new Date(project.creationDateTime).toLocaleDateString()}</span>
+      
+      <div className="flex items-center space-x-3 mb-4">
+        {project.hexColor && (
+          <div
+            className="w-8 h-8 rounded-full flex-shrink-0"
+            style={{ backgroundColor: `#${project.hexColor}` }}
+          />
+        )}
+        <h3 className="font-semibold text-gray-900 truncate">{project.name}</h3>
       </div>
-    </Link>
+      
+      {project.description && (
+        <p className="text-gray-600 text-sm line-clamp-2">{project.description}</p>
+      )}
+      
+      <div className="mt-4 text-xs text-gray-500">
+        Created: {new Date(project.creationDateTime).toLocaleDateString()}
+      </div>
+    </div>
   );
 }

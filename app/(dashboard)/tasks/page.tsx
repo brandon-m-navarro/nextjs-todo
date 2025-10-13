@@ -16,7 +16,7 @@ export default function TasksPage() {
         </div>
         <Link
           href="/tasks/new"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150"
         >
           + New Task
         </Link>

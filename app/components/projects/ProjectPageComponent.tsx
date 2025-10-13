@@ -13,11 +13,6 @@ export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
   const router = useRouter();
-  // const { getProjectById, projects } = useProjectContext();
-  // const project = getProjectById(projectId);
-
-  // console.log('Projects in context:', projects.length);
-  // console.log('Project found:', !!project);
   const { getProjectById, isLoading } = useProjectContext();
   const project = getProjectById(projectId);
 
@@ -49,7 +44,7 @@ export default function ProjectPageComponent({
           onClick={() => {
             router.push(`/projects/${project.id}/edit`);
           }}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ml-auto"
+          className="px-4 py-2 ml-auto bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150"
         >
           Edit Project
         </Button>
