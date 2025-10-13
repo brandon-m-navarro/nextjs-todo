@@ -70,7 +70,7 @@ export default function Accordion({
       >
         <h3 className="font-semibold">Accordion Title</h3>
         <span className="transform transition-transform duration-300">
-          {isOpen ? "▼" : "►"}
+          {isOpen ? <span>▼</span> : <span>►</span>}
         </span>
       </div>
 
