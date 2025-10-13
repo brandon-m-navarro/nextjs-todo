@@ -10,7 +10,6 @@ export default async function ProjectsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Remove the data fetching - let the context handle it
   return (
     <ProvidersWrapper>
       {children}

@@ -1,9 +1,10 @@
 "use client";
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { Task } from "@/app/lib/definitions";
 
 interface TaskContextType {
   tasks: Task[];
+  isLoading : boolean;
   addTask: (
     task: Omit<Task, "id" | "creationDateTime" | "lastModifiedDateTime">,
     callback?: (response?: {
@@ -34,7 +35,6 @@ interface TaskContextType {
 
 interface TaskProviderProps {
   children: ReactNode;
-  initialTasks?: Task[];
 }
 
 export const TaskContext = createContext<TaskContextType | undefined>(
@@ -43,9 +43,31 @@ export const TaskContext = createContext<TaskContextType | undefined>(
 
 export const TaskProvider: React.FC<TaskProviderProps> = ({
   children,
-  initialTasks = [],
 }) => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch tasks on mount
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/tasks');
+        if (response.ok) {
+          const data = await response.json();
+          setTasks(data.tasks || []);
+        } else {
+          console.error('Failed to fetch tasks:', response.status);
+        }
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   // Add Task with optimistic update and rollback on failure
   const addTask = async (
@@ -263,6 +285,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     <TaskContext.Provider
       value={{
         tasks,
+        isLoading,
         addTask,
         updateTask,
         deleteTask,
