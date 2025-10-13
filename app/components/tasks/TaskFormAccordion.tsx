@@ -6,7 +6,9 @@ interface TaskFormAccordionProps {
   projectId: string;
 }
 
-export default function TaskFormAccordion({ projectId }: TaskFormAccordionProps) {
+export default function TaskFormAccordion({
+  projectId,
+}: TaskFormAccordionProps) {
   return (
     <div className="mb-8">
       <Accordion
@@ -17,7 +19,7 @@ export default function TaskFormAccordion({ projectId }: TaskFormAccordionProps)
               onClick={toggle}
               className="cursor-pointer w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg"
             >
-              {isOpen ? "Close" : "Add New Task"}
+              <span>{isOpen ? "Close" : "Add New Task"}</span>{" "}
             </button>
 
             {/* Collapsible Content with Smooth Height Animation */}
