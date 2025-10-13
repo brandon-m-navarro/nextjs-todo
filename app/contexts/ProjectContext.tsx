@@ -1,9 +1,10 @@
 "use client";
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { Project } from "@/app/lib/definitions";
 
 interface ProjectContextType {
   projects: Project[];
+  isLoading: boolean;
   addProject: (
     project: Omit<Project, "id" | "creationDateTime" | "lastModifiedDateTime">,
     callback?: (response?: {
@@ -33,7 +34,7 @@ interface ProjectContextType {
 
 interface ProjectProviderProps {
   children: ReactNode;
-  initialProjects?: Project[];
+  // initialProjects?: Project[];
 }
 
 export const ProjectContext = createContext<ProjectContextType | undefined>(
@@ -42,9 +43,30 @@ export const ProjectContext = createContext<ProjectContextType | undefined>(
 
 export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   children,
-  initialProjects = [],
+  // initialProjects = [],
 }) => {
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch projects on mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/projects');
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data.projects || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // Add Project with optimistic update and rollback on failure
   const addProject = async (
@@ -259,6 +281,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     <ProjectContext.Provider
       value={{
         projects,
+        isLoading,
         addProject,
         updateProject,
         deleteProject,

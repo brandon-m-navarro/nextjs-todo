@@ -13,15 +13,30 @@ export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
   const router = useRouter();
-  const { getProjectById } = useProjectContext();
+  // const { getProjectById, projects } = useProjectContext();
+  // const project = getProjectById(projectId);
+
+  // console.log('Projects in context:', projects.length);
+  // console.log('Project found:', !!project);
+  const { getProjectById, isLoading } = useProjectContext();
   const project = getProjectById(projectId);
+
+  // Show loading state while projects are being fetched
+  if (isLoading) {
+    return (
+      <div className="p-8 text-black">
+        <BackButton text="All Projects" overrideRouter={"/projects"} />
+        <div>Loading projects...</div>
+      </div>
+    );
+  }
 
   // Show loading state if project is not yet available
   if (!project) {
     return (
       <div className="p-8 text-black">
         <BackButton text="All Projects" overrideRouter={"/projects"} />
-        <div>Loading project...</div>
+        <div>Project not found</div>
       </div>
     );
   }
