@@ -51,7 +51,7 @@ export default function ProjectPageComponent({
                   Project: {project.name}
                 </h1>
                 <span className="transform transition-transform duration-300">
-                  {isOpen ? "▼" : "►"}
+                  {isOpen ? <span>▼</span> : <span>►</span>}
                 </span>
               </div>
 
