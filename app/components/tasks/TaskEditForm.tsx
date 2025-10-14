@@ -17,6 +17,18 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
   const { projects, isLoading: projectsLoading } = useProjectContext();
   const task = getTaskById(taskId);
 
+  // Initialize form data with task or empty values
+  const [formData, setFormData] = useState({
+    title: task?.title || "",
+    description: task?.description || "",
+    isDone: task?.isDone || false,
+    ordinal: task?.ordinal || null,
+    expectedCompletionDateTime: task?.expectedCompletionDateTime
+      ? new Date(task.expectedCompletionDateTime).toISOString().slice(0, 16)
+      : "",
+    projectId: task?.projectId || "",
+  });
+
   // Show loading state while data is being fetched
   if (isLoading || projectsLoading) {
     return (
@@ -88,17 +100,6 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
       </div>
     );
   }
-
-  const [formData, setFormData] = useState({
-    title: task.title,
-    description: task.description || "",
-    isDone: task.isDone,
-    ordinal: task.ordinal || null,
-    expectedCompletionDateTime: task.expectedCompletionDateTime
-      ? new Date(task.expectedCompletionDateTime).toISOString().slice(0, 16)
-      : "",
-    projectId: task.projectId,
-  });
 
   const handleChange = (
     e: React.ChangeEvent<
