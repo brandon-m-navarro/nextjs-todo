@@ -137,10 +137,10 @@ export default function TaskForm({
       className="text-black w-full max-w-6xl mx-auto"
     >
       <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-        <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-6 pt-8 w-full">
+        <div className="flex-1 rounded-lg sm:bg-gray-50 sm:px-6 sm:pb-6 sm:pt-8 w-full">
           <div className="flex align-center mb-6">
             <h1
-              className={`text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}
+              className={`hidden sm:block text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}
             >
               Add New Task
             </h1>

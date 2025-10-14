@@ -1,10 +1,9 @@
 "use client";
 import Accordion from "../ui/accordion";
 import BackButton from "@/app/components/ui/back-button";
-import Button from "../ui/button";
 import TaskManager from "@/app/components/tasks/TaskManager";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 interface ProjectPageComponentProps {
   projectId: string;
 }
@@ -12,7 +11,6 @@ interface ProjectPageComponentProps {
 export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
-  const router = useRouter();
   const { getProjectById, isLoading } = useProjectContext();
   const project = getProjectById(projectId);
 
@@ -20,7 +18,7 @@ export default function ProjectPageComponent({
   if (isLoading) {
     return (
       <div className="p-8 text-black">
-        <BackButton text="All Projects" overrideRouter={"/projects"} />
+        <BackButton overrideRouter={"/projects"} />
         <div>Loading projects...</div>
       </div>
     );
@@ -30,24 +28,22 @@ export default function ProjectPageComponent({
   if (!project) {
     return (
       <div className="p-8 text-black">
-        <BackButton text="All Projects" overrideRouter={"/projects"} />
+        <BackButton overrideRouter={"/projects"} />
         <div>Project not found</div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 text-black max-w-6xl mx-auto">
-      <div className="relative flex">
-        <BackButton text="All Projects" />
-        <Button
-          onClick={() => {
-            router.push(`/projects/${project.id}/edit`);
-          }}
-          className="px-4 py-2 ml-auto bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150"
+    <div className="p-0 sm:p-8 text-black max-w-6xl mx-auto">
+      <div className="relative flex flex-col mb-6 sm:flex-row sm:items-center sm:mb-8 sm:justify-between">
+        <BackButton />
+        <Link
+          href={`/projects/${project.id}/edit`}
+          className="px-4 py-2 bg-blue-500 sm:ml-auto text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
         >
           Edit Project
-        </Button>
+        </Link>
       </div>
       {project.description && (
         <Accordion

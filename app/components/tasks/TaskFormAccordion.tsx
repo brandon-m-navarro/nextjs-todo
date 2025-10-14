@@ -27,7 +27,7 @@ export default function TaskFormAccordion({
               className="overflow-hidden transition-all duration-500 ease-in-out"
               style={{ height: isOpen ? `${contentHeight}px` : "0px" }}
             >
-              <div ref={contentRef} className="p-6 border-t border-gray-200">
+              <div ref={contentRef} className="p-2 sm:p-6 border-t border-gray-200">
                 <TaskForm
                   initialProjectId={projectId}
                   onTaskCreated={() => {

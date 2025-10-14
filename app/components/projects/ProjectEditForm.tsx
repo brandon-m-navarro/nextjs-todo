@@ -107,7 +107,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
+    if (!confirm("Are you sure you want to delete this project? All associated Tasks will also be deleted!")) return;
 
     setIsDeleting(true);
     setError("");

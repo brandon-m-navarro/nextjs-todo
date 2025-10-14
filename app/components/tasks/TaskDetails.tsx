@@ -162,10 +162,10 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
         {/* Description */}
         {taskState.description && (
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2 select-all">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
               Description
             </h3>
-            <p className="text-gray-600 bg-gray-50 p-4 rounded-lg">
+            <p className="text-gray-600 bg-gray-50 p-4 rounded-lg select-text">
               {taskState.description}
             </p>
           </div>
