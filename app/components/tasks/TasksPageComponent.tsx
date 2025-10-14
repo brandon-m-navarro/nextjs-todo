@@ -74,14 +74,14 @@ export default function TasksPageComponent() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Total Tasks</h3>
           {isLoading && (
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
           )}
           {!isLoading && <p className="text-3xl font-bold">{tasks.length}</p>}
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Active Tasks</h3>
           {isLoading && (
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
           )}
           {!isLoading && (
             <p className="text-3xl font-bold text-blue-600">
@@ -92,7 +92,7 @@ export default function TasksPageComponent() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Completed</h3>
           {isLoading && (
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mx-auto"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
           )}
           {!isLoading && (
             <p className="text-3xl font-bold text-green-600">
@@ -103,27 +103,37 @@ export default function TasksPageComponent() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h3 className="text-lg font-semibold mb-4">Filters</h3>
-        <TaskFilters
-          projects={projects}
-          currentProject={project}
-          currentStatus={status}
-          currentSort={sort}
-        />
-      </div>
+      {isLoading ? (
+        <div className="bg-white p-6 rounded-lg shadow mb-8">
+          <div className="flex justify-center items-center h-32 mb-8">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white p-6 rounded-lg shadow mb-8">
+          <h3 className="text-lg font-semibold mb-4">Filters</h3>
+          <TaskFilters
+            projects={projects}
+            currentProject={project}
+            currentStatus={status}
+            currentSort={sort}
+          />
+        </div>
+      )}
 
       {/* Tasks List */}
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold">
-            Tasks ({filteredTasks.length})
-            {project && currentProject && (
-              <span className="text-gray-600 text-lg font-normal ml-2">
-                in {currentProject.name}
-              </span>
-            )}
-          </h2>
+          {!isLoading && (
+            <h2 className="text-xl font-semibold">
+              Tasks ({filteredTasks.length})
+              {project && currentProject && (
+                <span className="text-gray-600 text-lg font-normal ml-2">
+                  in {currentProject.name}
+                </span>
+              )}
+            </h2>
+          )}
         </div>
 
         {isLoading ? (

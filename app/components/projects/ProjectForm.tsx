@@ -162,7 +162,6 @@ export default function ProjectForm() {
                   <div
                     className={`w-8 h-8 rounded-full ${option.color} border border-gray-300`}
                   />
-                  <span className="text-xs text-gray-600">{option.label}</span>
                 </label>
               ))}
             </div>
@@ -191,17 +190,17 @@ export default function ProjectForm() {
           </div>
 
           {/* Form Actions */}
-          <div className="flex gap-4 pt-4">
+          <div className="flex gap-4 pt-4 w-full justify-evenly">
             <Link
               href="/"
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 text-center transition-colors"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={isSubmitting || !formData.name.trim()}
-              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? "Creating..." : "Create Project"}
             </button>
