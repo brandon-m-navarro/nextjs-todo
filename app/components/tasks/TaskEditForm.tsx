@@ -13,12 +13,80 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const { getTaskById, updateTask } = useTaskContext();
-  const { projects } = useProjectContext();
+  const { getTaskById, updateTask, isLoading } = useTaskContext();
+  const { projects, isLoading: projectsLoading } = useProjectContext();
   const task = getTaskById(taskId);
 
+  // Show loading state while data is being fetched
+  if (isLoading || projectsLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6 animate-pulse">
+        <div className="space-y-6">
+          {/* Title Skeleton */}
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Description Skeleton */}
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-24 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Project Selection Skeleton */}
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Status Skeleton */}
+          <div className="flex items-center">
+            <div className="h-4 w-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-32 ml-2"></div>
+          </div>
+
+          {/* Priority Skeleton */}
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Due Date Skeleton */}
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Buttons Skeleton */}
+          <div className="flex justify-between pt-6 border-t border-gray-200">
+            <div className="h-12 bg-gray-200 rounded w-24"></div>
+            <div className="h-12 bg-gray-200 rounded w-32"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if task not found
   if (!task) {
-    throw new Error("Could not get task! - " + taskId);
+    return (
+      <div className="bg-white rounded-lg shadow p-6 text-center">
+        <div className="text-red-500 text-6xl mb-4">❌</div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          Task Not Found
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Unable to find task with ID: {taskId}
+        </p>
+        <button
+          onClick={() => router.back()}
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
 
   const [formData, setFormData] = useState({
@@ -96,7 +164,6 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-
         {/* Title */}
         <div>
           <label
