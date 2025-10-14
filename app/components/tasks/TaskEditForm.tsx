@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Task } from "@/app/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
@@ -28,6 +28,22 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
       : "",
     projectId: task?.projectId || "",
   });
+
+  // Update form data when task loads
+  useEffect(() => {
+    if (task) {
+      setFormData({
+        title: task.title,
+        description: task.description || "",
+        isDone: task.isDone,
+        ordinal: task.ordinal || null,
+        expectedCompletionDateTime: task.expectedCompletionDateTime
+          ? new Date(task.expectedCompletionDateTime).toISOString().slice(0, 16)
+          : "",
+        projectId: task.projectId,
+      });
+    }
+  }, [task]);
 
   // Show loading state while data is being fetched
   if (isLoading || projectsLoading) {
