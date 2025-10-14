@@ -210,7 +210,7 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
         </div>
 
         {/* Form Actions */}
-        <div className="flex gap-4 pt-6 border-t border-gray-200">
+        <div className="flex justify-between sm:justify-self-start sm:gap-4 pt-6 border-t border-gray-200">
           <button
             type="button"
             onClick={() => router.back()}
