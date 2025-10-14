@@ -12,6 +12,20 @@
   }
 }
 
+/* Prevent bounce/scrolling issues on mobile */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Enable scrolling only on main content */
+main {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
