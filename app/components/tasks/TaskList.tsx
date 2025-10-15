@@ -40,7 +40,7 @@ export default function TaskList({
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 mt-0.5"
               />
 
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 self-center">
                 <div className="flex items-center space-x-2">
                   <span
                     className={`font-medium ${
