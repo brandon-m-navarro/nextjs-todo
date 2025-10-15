@@ -344,7 +344,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
                   className="p-4 cursor-pointer flex justify-between items-center bg-blue-50"
                   onClick={toggle}
                 >
-                  <h1 className="text-[12px] font-bold mb-2">
+                  <h1 className="text-[12px] font-medium">
                     Additional Options
                   </h1>
                   <span className="transform transition-transform duration-300">
