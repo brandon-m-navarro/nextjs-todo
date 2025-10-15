@@ -14,7 +14,7 @@
 
 html {
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 body {
@@ -26,6 +26,9 @@ body {
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+
+  min-height: 100dvh; /* Use dynamic viewport height */
+  overscroll-behavior-y: contain; /* Prevent address bar jank without breaking pull-to-refresh */
 }
 
 /* Prevent iOS zoom on input focus */
