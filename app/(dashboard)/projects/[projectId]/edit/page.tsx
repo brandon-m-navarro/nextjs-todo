@@ -19,7 +19,7 @@ export default async function ProjectEditPage({
   }
 
   return (
-    <div className="max-w-6xl mx-auto pb-12 p-0 sm:p-8 text-black">
+    <div className="max-w-6xl mx-auto pb-15 p-0 sm:p-8 text-black">
       <div className="mb-8">
         <BackButton text="Project Details" />
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Project</h1>

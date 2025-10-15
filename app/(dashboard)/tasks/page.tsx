@@ -4,7 +4,7 @@ import TasksPageComponent from "@/app/components/tasks/TasksPageComponent";
 
 export default function TasksPage() {
   return (
-    <div className="max-w-6xl mx-auto pb-12 sm:p-8 text-black">
+    <div className="max-w-6xl mx-auto pb-15 sm:p-8 text-black">
       <BackButton text="Dashboard" overrideRouter={"/"} />
 
       {/* <div className="flex justify-between items-center"> */}
