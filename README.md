@@ -9,8 +9,6 @@ The latest version is deployed here: [https://nextjs-todo-lake.vercel.app/](http
 ## Getting Started (Locally)
 
 1. Clone the Repository
-
-First, clone the repo, then run the development server from the top-level of the project:
 ```bash
 git clone <your-repo-url>
 cd <your-repo-directory>
