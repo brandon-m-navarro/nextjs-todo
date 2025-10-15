@@ -35,7 +35,7 @@ export default function ProjectPageComponent({
   }
 
   return (
-    <div className="p-0 pb-8 sm:p-8 text-black max-w-6xl mx-auto">
+    <div className="p-0 pb-12 sm:p-8 text-black max-w-6xl mx-auto">
       <div className="relative flex flex-col mb-6 sm:flex-row sm:items-center sm:mb-8 sm:justify-between">
         <BackButton />
         <Link

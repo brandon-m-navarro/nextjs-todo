@@ -13,7 +13,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { id } = await params;
 
   return (
-    <div className="max-w-6xl mx-auto sm:p-8">
+    <div className="max-w-6xl mx-auto pb-12 sm:p-8">
       <div className="mb-8">
         <BackButton />
         <div className="flex justify-between items-center">
