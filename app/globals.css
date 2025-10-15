@@ -12,12 +12,9 @@
   }
 }
 
-/* Enable scrolling only on main content */
-main {
-  height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+html {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -25,6 +22,10 @@ body {
   background: var(--background);
   /* font-family: Arial, Helvetica, sans-serif; */
   font-family: Manrope;
+
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @layer utilities {
