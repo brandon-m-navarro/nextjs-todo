@@ -12,11 +12,6 @@
   }
 }
 
-/* Prevent bounce/scrolling issues on mobile */
-html, body {
-  height: 100%;
-}
-
 /* Enable scrolling only on main content */
 main {
   height: 100vh;

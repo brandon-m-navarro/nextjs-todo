@@ -107,7 +107,12 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this project? All associated Tasks will also be deleted!")) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete this project? All associated Tasks will also be deleted!"
+      )
+    )
+      return;
 
     setIsDeleting(true);
     setError("");
@@ -132,29 +137,37 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     }
   };
 
-  // Common color options for projects
+  // // Common color options for projects
+  // const colorOptions = [
+  //   { value: "#3b82f6", label: "Blue" },
+  //   { value: "#ef4444", label: "Red" },
+  //   { value: "#10b981", label: "Green" },
+  //   { value: "#f59e0b", label: "Yellow" },
+  //   { value: "#8b5cf6", label: "Purple" },
+  //   { value: "#ec4899", label: "Pink" },
+  //   { value: "#06b6d4", label: "Cyan" },
+  //   { value: "#f97316", label: "Orange" },
+  // ];
   const colorOptions = [
-    { value: "#3b82f6", label: "Blue" },
-    { value: "#ef4444", label: "Red" },
-    { value: "#10b981", label: "Green" },
-    { value: "#f59e0b", label: "Yellow" },
-    { value: "#8b5cf6", label: "Purple" },
-    { value: "#ec4899", label: "Pink" },
-    { value: "#06b6d4", label: "Cyan" },
-    { value: "#f97316", label: "Orange" },
+    { value: "EF4444", label: "Red", color: "bg-red-500" },
+    { value: "F59E0B", label: "Amber", color: "bg-amber-500" },
+    { value: "10B981", label: "Emerald", color: "bg-emerald-500" },
+    { value: "3B82F6", label: "Blue", color: "bg-blue-500" },
+    { value: "8B5CF6", label: "Violet", color: "bg-violet-500" },
+    { value: "EC4899", label: "Pink", color: "bg-pink-500" },
   ];
 
   // Common icon options (you can use emojis or icon library)
-  const iconOptions = [
-    { value: "📝", label: "Memo" },
-    { value: "💼", label: "Briefcase" },
-    { value: "🎯", label: "Target" },
-    { value: "🚀", label: "Rocket" },
-    { value: "🏠", label: "Home" },
-    { value: "🛒", label: "Shopping" },
-    { value: "🏋️", label: "Fitness" },
-    { value: "📚", label: "Books" },
-  ];
+  // const iconOptions = [
+  //   { value: "📝", label: "Memo" },
+  //   { value: "💼", label: "Briefcase" },
+  //   { value: "🎯", label: "Target" },
+  //   { value: "🚀", label: "Rocket" },
+  //   { value: "🏠", label: "Home" },
+  //   { value: "🛒", label: "Shopping" },
+  //   { value: "🏋️", label: "Fitness" },
+  //   { value: "📚", label: "Books" },
+  // ];
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -205,37 +218,35 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
         {/* Color Selection */}
         <div>
-          <label
-            htmlFor="hexColor"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Color
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Project Color
           </label>
-          <div className="grid grid-cols-4 gap-3 mb-3">
-            {colorOptions.map((color) => (
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            {colorOptions.map((option) => (
               <label
-                key={color.value}
-                className="flex items-center space-x-2 cursor-pointer"
+                key={option.value}
+                className={`relative cursor-pointer rounded-lg p-2 flex flex-col items-center space-y-2 border-2 transition-colors ${
+                  formData.hexColor === option.value
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-transparent hover:bg-gray-50"
+                }`}
               >
                 <input
                   type="radio"
                   name="hexColor"
-                  value={color.value}
-                  checked={formData.hexColor === color.value}
+                  value={option.value}
+                  checked={formData.hexColor === option.value}
                   onChange={handleChange}
                   className="sr-only"
                 />
                 <div
-                  className={`w-8 h-8 rounded-full border-2 ${
-                    formData.hexColor === color.value
-                      ? "border-gray-800"
-                      : "border-gray-300"
-                  }`}
-                  style={{ backgroundColor: color.value }}
+                  className={`w-8 h-8 rounded-full ${option.color} border border-gray-300`}
                 />
-                <span className="text-sm text-gray-600">{color.label}</span>
               </label>
             ))}
+          </div>
+          <div className="mt-2 text-sm text-gray-500">
+            Selected: #{formData.hexColor}
           </div>
           <input
             type="text"
@@ -252,39 +263,36 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         </div>
 
         {/* Icon Selection */}
-        <div>
-          <label
-            htmlFor="icon"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Icon
+        {/* <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Icon (Optional)
           </label>
-          <div className="grid grid-cols-4 gap-3 mb-3">
-            {iconOptions.map((icon) => (
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            {iconOptions.map((option) => (
               <label
-                key={icon.value}
-                className="flex items-center space-x-2 cursor-pointer"
+                key={option.value}
+                className={`relative cursor-pointer rounded-lg p-2 flex flex-col items-center space-y-2 border-2 transition-colors ${
+                  formData.icon === option.value
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-transparent hover:bg-gray-50"
+                }`}
               >
                 <input
                   type="radio"
                   name="icon"
-                  value={icon.value}
-                  checked={formData.icon === icon.value}
+                  value={option.value}
+                  checked={formData.icon === option.value}
                   onChange={handleChange}
                   className="sr-only"
                 />
                 <div
-                  className={`w-12 h-12 flex items-center justify-center text-2xl rounded-lg border-2 ${
-                    formData.icon === icon.value
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {icon.value}
-                </div>
-                <span className="text-sm text-gray-600">{icon.label}</span>
+                  className={`w-8 h-8 text-center text-2xl`}
+                >{option.value}</div>
               </label>
             ))}
+          </div>
+          <div className="mt-2 text-sm text-gray-500">
+            Selected: {formData.icon}
           </div>
           <input
             type="text"
@@ -292,13 +300,13 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             name="icon"
             value={formData.icon}
             onChange={handleChange}
-            placeholder="🎯"
+            placeholder=""
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <p className="mt-1 text-sm text-gray-500">
             Choose from presets or enter a custom emoji
           </p>
-        </div>
+        </div> */}
 
         {/* Form Actions */}
         <div className="flex gap-4 pt-6 border-t border-gray-200">

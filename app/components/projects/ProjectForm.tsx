@@ -171,7 +171,7 @@ export default function ProjectForm() {
           </div>
 
           {/* Icon (Optional) */}
-          <div>
+          {/* <div>
             <label
               htmlFor="icon"
               className="block text-sm font-medium text-gray-700 mb-2"
@@ -187,7 +187,7 @@ export default function ProjectForm() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., 🏠, 💼, 🎯 (emoji or icon name)"
             />
-          </div>
+          </div> */}
 
           {/* Form Actions */}
           <div className="flex gap-4 pt-4 w-full justify-evenly">
