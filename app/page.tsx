@@ -1,11 +1,17 @@
 import Link from "next/link";
 import SimpleAnimation from "@/app/components/ui/animation";
 import LiveDataPreviews from "@/app/components/dashboard/LiveDataPreviews";
+import Head from "next/head";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
       {/* Hero Section - Static */}
       <div className="text-center py-16 px-4">
         <div className="max-w-4xl mx-auto">
