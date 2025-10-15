@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/app/lib/definitions";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
+import Accordion from "../ui/accordion";
 
 interface ProjectEditFormProps {
   projectId: string;
@@ -309,7 +310,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         </div> */}
 
         {/* Form Actions */}
-        <div className="flex gap-4 pt-6 border-t border-gray-200">
+        <div className="flex justify-between sm:w-full sm:justify-self-start sm:gap-4 pt-6 border-t border-gray-200">
           <button
             type="button"
             onClick={() => router.back()}
@@ -330,10 +331,48 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors ml-auto"
+            className="hidden sm:block px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors ml-auto"
           >
             {isDeleting ? "Deleting..." : "Delete Project"}
           </button>
+        </div>
+        <div className="sm:hidden mt-12">
+          <Accordion
+            render={({ isOpen, toggle, contentHeight, contentRef }) => (
+              <div>
+                <div
+                  className="p-4 cursor-pointer flex justify-between items-center bg-blue-50"
+                  onClick={toggle}
+                >
+                  <h1 className="text-[12px] font-bold mb-2">
+                    Additional Options
+                  </h1>
+                  <span className="transform transition-transform duration-300">
+                    {isOpen ? <span>▼</span> : <span>►</span>}
+                  </span>
+                </div>
+
+                <div
+                  className="overflow-hidden transition-all duration-500 ease-in-out"
+                  style={{ height: isOpen ? `${contentHeight}px` : "0px" }}
+                >
+                  <div
+                    ref={contentRef}
+                    className="p-6 border-t border-gray-200"
+                  >
+                    <button
+                      type="button"
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors w-full m-auto"
+                    >
+                      {isDeleting ? "Deleting..." : "Delete Project"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          />
         </div>
       </form>
     </div>
