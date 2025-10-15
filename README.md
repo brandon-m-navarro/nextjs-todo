@@ -43,7 +43,7 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 
-Project Structure
+## Project Structure
 ```
 app/
 ├── (dashboard)/                        # Route group for dashboard (not in URL)
