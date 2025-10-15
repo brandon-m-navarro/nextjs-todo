@@ -8,13 +8,13 @@ The latest version is deployed here: [https://nextjs-todo-lake.vercel.app/](http
 
 ## Getting Started (Locally)
 
-# 1. Clone the Repository
+#### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
 cd <your-repo-directory>
 ```
 
-# 2. Install Dependencies
+#### 2. Install Dependencies
 ```bash
 npm install
 # or
@@ -25,12 +25,12 @@ pnpm install
 bun install
 ```
 
-# 3. Set Up Environment Variables & the Database
+#### 3. Set Up Environment Variables & the Database
 
 I used the following tutorial to connect my db, going with a Postgres db:
 https://nextjs.org/learn/dashboard-app/setting-up-your-database
 
-# 4. Run the Development Server
+#### 4. Run the Development Server
 ```bash
 npm run dev
 # or
