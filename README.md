@@ -1,11 +1,36 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+
+## Getting Started
+
 The latest version is deployed here: [https://nextjs-todo-lake.vercel.app/](https://nextjs-todo-lake.vercel.app/).
+
 
 ## Getting Started (Locally)
 
-First, clone the repo, then run the development server from the top-level of the project:
+#### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd <your-repo-directory>
+```
 
+#### 2. Install Dependencies
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+#### 3. Set Up Environment Variables & the Database
+
+I used the following tutorial to connect my db, going with a Postgres db:
+https://nextjs.org/learn/dashboard-app/setting-up-your-database
+
+#### 4. Run the Development Server
 ```bash
 npm run dev
 # or
@@ -18,7 +43,8 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Project Structure
+
+## Project Structure
 ```
 app/
 ├── (dashboard)/                        # Route group for dashboard (not in URL)
