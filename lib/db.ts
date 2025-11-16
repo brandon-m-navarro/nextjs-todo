@@ -5,7 +5,7 @@ import type {
   ProjectFromDb,
   Project,
   Task,
-} from "@/app/lib/definitions";
+} from "@/lib/definitions";
 
 // Initialize the database connection
 const sql = neon(process.env.DATABASE_URL!);

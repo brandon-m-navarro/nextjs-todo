@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/app/lib/db";
-import { generateId } from "@/app/lib/utilities";
+import { db } from "@/lib/db";
+import { generateId } from "@/lib/utilities";
 
 interface RouteParams {
   params: Promise<{

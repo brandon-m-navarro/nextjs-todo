@@ -3,9 +3,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useRouter } from "next/navigation";
-import { Task } from "@/app/lib/definitions";
+import { Task } from "@/lib/definitions";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 
 interface TaskDetailProps {
   taskId: string;

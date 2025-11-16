@@ -1,5 +1,5 @@
 "use client";
-import { Task } from "../../lib/definitions";
+import { Task } from "../../../lib/definitions";
 import Image from "next/image";
 
 type TaskCardProps = {

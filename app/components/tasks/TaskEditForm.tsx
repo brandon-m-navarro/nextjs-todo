@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Task } from "@/app/lib/definitions";
+import { Task } from "@/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 

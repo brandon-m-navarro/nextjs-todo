@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 
 export default function ProjectForm() {
   const router = useRouter();

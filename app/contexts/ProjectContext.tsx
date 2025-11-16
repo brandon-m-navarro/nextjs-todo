@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 
 interface ProjectContextType {
   projects: Project[];

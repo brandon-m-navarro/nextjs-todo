@@ -2,7 +2,7 @@
 import Link from "next/link";
 import TaskList from "@/app/components/tasks/TaskList";
 import TaskFilters from "@/app/components/tasks/TaskFilters";
-import { Task, Project } from "@/app/lib/definitions";
+import { Task, Project } from "@/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { useSearchParams } from "next/navigation";

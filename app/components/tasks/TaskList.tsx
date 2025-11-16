@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTaskContext } from "@/app/contexts/TaskContext";
-import { Task } from "@/app/lib/definitions";
+import { Task } from "@/lib/definitions";
 
 interface TaskListProps {
   projectId?: string | null;

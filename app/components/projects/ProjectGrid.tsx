@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 
 interface ProjectGridProps {
   projects: Project[];

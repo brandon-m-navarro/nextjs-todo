@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
-config({ path: '.env.local' }); // Load environment variables from .env file
+config({ path: '.env' }); // Load environment variables from .env file
 
 // scripts/seed.ts
+import { Tasks, Projects } from '../lib/placeholder-data';
 import { neon } from '@neondatabase/serverless';
-import * as data from '../app/lib/placeholder-data'; // Adjust path if needed
 
 async function main() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -76,7 +76,7 @@ async function main() {
 
     // Insert Projects first (they're referenced by Tasks)
     console.log('Seeding projects...');
-    for (const project of data.Projects) {
+    for (const project of Projects) {
       await sql`
         INSERT INTO projects (
           id, name, description, hex_color, icon, 
@@ -87,8 +87,8 @@ async function main() {
           ${project.description}, 
           ${project.hexColor}, 
           ${project.icon}, 
-          TO_TIMESTAMP(${project.creationDateTime} / 1000.0), 
-          TO_TIMESTAMP(${project.lastModifiedDateTime} / 1000.0)
+          ${project.creationDateTime}, 
+          ${project.lastModifiedDateTime}
         )
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -101,7 +101,7 @@ async function main() {
 
     // Insert Tasks
     console.log('Seeding tasks...');
-    for (const task of data.Tasks) {
+    for (const task of Tasks) {
       await sql`
         INSERT INTO tasks (
           project_id, id, title, description, is_done, ordinal,
@@ -114,10 +114,10 @@ async function main() {
           ${task.isDone},
           ${task.ordinal},
           ${task.expectedCompletionDateTime ? 
-            sql`TO_TIMESTAMP(${task.expectedCompletionDateTime} / 1000.0)` : 
+            sql`${task.expectedCompletionDateTime}` : 
             sql`NULL`},
-          TO_TIMESTAMP(${task.creationDateTime} / 1000.0),
-          TO_TIMESTAMP(${task.lastModifiedDateTime} / 1000.0)
+          ${task.creationDateTime},
+          ${task.lastModifiedDateTime}
         )
         ON CONFLICT (project_id, title) DO UPDATE SET
           description = EXCLUDED.description,

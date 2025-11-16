@@ -2,7 +2,7 @@
 "use client";
 import TaskList from "./TaskList";
 import TaskFormAccordion from "./TaskFormAccordion";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 
 interface TaskManagerProps {
   project: Project;

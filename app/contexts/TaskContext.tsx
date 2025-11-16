@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { Task } from "@/app/lib/definitions";
+import { Task } from "@/lib/definitions";
 
 interface TaskContextType {
   tasks: Task[];

@@ -1,5 +1,5 @@
-import { db } from "@/app/lib/db";
-import { TaskWithProject } from "@/app/lib/definitions";
+import { db } from "@/lib/db";
+import { TaskWithProject } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
 
 async function getRecentTasksPreview() {

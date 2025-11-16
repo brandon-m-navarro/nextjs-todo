@@ -1,4 +1,5 @@
 export type Task = {
+  userId?: string | null;
   projectId: string;
   id: string;
   title: string;
@@ -6,15 +7,12 @@ export type Task = {
   isDone: boolean;
   ordinal: number | null;
   expectedCompletionDateTime: Date | null;
-  // complexityRating?: number; // 1-5
-  // effortRating?: number; // 1-5
-  // priorityRating?: number; // 1-5
-  // tags?: string[]; // e.g., ['urgent', 'important'] allow multiple tags & custom tags
   creationDateTime: Date;
   lastModifiedDateTime: Date;
 };
 
 export type Project = {
+  userId?: string | null;
   id: string;
   name: string;
   description: string | null;
@@ -25,6 +23,7 @@ export type Project = {
 };
 
 export interface TaskFromDb {
+  user_id?: string | null;
   project_id: string;
   id: string;
   title: string;
@@ -37,6 +36,7 @@ export interface TaskFromDb {
 }
 
 export interface ProjectFromDb {
+  user_id?: string | null;
   id: string;
   name: string;
   description: string | null;
@@ -47,6 +47,7 @@ export interface ProjectFromDb {
 }
 
 export interface TaskWithProject {
+  userId?: string | null;
   id: string;
   title: string;
   description: string | null;
@@ -62,6 +63,7 @@ export interface TaskWithProject {
 }
 
 export type LS = {
+  userId?: string | null;
   tasks: Task[];
   projects: Project[];
   lastUsedProjectId?: string;

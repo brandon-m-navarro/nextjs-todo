@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Project } from "@/app/lib/definitions";
+import { Project } from "@/lib/definitions";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import Accordion from "../ui/accordion";
 
