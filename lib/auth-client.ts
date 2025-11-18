@@ -26,7 +26,7 @@ export async function getUserIdFromToken(token: string) {
 // Fetch JWT from App A if not provided (e.g., redirect-based flow)
 export async function getToken() {
   const { data, error } = await authClient.token();
-  console.log(data);
+  console.log("Fetched token from App A:", data, error);
   if (error) throw new Error("Failed to fetch JWT from App A");
   return data?.token;
 }

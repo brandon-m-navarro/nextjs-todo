@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { authClient, getToken, getUserIdFromToken } from "@/lib/auth-client";
 
 interface ProjectPreview {
   id: string;
@@ -75,7 +76,23 @@ export default function LiveDataPreviews() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-12">
-
+            <button className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
+              onClick={() => {
+                getToken().then(token => {
+                  if (token) {
+                    getUserIdFromToken(token).then(userId => {
+                      console.log("User ID from token:", userId);
+                    }).catch(err => {
+                      console.error("Error getting user ID from token:", err);
+                    });
+                  }
+                }).catch(err => {
+                  console.error("Error getting token:", err);
+                });
+              }}
+            >
+              Test JWT token
+            </button>
       {/* Recent Projects Preview */}
       <div className="bg-gray-50 rounded-xl p-6">
         <h3 className="text-2xl font-semibold mb-4 text-black">
