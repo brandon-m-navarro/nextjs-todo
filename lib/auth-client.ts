@@ -3,7 +3,7 @@ import { jwtClient } from "better-auth/client/plugins"
 import { jwtVerify, createRemoteJWKSet } from "jose";
 
 export const authClient = createAuthClient({
-  baseURL: "https://bnav.dev",
+  baseURL: "https://login.bnav.dev",
   plugins: [
     jwtClient() 
   ]
