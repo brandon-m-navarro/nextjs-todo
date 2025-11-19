@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getToken } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 interface ProjectPreview {
   id: string;
@@ -79,9 +79,8 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          getToken().then((token) => {
-            alert("JWT Token: " + token);
-          });
+          const session = authClient.getSession();
+          console.log("Current session:", session);
         }}
       >
         Test JWT token
