@@ -1,20 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify, createRemoteJWKSet } from "jose";
+import { /*NextRequest,*/ NextResponse } from "next/server";
 
-const JWKS_URL = "https://app-dashboard-livid-omega.vercel.app/api/auth/jwks";
-const ISSUER = "https://app-dashboard-livid-omega.vercel.app";
-const AUDIENCE = "http://localhost:3000";
-
-async function validateToken(token: string) {
-  const JWKS = createRemoteJWKSet(new URL(JWKS_URL));
-  const { payload } = await jwtVerify(token, JWKS, {
-    issuer: ISSUER,
-    audience: AUDIENCE,
-  });
-  return payload;
-}
-
-export async function proxy(req: NextRequest) {
+export async function proxy(/*req: NextRequest*/) {
   return NextResponse.next();
   // console.log("Proxying request:", req.url);
   // const token = req.cookies.get("auth_token")?.value;
