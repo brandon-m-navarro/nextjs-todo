@@ -3,6 +3,7 @@ import { jwtClient } from "better-auth/client/plugins"
 import { jwtVerify, createRemoteJWKSet } from "jose";
 
 export const authClient = createAuthClient({
+  baseURL: "https://app-dashboard-livid-omega.vercel.app",
   plugins: [
     jwtClient() 
   ]
@@ -10,14 +11,14 @@ export const authClient = createAuthClient({
 
 
 // JWKS endpoint from App A
-const JWKS_URL = "https://app-dashboard-livid-omega.vercel.app/api/auth/jwks";
+const JWKS_URL = "https://login.bnav.dev/api/auth/jwks";
 
 export async function getUserIdFromToken(token: string) {
   const JWKS = createRemoteJWKSet(new URL(JWKS_URL));
 
   const { payload } = await jwtVerify(token, JWKS, {
-    issuer: "https://app-dashboard-livid-omega.vercel.app/",
-    audience: "http://localhost:3000/",
+    issuer: "https://login.bnav.dev",
+    audience: "https://todo.bnav.dev",
   });
 
   return payload.sub; // or payload.id depending on your JWT payload
@@ -26,7 +27,7 @@ export async function getUserIdFromToken(token: string) {
 // Fetch JWT from App A if not provided (e.g., redirect-based flow)
 export async function getToken() {
   const { data, error } = await authClient.token();
-  console.log("Fetched token from App A:", data, error);
-  if (error) throw new Error("Failed to fetch JWT from App A");
+  console.log("Fetched token from login.bnav.dev", data, error);
+  if (error) throw new Error("Failed to fetch JWT from login.bnav.dev");
   return data?.token;
 }
