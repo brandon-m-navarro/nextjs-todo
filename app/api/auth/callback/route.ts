@@ -9,24 +9,35 @@ export async function GET(req: Request) {
   }
 
   // This calls BetterAuth’s /oauth2/token endpoint
-//   const { data, error } = await authClient.oauth2.token({
-//     grant_type: "authorization_code",
-//     code,
-//     redirect_uri: "https://todo.bnav.dev/auth/callback",
-//     client_id: process.env.TODO_CLIENT_ID as string,
-//     client_secret: process.env.TODO_CLIENT_SECRET as string,
-//   });
+  //   const { data, error } = await authClient.oauth2.token({
+  //     grant_type: "authorization_code",
+  //     code,
+  //     redirect_uri: "https://todo.bnav.dev/auth/callback",
+  //     client_id: process.env.TODO_CLIENT_ID as string,
+  //     client_secret: process.env.TODO_CLIENT_SECRET as string,
+  //   });
 
-    const user = await authClient.oauth2.userinfo({
-    //   accessToken: data?.access_token as string,
-    });
-    console.log('TESTING');
-    console.log("OAuth2 User Info:", user);
-    
-//   // Handle error
-//   if (error) {
-//     return new Response(error.message, { status: 400 });
-//   }
+  // const user = await authClient.oauth2.userinfo({
+  //   //   accessToken: data?.access_token as string,
+  // });
+  // console.log("TESTING");
+  // console.log("OAuth2 User Info:", user);
 
-    return Response.redirect("https://todo.bnav.dev/dashboard");
+  const response = await fetch(
+    "https://your-domain.com/api/auth/oauth2/userinfo",
+    {
+      headers: {
+        Authorization: "Bearer ACCESS_TOKEN",
+      },
+    }
+  );
+  const userInfo = await response.json();
+  console.log("OAuth2 User Info:", userInfo);
+
+  //   // Handle error
+  //   if (error) {
+  //     return new Response(error.message, { status: 400 });
+  //   }
+
+  return Response.redirect("https://todo.bnav.dev/dashboard");
 }

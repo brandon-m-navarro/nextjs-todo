@@ -79,13 +79,18 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          const response = await fetch('https://login.bnav.dev/api/auth/oauth2/userinfo', {
-            headers: {
-              'Authorization': 'Bearer ACCESS_TOKEN'
-            }
-          });
-          const userInfo = await response.json();
-          console.log("User Info:", userInfo);
+          try {
+            fetch("https://login.bnav.dev/api/auth/oauth2/authorize?response_type=code&client_id=" + encodeURIComponent(process.env.TODO_CLIENT_ID as string) + "&redirect_uri=" + encodeURIComponent("https://todo.bnav.dev/auth/callback") + "&scope=openid%20profile%20email", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }).then(response => {
+              console.log("Auth response:", response);
+            });
+          } catch (err) {
+            console.error("Auth error:", err);
+          }
         }}
       >
         Test Auth Client
