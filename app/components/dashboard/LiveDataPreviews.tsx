@@ -79,11 +79,11 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          const session = authClient.getSession();
-          console.log("Current session:", session);
+          // const session = authClient.getSession();
+          // console.log("Current session:", session);
         }}
       >
-        Test JWT token
+        Test Auth Client
       </button>
       {/* Recent Projects Preview */}
       <div className="bg-gray-50 rounded-xl p-6">

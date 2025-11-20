@@ -4,7 +4,7 @@ import { jwtClient } from "better-auth/client/plugins"
 import { oidcClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: "https://login.bnav.dev",
+  // baseURL: "https://login.bnav.dev",
   plugins: [
     oidcClient()
   ]
