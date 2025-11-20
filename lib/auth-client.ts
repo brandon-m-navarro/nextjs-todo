@@ -1,10 +1,10 @@
 import { createAuthClient } from "better-auth/client"
-import { jwtClient } from "better-auth/client/plugins"
+// import { jwtClient } from "better-auth/client/plugins"
 // import { jwtVerify, createRemoteJWKSet } from "jose";
 import { oidcClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  // baseURL: "https://login.bnav.dev",
+  baseURL: "https://login.bnav.dev",
   plugins: [
     oidcClient()
   ]
