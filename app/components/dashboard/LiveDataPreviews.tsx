@@ -80,16 +80,14 @@ export default function LiveDataPreviews() {
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
           try {
-            fetch("https://login.bnav.dev/api/auth/oauth2/authorize?response_type=code&client_id=" + encodeURIComponent(process.env.TODO_CLIENT_ID as string) + "&redirect_uri=" + encodeURIComponent("https://todo.bnav.dev/auth/callback") + "&scope=openid%20profile%20email", {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }).then(response => {
-              console.log("Auth response:", response);
-            });
-          } catch (err) {
-            console.error("Auth error:", err);
+            const response = await fetch('/api/auth/callback'); // Or '/api/hello' for Pages Router
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log("API Response:", result);
+          } catch (error) {
+            console.error("Error during OIDC authorization:", error);
           }
         }}
       >

@@ -1,12 +1,12 @@
 import { authClient } from "@/lib/auth-client";
 
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const code = url.searchParams.get("code");
+  // const url = new URL(req.url);
+  // const code = url.searchParams.get("code");
 
-  if (!code) {
-    return new Response("Missing code", { status: 400 });
-  }
+  // if (!code) {
+  //   return new Response("Missing code", { status: 400 });
+  // }
 
   // This calls BetterAuth’s /oauth2/token endpoint
   //   const { data, error } = await authClient.oauth2.token({
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   // console.log("OAuth2 User Info:", user);
 
   const response = await fetch(
-    "https://your-domain.com/api/auth/oauth2/userinfo",
+    "https://login.bnav.dev/api/auth/oauth2/userinfo",
     {
       headers: {
         Authorization: "Bearer ACCESS_TOKEN",
