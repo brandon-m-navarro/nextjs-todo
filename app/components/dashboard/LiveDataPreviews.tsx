@@ -79,7 +79,7 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          const response = await fetch('https://your-domain.com/api/auth/oauth2/userinfo', {
+          const response = await fetch('https://login.banv.dev/api/auth/oauth2/userinfo', {
             headers: {
               'Authorization': 'Bearer ACCESS_TOKEN'
             }
