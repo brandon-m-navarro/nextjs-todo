@@ -1,0 +1,31 @@
+import { authClient } from "@/lib/auth-client";
+
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const code = url.searchParams.get("code");
+
+  if (!code) {
+    return new Response("Missing code", { status: 400 });
+  }
+
+  // This calls BetterAuth’s /oauth2/token endpoint
+//   const { data, error } = await authClient.oauth2.token({
+//     grant_type: "authorization_code",
+//     code,
+//     redirect_uri: "https://todo.bnav.dev/auth/callback",
+//     client_id: process.env.TODO_CLIENT_ID as string,
+//     client_secret: process.env.TODO_CLIENT_SECRET as string,
+//   });
+
+    const user = await authClient.oauth2.userinfo({
+    //   accessToken: data?.access_token as string,
+    });
+    console.log("OAuth2 User Info:", user);
+    
+//   // Handle error
+//   if (error) {
+//     return new Response(error.message, { status: 400 });
+//   }
+
+    return Response.redirect("https://todo.bnav.dev/dashboard");
+}
