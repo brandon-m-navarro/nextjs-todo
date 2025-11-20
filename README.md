@@ -124,3 +124,4 @@ app/
 ├── page.tsx                            # Homepage (/)
 └── globals.css                         # Tailwind/global styles
 ```
+ 
