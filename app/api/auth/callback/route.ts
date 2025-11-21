@@ -4,25 +4,26 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  // if (!code) {
-  //   return new Response("Missing code", { status: 400 });
-  // }
+  if (!code) {
+    return new Response("Missing code", { status: 400 });
+  }
 
   // This calls BetterAuth’s /oauth2/token endpoint
-    const { data, error } = await authClient.oauth2.token({
-      grant_type: "authorization_code",
-      code,
-      redirect_uri: "https://todo.bnav.dev/auth/callback",
-      client_id: process.env.TODO_CLIENT_ID as string,
-      client_secret: process.env.TODO_CLIENT_SECRET as string,
-    });
+  const { data, error } = await authClient.oauth2.token({
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: "https://todo.bnav.dev/auth/callback",
+    client_id: process.env.TODO_CLIENT_ID as string,
+    client_secret: process.env.TODO_CLIENT_SECRET as string,
+  });
 
-  // const user = await authClient.oauth2.userinfo({
-  //   //   accessToken: data?.access_token as string,
-  // });
-  // console.log("TESTING");
-  // console.log("OAuth2 User Info:", user);
+  console.log("OAuth2 Token Response:", data, error);
 
+  if (error || !data) {
+    return new Response("Failed to exchange code for token", { status: 500 });
+  }
+
+  // Optionally, fetch user info using the access token
   const response = await fetch(
     "https://login.bnav.dev/api/auth/oauth2/userinfo",
     {
@@ -33,11 +34,6 @@ export async function GET(req: Request) {
   );
   const userInfo = await response.json();
   console.log("OAuth2 User Info:", userInfo);
-
-  //   // Handle error
-  //   if (error) {
-  //     return new Response(error.message, { status: 400 });
-  //   }
 
   return Response.redirect("https://todo.bnav.dev/projects");
 }
