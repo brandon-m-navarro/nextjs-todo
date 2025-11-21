@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const { data, error } = await authClient.oauth2.token({
     grant_type: "authorization_code",
     code,
-    // redirect_uri: "https://todo.bnav.dev/auth/callback",
+    redirect_uri: "https://todo.bnav.dev/api/auth/callback",
     client_id: process.env.TODO_CLIENT_ID as string,
     client_secret: process.env.TODO_CLIENT_SECRET as string,
   });
