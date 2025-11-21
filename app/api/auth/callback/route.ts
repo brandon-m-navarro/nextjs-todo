@@ -24,6 +24,7 @@ export async function GET(req: Request) {
   // console.log("TESTING");
   // console.log("OAuth2 User Info:", user);
   const atoken = (await cookies()).get('__Secure-better-auth.session_token')?.value;
+  console.log("Access Token:", atoken);
   const response = await fetch(
     "https://login.bnav.dev/api/auth/oauth2/userinfo",
     {
