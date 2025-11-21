@@ -6,6 +6,7 @@ export async function GET(req: Request) {
   const code = url.searchParams.get("code");
 
   if (!code) {
+    console.error("Missing code in callback");
     return new Response("Missing code", { status: 400 });
   }
 
@@ -19,6 +20,7 @@ export async function GET(req: Request) {
   });
 
   if (error) {
+    console.error("Error exchanging code for token:", error);
     return new Response(error.message, { status: 400 });
   }
 
