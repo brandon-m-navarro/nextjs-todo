@@ -4,9 +4,9 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  if (!code) {
-    return new Response("Missing code", { status: 400 });
-  }
+  // if (!code) {
+  //   return new Response("Missing code", { status: 400 });
+  // }
 
   // This calls BetterAuth’s /oauth2/token endpoint
   const { data, error } = await authClient.oauth2.token({

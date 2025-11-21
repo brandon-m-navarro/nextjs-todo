@@ -80,7 +80,7 @@ export default function LiveDataPreviews() {
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
           try {
-            const response = await fetch('/api/auth/callback'); // Or '/api/hello' for Pages Router
+            const response = await fetch('/api/auth/callback');
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
