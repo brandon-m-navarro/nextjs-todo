@@ -5,7 +5,7 @@ export async function GET() {
     "https://login.bnav.dev/api/auth/oauth2/authorize"
   );
 
-  authorizeURL.searchParams.set("client_id", process.env.OIDC_CLIENT_ID!);
+  authorizeURL.searchParams.set("client_id", process.env.TODO_CLIENT_ID!);
   authorizeURL.searchParams.set(
     "redirect_uri",
     "https://todo.bnav.dev/auth/callback"
