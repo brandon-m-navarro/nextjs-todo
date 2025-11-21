@@ -79,9 +79,7 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          const user = authClient.accountInfo;
-          console.log("Testing Auth Client... *authclient.accountInfo:*");
-          console.log("Auth Client User Info:", user);
+          window.location.href = "/api/auth/sso/login";
         }}
       >
         Test Auth Client
