@@ -79,16 +79,9 @@ export default function LiveDataPreviews() {
       <button
         className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
         onClick={async () => {
-          try {
-            const response = await fetch('/api/auth/callback');
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            console.log("API Response:", result);
-          } catch (error) {
-            console.error("Error during OIDC authorization:", error);
-          }
+          const user = authClient.accountInfo;
+          console.log("Testing Auth Client... *authclient.accountInfo:*");
+          console.log("Auth Client User Info:", user);
         }}
       >
         Test Auth Client
