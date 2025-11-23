@@ -18,7 +18,3 @@ export async function GET() {
 
   return NextResponse.redirect(authorizeURL.toString(), 302);
 }
-
-//https://todo.bnav.dev/auth/callback
-// ?code=t0KaRc1jUr1iTRMI3oP4Mxy4DopUW0DE
-// &state=9e447ee2-1023-496d-a9d8-9c489eb59992
