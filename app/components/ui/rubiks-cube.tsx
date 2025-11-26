@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState } from "react";
 
 export default function RubiksCube() {
@@ -28,12 +30,11 @@ export default function RubiksCube() {
 
   return (
     <div
-      className="animation-container mt-[24px] h-[250px] w-full relative"
+      className="animation-container mt-[24px] h-[250px] z-9 w-full relative cursor-grab select-none"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onMouseMove={handleMouseMove}
-      style={{ cursor: "grab", userSelect: "none" }}
     >
       <div className="cube-container">
         <div

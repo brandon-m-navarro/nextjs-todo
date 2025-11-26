@@ -90,13 +90,6 @@ body {
   transform: skew(0deg, 45deg);
 }
 
-.face {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  border: 1px solid #000;
-}
-
 .cube-container {
   perspective: 1000px;
   width: 100px;
@@ -132,13 +125,59 @@ body {
 .top    { transform: rotateX(90deg) translateZ(50px); }
 .bottom { transform: rotateX(-90deg) translateZ(50px); }
 
+.preserve-3d { transform-style: preserve-3d; }
+.r-rect-front  { transform: rotateY(0deg) translateZ(8px); }
+.r-rect-back   { transform: rotateY(180deg) translateZ(8px); }
+.r-rect-left   { transform: rotateY(-90deg) translateZ(8px); }
+.r-rect-right  { transform: rotateY(90deg) translateZ(42px); }
+.r-rect-top    { transform: rotateX(90deg) translateZ(8px); }
+.r-rect-bottom { transform: rotateX(-90deg) translateZ(8px); }
+.r-rect { transform: rotate(135deg) translate3d(-6px, -10px, 0px); }
+
+
+.l-rect-front  { transform: rotateY(0deg) translateZ(8px); }
+.l-rect-back   { transform: rotateY(180deg) translateZ(8px); }
+.l-rect-left   { transform: rotateY(-90deg) translateZ(8px); }
+.l-rect-right  { transform: rotateY(90deg) translateZ(27px); }
+.l-rect-top    { transform: rotateX(90deg) translateZ(8px); }
+.l-rect-bottom { transform: rotateX(-90deg) translateZ(8px); }
+.l-rect { transform: rotate(45deg) translate3d(-3px, 0px, 0px); }
+ 
+/* These exist to hide the borders of the prisms */
+.check-front {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  transform: translate3d(29px, 1px, 8.05px);
+}
+.check-back {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  transform: translate3d(20px, -7px, -8.05px);
+}
+.check-side {
+  transform: rotateY(90deg)translate3d(0, -8px, 28.05px);
+  width: 14px;
+  height: 14px;
+}  
 
 /* Animations */
 
 /* Success Animation (2.5s) */
 @theme {
-  --animate-grow-shrink: grow-shrink 1.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 
+  --animate-rotate: rotate 25s linear infinite;
+  @keyframes rotate {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(360deg);
+    }
+  }
+
+  --animate-grow-shrink: grow-shrink 1.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
   @keyframes grow-shrink {
     0% {
       min-height: 40px;
