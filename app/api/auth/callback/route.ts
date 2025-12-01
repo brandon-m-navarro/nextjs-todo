@@ -1,8 +1,14 @@
 import { authClient } from "@/lib/auth-client";
-// import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
+
+  console.log("Callback route hit");
   const url = new URL(req.url);
+  console.log("Full URL:", url.toString());
+  console.log("Search params:", Object.fromEntries(url.searchParams.entries()));
+
+
+  // const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
   if (!code) {
