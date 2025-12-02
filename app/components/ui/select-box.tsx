@@ -1,6 +1,7 @@
+// ui/select-box.tsx
 interface SelectBoxProps {
   name: string;
-  options: string[];
+  options: { value: string; label: string }[];
   value?: string;
   onChange?: (value: string) => void;
   required?: boolean;
@@ -23,8 +24,8 @@ export default function SelectBox({
     >
       <option value="">Select a project</option>
       {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
+        <option key={option.value} value={option.value}>
+          {option.label}
         </option>
       ))}
     </select>

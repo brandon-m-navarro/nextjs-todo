@@ -3,7 +3,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-The latest version is deployed here: [https://nextjs-todo-lake.vercel.app/](https://nextjs-todo-lake.vercel.app/).
+The latest version is deployed here: [https://todo.bnav.dev/](https://todo.bnav.dev/).
 
 
 ## Getting Started (Locally)

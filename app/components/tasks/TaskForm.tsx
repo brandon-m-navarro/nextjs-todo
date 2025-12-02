@@ -40,9 +40,6 @@ export default function TaskForm({
   } = useSpinner();
 
   // Find the initial project name based on the initialProjectId
-  const initialProject = projects.find((p) => p.id === initialProjectId);
-  const initialProjectName = initialProject ? initialProject.name : "";
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,7 +65,6 @@ export default function TaskForm({
         },
         (result) => {
           if (result?.success && result.task) {
-
             // Show success spinner, then hide and reset
             setTimeout(() => {
               showSpinnerSuccess();
@@ -124,8 +120,8 @@ export default function TaskForm({
     setDueDate(date);
   };
 
-  const handleProjectChange = (projectName: string) => {
-    const project = projects.find((p) => p.name === projectName);
+  const handleProjectChange = (id: string) => {
+    const project = projects.find((p) => p.id === id);
     if (project) {
       setSelectedProjectId(project.id);
     }
@@ -161,9 +157,15 @@ export default function TaskForm({
                 <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
                   <SelectBox
                     name="project"
-                    options={projects.map((p) => p.name)}
-                    value={initialProjectName}
-                    onChange={handleProjectChange}
+                    options={projects.map((p) => ({
+                      value: p.id,
+                      label: p.name,
+                    }))}
+                    value={selectedProjectId}
+                    onChange={(selectedId) => {
+                      console.log("Selected project ID:", selectedId);
+                      setSelectedProjectId(selectedId);
+                    }}
                     required
                   />
                 </div>
