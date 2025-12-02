@@ -1,15 +1,16 @@
-import { db } from "@/lib/db";
-import { TaskWithProject } from "@/lib/definitions";
+import { TaskWithProject, Task } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 async function getRecentTasksPreview() {
   try {
-    const projects = await db.projects.getAll();
+    const projects = await prisma.project.findMany({ orderBy: { creationDateTime: 'desc' } });
     const allTasks: TaskWithProject[] = [];
 
     for (const project of projects) {
-      const tasks = await db.tasks.getByProjectId(project.id);
-      const tasksWithProject = tasks.map((task) => ({
+      const tasks = await prisma.task.findMany({ where: { projectId: project.id } })
+      
+      const tasksWithProject = tasks.map((task: Task) => ({
         ...task,
         projectId: task.projectId,
         isDone: task.isDone,

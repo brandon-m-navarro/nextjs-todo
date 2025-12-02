@@ -1,0 +1,72 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                   String   @id @db.VarChar(50)
+  userId               String?  @db.VarChar(50)  // No @map needed
+  name                 String   @db.VarChar(255)
+  description          String?
+  hexColor             String?  @db.VarChar(6)   // No @map needed
+  icon                 String?  @db.VarChar(255)
+  creationDateTime     DateTime @default(now()) @db.Timestamptz
+  lastModifiedDateTime DateTime @default(now()) @db.Timestamptz
+  
+  tasks    Task[]     // Relation to tasks
+  user     User?      @relation(fields: [userId], references: [id])  // Fixed relation
+  
+  // Index uses camelCase field name, index name also camelCase
+  @@index([userId], name: "idx_projects_userId")
+  @@map("projects")  // Table name mapping
+}
+
+model Task {
+  id                          String    @id @db.VarChar(50)
+  userId                      String?   @db.VarChar(50)
+  projectId                   String    @db.VarChar(50)
+  title                       String    @db.VarChar(255)
+  description                 String?
+  isDone                      Boolean   @default(false)
+  ordinal                     Int?
+  expectedCompletionDateTime  DateTime? @db.Timestamptz
+  creationDateTime            DateTime  @default(now()) @db.Timestamptz
+  lastModifiedDateTime        DateTime  @default(now()) @db.Timestamptz
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Indexes use camelCase throughout
+  @@index([projectId], name: "idx_tasks_projectId")
+  @@index([userId], name: "idx_tasks_userId")
+  @@map("tasks")  // Table name mapping
+}
+
+model User {
+  id         String  @id @default(cuid())
+  externalId String  @unique
+  email      String?
+  name       String?
+  image      String?
+
+  // App-specific relations
+  projects Project[]
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
+}

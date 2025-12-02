@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 interface RouteParams {
   params: Promise<{
@@ -10,7 +10,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
-    const project = await db.projects.getById(projectId);
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
@@ -29,9 +29,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
-    await db.projects.delete(projectId);
+    const response = await prisma.project.delete({ where: { id: projectId } })
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      message: "Project deleted successfully",
+      response: response,
+    });
   } catch (error) {
     console.error("Error deleting project:", error);
     return NextResponse.json(
@@ -45,7 +49,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
     const body = await request.json();
-    const project = await db.projects.update(projectId, body);
+    const project = await prisma.project.update({ where: { id: projectId }, data: {
+      name: body.name,
+      description: body.description || null,
+      hexColor: body.hexColor || null
+    } });
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { generateId } from "@/lib/utilities";
+import { prisma } from "@/lib/prisma";
 
 interface RouteParams {
   params: Promise<{
@@ -11,9 +11,8 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
-    const tasks = await db.tasks.getByProjectId(projectId);
+    const tasks = await prisma.task.findMany({ where: { projectId: projectId } })
 
-    // Map all tasks (snake_case -> camelCase)
     return NextResponse.json({ success: true, tasks });
   } catch (error) {
     console.error("Error fetching project tasks:", error);
@@ -40,16 +39,19 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     const taskId = generateId("TSK");
 
-    // db expects snake_case for properties
-    const task = await db.tasks.create({
+    const task = await prisma.task.create({ data: {
       projectId: projectId,
       id: taskId,
       title,
-      description,
+      description: description || null,
       isDone: isDone || false,
-      ordinal,
-      expectedCompletionDateTime: expectedCompletionDateTime,
-    });
+      ordinal: ordinal || null,
+      expectedCompletionDateTime: expectedCompletionDateTime
+        ? new Date(expectedCompletionDateTime)
+        : null,
+      creationDateTime: new Date(),
+      lastModifiedDateTime: new Date(),
+    } })
 
     return NextResponse.json({ success: true, task }, { status: 201 });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 interface RouteParams {
   params: Promise<{
@@ -10,14 +10,13 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const task = await db.tasks.getById(id);
+    const task = await prisma.task.findUnique({ where: { id } });
 
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
-    // Map db result (snake_case -> camelCase)
-    const project = await db.projects.getById(task.projectId);
+    const project = await prisma.project.findUnique({ where: { id: task.projectId } });
 
     const taskWithProject = {
       ...task,
@@ -42,7 +41,16 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const task = await db.tasks.update(id, body);
+    const task = await prisma.task.update({
+      where: { id },
+      data: {
+        title: body.title,
+        description: body.description,
+        expectedCompletionDateTime: body.expectedCompletionDateTime,
+        isDone: body.isDone,
+        projectId: body.projectId,
+      },
+    });
 
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
@@ -64,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const response = await db.tasks.delete(id);
+    const response = await prisma.task.delete({ where: { id } });
 
     return NextResponse.json({
       success: true,

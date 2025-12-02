@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { generateId } from "@/lib/utilities";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,17 +22,19 @@ export async function POST(request: NextRequest) {
     }
 
     const taskId = generateId("TSK");
-
-    // Use snake_case for db properties
-    const task = await db.tasks.create({
+    const task = await prisma.task.create({ data: {
       projectId: projectId,
       id: taskId,
       title,
-      description,
+      description: description || null,
       isDone: isDone || false,
-      ordinal,
-      expectedCompletionDateTime: expectedCompletionDateTime,
-    });
+      ordinal: ordinal || null,
+      expectedCompletionDateTime: expectedCompletionDateTime
+        ? new Date(expectedCompletionDateTime)
+        : null,
+      creationDateTime: new Date(),
+      lastModifiedDateTime: new Date(),
+    } });
 
     return NextResponse.json({ success: true, task }, { status: 201 });
   } catch (error) {
@@ -51,9 +53,9 @@ export async function GET(request: NextRequest) {
 
     let tasks;
     if (projectId) {
-      tasks = await db.tasks.getByProjectId(projectId);
+      tasks = await prisma.task.findMany({ where: { projectId: projectId } })
     } else {
-      tasks = await db.tasks.getAll();
+      tasks = await prisma.task.findMany({ orderBy: { creationDateTime: 'desc' } })
     }
 
     return NextResponse.json({ success: true, tasks });
