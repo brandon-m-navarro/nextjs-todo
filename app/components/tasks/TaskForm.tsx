@@ -120,13 +120,6 @@ export default function TaskForm({
     setDueDate(date);
   };
 
-  const handleProjectChange = (id: string) => {
-    const project = projects.find((p) => p.id === id);
-    if (project) {
-      setSelectedProjectId(project.id);
-    }
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
