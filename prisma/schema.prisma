@@ -69,7 +69,6 @@ model user {
   // YOUR APP RELATIONS (Added by you):
   projects    Project[]
   tasks       Task[]
-  verifications verification[]
 
   @@map("user")
 }
@@ -81,8 +80,6 @@ model verification {
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  user user? @relation(fields: [identifier], references: [email])
 
   @@unique([identifier, value])
   @@map("verification")
