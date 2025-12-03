@@ -1,3 +1,4 @@
+// File: todo.bnav.dev/prisma/schema.prisma
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
@@ -8,22 +9,104 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ======================
+// BETTER AUTH SCHEMA (Required by prismaAdapter)
+// ======================
+model account {
+  id                   String    @id @default(cuid())
+  userId               String
+  accountId            String
+  providerId           String
+  accessToken          String?
+  refreshToken         String?
+  idToken              String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                String?
+  password             String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("session")
+}
+
+model user {
+  id                   String    @id @default(cuid())
+  name                 String?
+  email                String    @unique
+  emailVerified        Boolean   @default(false)
+  image                String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  twoFactorSecret      String?
+  twoFactorRecoveryCodes String?
+  twoFactorEnabled     Boolean   @default(false)
+
+  // Relations
+  accounts    account[]
+  sessions    session[]
+  // YOUR APP RELATIONS (Added by you):
+  projects    Project[]
+  tasks       Task[]
+  verifications verification[]
+
+  @@map("user")
+}
+
+model verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user user? @relation(fields: [identifier], references: [email])
+
+  @@unique([identifier, value])
+  @@map("verification")
+}
+// ======================
+// END BETTER AUTH SCHEMA
+// ======================
+
 model Project {
   id                   String   @id @db.VarChar(50)
-  userId               String?  @db.VarChar(50)  // No @map needed
+  userId               String?  @db.VarChar(50)
   name                 String   @db.VarChar(255)
   description          String?
-  hexColor             String?  @db.VarChar(6)   // No @map needed
+  hexColor             String?  @db.VarChar(6)
   icon                 String?  @db.VarChar(255)
   creationDateTime     DateTime @default(now()) @db.Timestamptz
   lastModifiedDateTime DateTime @default(now()) @db.Timestamptz
   
-  tasks    Task[]     // Relation to tasks
-  user     User?      @relation(fields: [userId], references: [id])  // Fixed relation
-  
-  // Index uses camelCase field name, index name also camelCase
+  tasks    Task[]
+  // CRITICAL: This relation now points to Better Auth's 'user' model
+  user     user?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId], name: "idx_projects_userId")
-  @@map("projects")  // Table name mapping
+  @@map("projects")
 }
 
 model Task {
@@ -39,34 +122,10 @@ model Task {
   lastModifiedDateTime        DateTime  @default(now()) @db.Timestamptz
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
-  // Indexes use camelCase throughout
+  // CRITICAL: This relation now points to Better Auth's 'user' model
+  user    user?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([projectId], name: "idx_tasks_projectId")
   @@index([userId], name: "idx_tasks_userId")
-  @@map("tasks")  // Table name mapping
-}
-
-model User {
-  id         String  @id @default(cuid())
-  externalId String  @unique
-  email      String?
-  name       String?
-  image      String?
-
-  // App-specific relations
-  projects Project[]
-  sessions Session[]
-
-  @@map("users")
-}
-
-model Session {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  expiresAt DateTime
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("sessions")
+  @@map("tasks")
 }

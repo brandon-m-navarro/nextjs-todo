@@ -1,12 +1,27 @@
 "use client";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function HeroSection() {
+  const handleLogin = async () => {
+    const { data, error } = await authClient.signIn.oidc({
+      providerId: "bnav-oidc", // Matches your auth.ts configuration
+      callbackURL: "/projects", // Optional redirect after login
+    });
+
+    if (error) {
+      alert(`Login failed: ${error.message}`);
+    }
+  };
+
   return (
     <div className="text-center py-16 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-5xl font-bold text-gray-900 mb-6">
-          Welcome to <strong className="underline decoration-sky-500">todo.bnav.dev!</strong>
+          Welcome to{" "}
+          <strong className="underline decoration-sky-500">
+            todo.bnav.dev!
+          </strong>
         </h1>
         <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
           A minimal todo application demonstrating integration with my SSO
@@ -19,7 +34,7 @@ export default function HeroSection() {
             {/* Primary Button */}
             <button
               onClick={async () => {
-                window.location.href = "/api/auth/sso/login";
+                await handleLogin();
               }}
               className="px-10 py-4 cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center gap-2 group sm:border-r sm:border-blue-500/30"
             >
