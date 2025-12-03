@@ -75,14 +75,6 @@ export default function LiveDataPreviews() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-12">
-      <button
-        className="px-8 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-lg font-semibold"
-        onClick={async () => {
-          window.location.href = "/api/auth/sso/login";
-        }}
-      >
-        Test Auth Client
-      </button>
       {/* Recent Projects Preview */}
       <div className="bg-gray-50 rounded-xl p-6">
         <h3 className="text-2xl font-semibold mb-4 text-black">
