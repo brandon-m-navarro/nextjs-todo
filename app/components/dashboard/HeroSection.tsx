@@ -4,8 +4,8 @@ import { authClient } from "@/lib/auth-client";
 
 export default function HeroSection() {
   const handleLogin = async () => {
-    const { data, error } = await authClient.signIn.oidc({
-      providerId: "bnav-oidc", // Matches your auth.ts configuration
+    const { data, error } = await authClient.signIn.social({
+      provider: "bnav-oidc", // Matches your auth.ts configuration
       callbackURL: "/projects", // Optional redirect after login
     });
 
