@@ -1,11 +1,10 @@
 'use client';
-import { useProjectContext } from '@/app/contexts/ProjectContext';
+import { Project } from '@/lib/definitions';
 import ProjectCard from './ProjectCard';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ProjectChooser() {
-  const { projects, isLoading } = useProjectContext();
+export default function ProjectChooser({projects}: {projects: Project[]}) {
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState<string | null>(null);
 
@@ -14,36 +13,14 @@ export default function ProjectChooser() {
     router.push(href);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-6xl mx-auto p-0 sm:p-4">
       {/* Projects Grid */}
-      {projects.length === 0 ? (
+      {projects.length == 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 text-6xl mb-4">📁</div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">No projects yet</h2>
           <p className="text-gray-600 mb-6">Create your first project to get started</p>
-          <button
-            onClick={() => handleNavigation('/projects/new')}
-            disabled={isNavigating === '/projects/new'}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            {isNavigating === '/projects/new' ? (
-              <span className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Creating...
-              </span>
-            ) : (
-              'Create Project'
-            )}
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -54,7 +31,7 @@ export default function ProjectChooser() {
               isNavigating={isNavigating === project.id}
               onNavigate={() => handleNavigation(`/projects/${project.id}`, project.id)}
             />
-          ))}
+          ))} 
         </div>
       )}
     </div>

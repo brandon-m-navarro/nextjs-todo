@@ -153,3 +153,5 @@ dist
 /lib/generated/prisma
 
 /lib/generated/prisma
+
+/todo.txt

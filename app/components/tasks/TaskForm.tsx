@@ -11,12 +11,14 @@ import { useProjectContext } from "@/app/contexts/ProjectContext";
 
 interface TaskFormProps {
   initialProjectId?: string;
+  isPrivate?: boolean;
   onTaskCreated?: (task: Task) => void;
   onError?: () => void;
 }
 
 export default function TaskForm({
   initialProjectId = "",
+  isPrivate = false,
   onTaskCreated,
   onError,
 }: TaskFormProps) {
@@ -63,6 +65,7 @@ export default function TaskForm({
           ordinal: null,
           expectedCompletionDateTime: dueDate ? new Date(dueDate) : null,
         },
+        isPrivate,
         (result) => {
           if (result?.success && result.task) {
             // Show success spinner, then hide and reset
@@ -128,11 +131,11 @@ export default function TaskForm({
       <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
         <div className="flex-1 rounded-lg sm:bg-gray-50 sm:px-6 sm:pb-6 sm:pt-8 w-full">
           <div className="flex align-center mb-6">
-            <h1
+            {/* <h1
               className={`hidden sm:block text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}
             >
               Add New Task
-            </h1>
+            </h1> */}
             <SpinnerComponent spinnerState={spinnerState} size={40} />
           </div>
 

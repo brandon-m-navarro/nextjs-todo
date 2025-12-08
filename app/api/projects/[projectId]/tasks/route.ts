@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { projectId } = await params;
     const body = await request.json();
-    const { title, description, isDone, ordinal, expectedCompletionDateTime } =
+    const { title, userId, description, isDone, ordinal, expectedCompletionDateTime } =
       body;
 
     if (!title) {
@@ -42,6 +42,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const task = await prisma.task.create({ data: {
       projectId: projectId,
       id: taskId,
+      userId,
       title,
       description: description || null,
       isDone: isDone || false,

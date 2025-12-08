@@ -1,34 +1,34 @@
 export type Task = {
+  id: string;
   userId?: string | null;
   projectId: string;
-  id: string;
   title: string;
-  description: string | null;
+  description?: string | null;
   isDone: boolean;
-  ordinal: number | null;
-  expectedCompletionDateTime: Date | null;
+  ordinal?: number | null;
+  expectedCompletionDateTime?: Date | null;
   creationDateTime: Date;
   lastModifiedDateTime: Date;
 };
 
 export type Project = {
-  userId?: string | null;
   id: string;
+  userId?: string | null;
   name: string;
-  description: string | null;
-  hexColor: string | null;
-  icon: string | null;
+  description?: string | null;
+  hexColor?: string | null;
+  icon?: string | null;
   creationDateTime: Date;
   lastModifiedDateTime: Date;
 };
 
 export interface TaskWithProject {
-  userId?: string | null;
   id: string;
+  userId?: string | null;
   title: string;
-  description: string | null;
+  description?: string | null;
   isDone: boolean;
-  ordinal: number | null;
+  ordinal?: number | null;
   expectedCompletionDateTime?: Date | null;
   creationDateTime: Date;
   lastModifiedDateTime: Date;
@@ -37,10 +37,3 @@ export interface TaskWithProject {
   projectName: string;
   projectColor?: string | null;
 }
-
-export type LS = {
-  userId?: string | null;
-  tasks: Task[];
-  projects: Project[];
-  lastUsedProjectId?: string;
-};

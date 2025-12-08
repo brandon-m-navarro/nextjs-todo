@@ -5,18 +5,21 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { Project } from "@/lib/definitions";
+import { useUserContext } from "@/app/contexts/UserContext";
 
 export default function ProjectForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string>("");
   const { addProject } = useProjectContext();
+  const { isLoggedIn, userId } = useUserContext();
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     hexColor: "3B82F6", // Default blue color
     icon: "",
+    isPublic: true,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,8 +36,14 @@ export default function ProjectForm() {
       Project,
       "id" | "creationDateTime" | "lastModifiedDateTime"
     > = {
-      ...formData,
+      name: formData.name.trim(),
+      description: formData.description.trim(),
+      hexColor: formData.hexColor,
+      icon: formData.icon.trim(),
+      userId: formData.isPublic ? null : userId || null,
     };
+
+    console.log('Creating project:', projectToCreate);
 
     try {
       await addProject(projectToCreate, (result) => {
@@ -170,24 +179,28 @@ export default function ProjectForm() {
             </div>
           </div>
 
-          {/* Icon (Optional) */}
-          {/* <div>
-            <label
-              htmlFor="icon"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Icon (Optional)
-            </label>
-            <input
-              type="text"
-              id="icon"
-              name="icon"
-              value={formData.icon}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="e.g., 🏠, 💼, 🎯 (emoji or icon name)"
-            />
-          </div> */}
+          {/* isPublic Toggle */}
+          {isLoggedIn && (
+            <div>
+              <label className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="isPublic"
+                  checked={formData.isPublic}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isPublic: e.target.checked,
+                    }))
+                  }
+                  className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  Make this project public
+                </span>
+              </label>
+            </div>
+          )}
 
           {/* Form Actions */}
           <div className="flex gap-4 pt-4 w-full justify-evenly">

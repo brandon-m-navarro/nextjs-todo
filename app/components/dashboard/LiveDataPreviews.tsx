@@ -27,7 +27,7 @@ export default function LiveDataPreviews() {
     async function fetchLiveData() {
       try {
         const [projectsRes, tasksRes] = await Promise.all([
-          fetch("/api/projects?limit=3"),
+          fetch("/api/projects/recent?limit=3"),
           fetch("/api/tasks/recent?limit=5"),
         ]);
 
@@ -48,7 +48,7 @@ export default function LiveDataPreviews() {
   // Show loading state while fetching data
   if (loading) {
     return (
-      <div className="grid lg:grid-cols-2 gap-12">
+      <div className="grid lg:grid-cols-2 gap-[36px]">
         <div className="bg-gray-50 rounded-xl p-6">
           <div className="animate-pulse">
             <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
@@ -74,7 +74,7 @@ export default function LiveDataPreviews() {
   }
 
   return (
-    <div className="grid lg:grid-cols-2 gap-12">
+    <div className="grid lg:grid-cols-2 gap-[36px]">
       {/* Recent Projects Preview */}
       <div className="bg-gray-50 rounded-xl p-6">
         <h3 className="text-2xl font-semibold mb-4 text-black">

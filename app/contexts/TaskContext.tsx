@@ -1,12 +1,16 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { Task } from "@/lib/definitions";
+import { useUserContext } from "./UserContext";
 
 interface TaskContextType {
   tasks: Task[];
+  publicTasks: Task[];
+  privateTasks: Task[];
   isLoading : boolean;
   addTask: (
     task: Omit<Task, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    isPrivate: boolean,
     callback?: (response?: {
       success: boolean;
       task?: Task;
@@ -45,7 +49,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   children,
 }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [privateTasks, setPrivateTasks] = useState<Task[]>([]);
+  const [publicTasks, setPublicTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { userId } = useUserContext();
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -72,6 +79,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   // Add Task with optimistic update and rollback on failure
   const addTask = async (
     task: Omit<Task, "id" | "creationDateTime" | "lastModifiedDateTime">,
+    isPrivate: boolean,
     callback?: (response?: {
       success: boolean;
       task?: Task;
@@ -85,15 +93,26 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       creationDateTime: new Date(),
       lastModifiedDateTime: new Date(),
     };
+    const originalTasks = [...tasks];
+    const originalPrivateTasks = [...privateTasks];
+    const originalPublicTasks = [...publicTasks];
 
     try {
       // Store rollback function
       rollback = () => {
-        setTasks((prevTasks) => prevTasks.filter((t) => t.id !== tempTask.id));
+        // setTasks((prevTasks) => prevTasks.filter((t) => t.id !== tempTask.id));
+        setTasks(originalTasks);
+        setPrivateTasks(originalPrivateTasks);
+        setPublicTasks(originalPublicTasks);
       };
 
       // Optimistic update
       setTasks((prevTasks) => [tempTask, ...prevTasks]);
+      if (isPrivate) {
+        setPrivateTasks((prevTasks) => [...prevTasks, tempTask]);
+      } else {
+        setPublicTasks((prevTasks) => [...prevTasks, tempTask]);
+      }
 
       const response = await fetch(`/api/projects/${task.projectId}/tasks`, {
         method: "POST",
@@ -108,6 +127,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
             ? new Date(task.expectedCompletionDateTime).toISOString()
             : null,
           isDone: task.isDone,
+          userId: isPrivate ? userId : null
         }),
       });
 
@@ -124,6 +144,15 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       setTasks((prev) =>
         prev.map((t) => (t.id === tempTask.id ? serverTask : t))
       );
+      if (isPrivate) {
+        setPrivateTasks((prev) =>
+          prev.map((t) => (t.id === tempTask.id ? serverTask : t))
+        )
+      } else {
+        setPublicTasks((prev) =>
+          prev.map((t) => (t.id === tempTask.id ? serverTask : t))
+        )
+      }
 
       // Call callback with success data
       callback?.({ success: true, task: serverTask });
@@ -285,6 +314,8 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     <TaskContext.Provider
       value={{
         tasks,
+        privateTasks,
+        publicTasks,
         isLoading,
         addTask,
         updateTask,

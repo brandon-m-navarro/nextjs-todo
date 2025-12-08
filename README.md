@@ -50,7 +50,7 @@ app/
 ├── (dashboard)/                        # Route group for dashboard (not in URL)
 │   ├── layout.tsx                      # Dashboard layout (<ContextProviders />)
 │   ├── loading.tsx                     # Loading state for Dashboard (LiveDataPreviews component)
-│   ├── providers-wrapper.tsx           # Wrapper for Project/Task Provider so layout can stay server-component
+│   ├── providers-wrapper.tsx           # Wrapper for Project/Task/User Provider so layout can stay server-component
 │   ├── tasks/
 │   │   ├── page.tsx                    # /(dashboard)/tasks - All tasks
 │   │   ├── new/

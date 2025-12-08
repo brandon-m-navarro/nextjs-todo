@@ -11,7 +11,7 @@ interface TaskManagerProps {
 export default function TaskManager({ project }: TaskManagerProps) {
   return (
     <div className="bg-white rounded-lg shadow">
-      <TaskFormAccordion projectId={project.id} />
+      <TaskFormAccordion projectId={project.id} isPrivate={project.userId != null} />
       <TaskList projectId={project.id} />
     </div>
   );

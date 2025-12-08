@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Project } from "@/lib/definitions";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import Accordion from "../ui/accordion";
+import { useUserContext } from "@/app/contexts/UserContext";
 
 interface ProjectEditFormProps {
   projectId: string;
@@ -17,12 +18,14 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
   const [error, setError] = useState("");
   const { getProjectById, updateProject, deleteProject } = useProjectContext();
   const project = getProjectById(projectId);
+  const { isLoggedIn, userId } = useUserContext();
 
   const [formData, setFormData] = useState({
     name: project?.name || "",
     description: project?.description || "",
     hexColor: project?.hexColor || "",
     icon: project?.icon || "",
+    isPublic: project?.userId ? false : true,
   });
 
   // Sync form data when project changes
@@ -33,6 +36,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         description: project.description || "",
         hexColor: project.hexColor || "",
         icon: project.icon || "",
+        isPublic: project.userId ? false : true,
       });
     }
   }, [project]);
@@ -80,6 +84,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     setIsSubmitting(true);
     setError("");
 
+
     try {
       setIsNavigating(true);
 
@@ -90,7 +95,10 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         hexColor:
           formData.hexColor !== "" ? formData.hexColor.replace("#", "") : null,
         icon: formData.icon || null,
+        userId: formData.isPublic ? null : userId || null,
       };
+
+      console.log('Updating project with data:', updatedProject);
 
       updateProject(updatedProject, () => {
         router.back();
@@ -138,17 +146,6 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     }
   };
 
-  // // Common color options for projects
-  // const colorOptions = [
-  //   { value: "#3b82f6", label: "Blue" },
-  //   { value: "#ef4444", label: "Red" },
-  //   { value: "#10b981", label: "Green" },
-  //   { value: "#f59e0b", label: "Yellow" },
-  //   { value: "#8b5cf6", label: "Purple" },
-  //   { value: "#ec4899", label: "Pink" },
-  //   { value: "#06b6d4", label: "Cyan" },
-  //   { value: "#f97316", label: "Orange" },
-  // ];
   const colorOptions = [
     { value: "EF4444", label: "Red", color: "bg-red-500" },
     { value: "F59E0B", label: "Amber", color: "bg-amber-500" },
@@ -157,18 +154,6 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     { value: "8B5CF6", label: "Violet", color: "bg-violet-500" },
     { value: "EC4899", label: "Pink", color: "bg-pink-500" },
   ];
-
-  // Common icon options (you can use emojis or icon library)
-  // const iconOptions = [
-  //   { value: "📝", label: "Memo" },
-  //   { value: "💼", label: "Briefcase" },
-  //   { value: "🎯", label: "Target" },
-  //   { value: "🚀", label: "Rocket" },
-  //   { value: "🏠", label: "Home" },
-  //   { value: "🛒", label: "Shopping" },
-  //   { value: "🏋️", label: "Fitness" },
-  //   { value: "📚", label: "Books" },
-  // ];
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -263,51 +248,28 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           </p>
         </div>
 
-        {/* Icon Selection */}
-        {/* <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Icon (Optional)
-          </label>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {iconOptions.map((option) => (
-              <label
-                key={option.value}
-                className={`relative cursor-pointer rounded-lg p-2 flex flex-col items-center space-y-2 border-2 transition-colors ${
-                  formData.icon === option.value
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-transparent hover:bg-gray-50"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="icon"
-                  value={option.value}
-                  checked={formData.icon === option.value}
-                  onChange={handleChange}
-                  className="sr-only"
-                />
-                <div
-                  className={`w-8 h-8 text-center text-2xl`}
-                >{option.value}</div>
-              </label>
-            ))}
+        {/* isPublic Toggle */}
+        {isLoggedIn && (
+          <div>
+            <label className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                name="isPublic"
+                checked={formData.isPublic}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isPublic: e.target.checked,
+                  }))
+                }
+                className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">
+                Make this project public
+              </span>
+            </label>
           </div>
-          <div className="mt-2 text-sm text-gray-500">
-            Selected: {formData.icon}
-          </div>
-          <input
-            type="text"
-            id="icon"
-            name="icon"
-            value={formData.icon}
-            onChange={handleChange}
-            placeholder=""
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <p className="mt-1 text-sm text-gray-500">
-            Choose from presets or enter a custom emoji
-          </p>
-        </div> */}
+        )}
 
         {/* Form Actions */}
         <div className="flex justify-between sm:w-full sm:justify-self-start sm:gap-4 pt-6 border-t border-gray-200">

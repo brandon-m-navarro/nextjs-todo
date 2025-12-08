@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
+import ProvidersWrapper from "@/app/(dashboard)/providers-wrapper";
+import Header from "./components/ui/header";
 
 export const metadata: Metadata = {
   title: "Brandon's Todo App",
@@ -16,7 +18,10 @@ export default function RootLayout({
       <body
         className={`antialiased min-h-screen flex-1 p-6 bg-white! select-none`}
       >
-        {children}
+        <ProvidersWrapper>
+          <Header/>
+          {children}
+          </ProvidersWrapper>
       </body>
     </html>
   );

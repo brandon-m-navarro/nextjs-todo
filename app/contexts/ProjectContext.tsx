@@ -1,9 +1,12 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { Project } from "@/lib/definitions";
+// import { useUserContext } from "./UserContext";
 
 interface ProjectContextType {
   projects: Project[];
+  publicProjects: Project[];
+  privateProjects: Project[];
   isLoading: boolean;
   addProject: (
     project: Omit<Project, "id" | "creationDateTime" | "lastModifiedDateTime">,
@@ -34,7 +37,6 @@ interface ProjectContextType {
 
 interface ProjectProviderProps {
   children: ReactNode;
-  // initialProjects?: Project[];
 }
 
 export const ProjectContext = createContext<ProjectContextType | undefined>(
@@ -43,23 +45,32 @@ export const ProjectContext = createContext<ProjectContextType | undefined>(
 
 export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   children,
-  // initialProjects = [],
 }) => {
   const [projects, setProjects] = useState<Project[]>([]);
+
+  const [publicProjects, setPublicProjects] = useState<Project[]>([]);
+  const [privateProjects, setPrivateProjects] = useState<Project[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
+
+  // const { userId } = useUserContext();
 
   // Fetch projects on mount
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/projects');
+        const response = await fetch("/api/projects");
         if (response.ok) {
           const data = await response.json();
+
+          setPublicProjects(data.public || []);
+          setPrivateProjects(data.private || []);
+
           setProjects(data.projects || []);
         }
       } catch (error) {
-        console.error('Failed to fetch projects:', error);
+        console.error("Failed to fetch projects:", error);
       } finally {
         setIsLoading(false);
       }
@@ -88,12 +99,38 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     try {
       // Store rollback function
       rollback = () => {
+        // Check if tempProject is public or private to determine which setter to use
+        if (tempProject.userId) {
+          // When a function is passed to a useState setter, the current state is passed as a param
+          setPrivateProjects((prevPrivateProjects) =>
+            prevPrivateProjects.filter((p) => p.id !== tempProject.id)
+          );
+        } else {
+          setPublicProjects((prevPublicProjects) =>
+            prevPublicProjects.filter((p) => p.id !== tempProject.id)
+          );
+        }
+
+        // Keep legacy code until private/publicProjects are fully implemented
         setProjects((prevProjects) =>
           prevProjects.filter((p) => p.id !== tempProject.id)
         );
       };
 
       // Optimistic update
+      if (tempProject.userId) {
+        setPrivateProjects((prevPrivateProjects) => [
+          tempProject,
+          ...prevPrivateProjects,
+        ]);
+      } else {
+        setPublicProjects((prevPublicProjects) => [
+          tempProject,
+          ...prevPublicProjects,
+        ]);
+      }
+
+      // Optimistic update (Keep legacy code until private/publicProjects are fully implemented)
       setProjects((prevProjects) => [tempProject, ...prevProjects]);
 
       const response = await fetch(`/api/projects`, {
@@ -106,6 +143,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           description: project.description || null,
           hexColor: project.hexColor || null,
           icon: project.icon || null,
+          userId: project.userId || null,
         }),
       });
 
@@ -122,6 +160,16 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       setProjects((prev) =>
         prev.map((p) => (p.id === tempProject.id ? serverProject : p))
       );
+
+      if (tempProject.userId) {
+        setPrivateProjects((prev) =>
+          prev.map((p) => (p.id === tempProject.id ? serverProject : p))
+        );
+      } else {
+        setPublicProjects((prev) =>
+          prev.map((p) => (p.id === tempProject.id ? serverProject : p))
+        );
+      }
 
       // Call callback with success data
       callback?.({ success: true, project: serverProject });
@@ -150,25 +198,58 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }) => void
   ) => {
     let rollback: (() => void) | null = null;
+    const originalProjects: Project[] = [...projects],
+      originalPublic: Project[] = [...publicProjects],
+      originalPrivate: Project[] = [...privateProjects],
+      isCurrentlyPublic: boolean = publicProjects.some(
+        (p) => p.id === updatedProject.id
+      ),
+      willBePublic: boolean = updatedProject.userId == null;
+
     try {
-      // Store rollback function
-      rollback = () => {
-        setProjects((prevProjects) =>
-          prevProjects.map((project) =>
-            project.id === updatedProject.id
-              ? // Find the original project to restore it
-                prevProjects.find((p) => p.id === updatedProject.id) || project
-              : project
-          )
+      // Optimistic update
+      if (isCurrentlyPublic && !willBePublic) {
+        // Moving from public to private
+        setPublicProjects((prev) =>
+          prev.filter((p) => p.id !== updatedProject.id)
         );
-      };
+        setPrivateProjects((prev) => [...prev, updatedProject]);
+      } else if (!isCurrentlyPublic && willBePublic) {
+        // Moving from private to public
+        setPrivateProjects((prev) =>
+          prev.filter((p) => p.id !== updatedProject.id)
+        );
+        setPublicProjects((prev) => [...prev, updatedProject]);
+      } else {
+        // Same visibility, just update in place
+        if (isCurrentlyPublic) {
+          setPublicProjects((prev) =>
+            prev.map((project) =>
+              project.id === updatedProject.id ? updatedProject : project
+            )
+          );
+        } else {
+          setPrivateProjects((prev) =>
+            prev.map((project) =>
+              project.id === updatedProject.id ? updatedProject : project
+            )
+          );
+        }
+      }
 
       // Optimistic update
-      setProjects((prevProjects) =>
-        prevProjects.map((project) =>
+      setProjects((currentProjects) =>
+        currentProjects.map((project) =>
           project.id === updatedProject.id ? updatedProject : project
         )
       );
+
+      // Create rollback
+      rollback = () => {
+        setProjects(originalProjects);
+        setPublicProjects(originalPublic);
+        setPrivateProjects(originalPrivate);
+      };
 
       const response = await fetch(`/api/projects/${updatedProject.id}`, {
         method: "PUT",
@@ -180,6 +261,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           description: updatedProject.description || null,
           hexColor: updatedProject.hexColor || null,
           icon: updatedProject.icon,
+          userId: updatedProject.userId || null,
           lastModifiedDateTime: new Date().toISOString(),
         }),
       });
@@ -221,22 +303,44 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }) => void
   ) => {
     let rollback: (() => void) | null = null;
+    const originalProjects: Project[] = [...projects],
+      originalPublic: Project[] = [...publicProjects],
+      originalPrivate: Project[] = [...privateProjects],
+      isPrivate: boolean = privateProjects.some((p) => p.id === projectId);
 
     try {
-      const projectToDelete = projects.find((p) => p.id === projectId);
+      // Define rollback function
+      rollback = () => {
+        setProjects(originalProjects);
+        setPublicProjects(originalPublic);
+        setPrivateProjects(originalPrivate);
+      };
+
+      let projectToDelete;
+      if (isPrivate) {
+        projectToDelete = privateProjects.find((p) => p.id === projectId);
+      } else {
+        projectToDelete = publicProjects.find((p) => p.id === projectId);
+      }
+
       if (!projectToDelete) {
         throw new Error("Project not found for deletion");
       }
-
-      // Define rollback function
-      rollback = () => {
-        setProjects((prevProjects) => [projectToDelete, ...prevProjects]);
-      };
 
       // Optimistically remove project from context
       setProjects((prevProjects) =>
         prevProjects.filter((project) => project.id !== projectId)
       );
+
+      if (isPrivate) {
+        setPrivateProjects((prevPrivateProjects) =>
+          prevPrivateProjects.filter((project) => project.id !== projectId)
+        );
+      } else {
+        setPublicProjects((prevPublicProjects) =>
+          prevPublicProjects.filter((project) => project.id !== projectId)
+        );
+      }
 
       const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
@@ -274,13 +378,22 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   };
 
   const getProjectById = (id: string) => {
-    return projects.find((project) => project.id === id);
+    const isPrivate: boolean = privateProjects.some((p) => p.id === id);
+
+    if (isPrivate) {
+      return privateProjects.find((project) => project.id === id);
+    } else {
+      return publicProjects.find((project) => project.id === id);
+    }
+    // return projects.find((project) => project.id === id);
   };
 
   return (
     <ProjectContext.Provider
       value={{
         projects,
+        publicProjects,
+        privateProjects,
         isLoading,
         addProject,
         updateProject,

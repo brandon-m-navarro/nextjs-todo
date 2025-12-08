@@ -1,26 +1,69 @@
-import BackButton from "@/app/components/ui/back-button";
+"use client";
 import Link from "next/link";
 import ProjectChooser from "@/app/components/projects/ProjectChooser";
+import { useProjectContext } from "@/app/contexts/ProjectContext";
+import { useUserContext } from "@/app/contexts/UserContext";
 
 export default function ProjectsPage() {
+  const { publicProjects, privateProjects, isLoading } = useProjectContext();
+  const { isLoggedIn } = useUserContext();
+
   return (
     <div className="pb-15 sm:p-6 md:p-8 max-w-6xl mx-auto">
-      <BackButton />
+      {isLoggedIn && (
+        <>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Your Projects
+              </h1>
+              <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
+                Manage your projects and organize your tasks
+              </p>
+            </div>
+            <Link
+              href="/projects/new"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
+            >
+              + New Project
+            </Link>
+          </div>
+
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+            </div>
+          ) : (
+            <ProjectChooser projects={privateProjects} />
+          )}
+        </>
+      )}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
         <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">All Projects</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Public Projects
+          </h1>
           <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
-            Manage your projects and organize your tasks
+            Explore public projects created by other users
           </p>
         </div>
-        <Link
-          href="/projects/new"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
-        >
-          + New Project
-        </Link>
+        {/* Make sure only 1 'Create Project' button */}
+        {!isLoggedIn && (
+          <Link
+            href="/projects/new"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
+          >
+            + New Project
+          </Link>
+        )}
       </div>
-      <ProjectChooser />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <ProjectChooser projects={publicProjects} />
+      )}
     </div>
   );
 }

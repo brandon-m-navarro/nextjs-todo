@@ -4,10 +4,12 @@ import TaskForm from "./TaskForm";
 
 interface TaskFormAccordionProps {
   projectId: string;
+  isPrivate: boolean;
 }
 
 export default function TaskFormAccordion({
   projectId,
+  isPrivate=false
 }: TaskFormAccordionProps) {
   return (
     <div className="mb-8">
@@ -30,6 +32,7 @@ export default function TaskFormAccordion({
               <div ref={contentRef} className="p-2 sm:p-6 border-t border-gray-200">
                 <TaskForm
                   initialProjectId={projectId}
+                  isPrivate={isPrivate}
                   onTaskCreated={() => {
                     // Delay to let success animation finish
                     setTimeout(() => {
