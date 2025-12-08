@@ -52,7 +52,7 @@ export default function Header() {
               className="h-[38px] border-box px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               onClick={() => {
                 console.log("Navigate to login");
-                login("HARDCODED IN USERCONTEXT FOR NOW");
+                login();
               }}
             >
               Login

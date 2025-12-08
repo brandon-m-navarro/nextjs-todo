@@ -61,6 +61,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       try {
         setIsLoading(true);
         const response = await fetch("/api/projects");
+        
         if (response.ok) {
           const data = await response.json();
 

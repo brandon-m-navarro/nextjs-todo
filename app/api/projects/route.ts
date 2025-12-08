@@ -1,17 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateId } from "@/lib/utilities";
 import { prisma } from "@/lib/prisma";
-// import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Project } from "@/lib/definitions";
-
-// const dev = true;
-
-const user = { id: "wGKGJLpiPKkRQxBITC2K6OpxHfSpQkFS" };
-// if (dev) {
-//   user = { id: "wGKGJLpiPKkRQxBITC2K6OpxHfSpQkFS" };
-// } else {
-//   user = await auth.api.getSession();
-// }
 
 
 export async function POST(request: NextRequest) {
@@ -52,6 +43,9 @@ export async function POST(request: NextRequest) {
 // Fetch all projects, both public and those that are associated with the user
 export async function GET() {
   try {
+    const session = await auth.api.getSession();
+    const user = session?.user;
+
     console.log("API Route User:", user);
 
     const publicProjects = await prisma.project.findMany({
@@ -70,7 +64,12 @@ export async function GET() {
     // For now, combine both public and private projects into a single list
     const projects = [...privateProjects, ...publicProjects];
 
-    return NextResponse.json({ success: true, projects: projects, public: publicProjects, private: privateProjects }, { status: 200 });
+    return NextResponse.json({
+      success: true,
+      projects: projects,
+      public: publicProjects,
+      private: privateProjects
+    }, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return NextResponse.json(

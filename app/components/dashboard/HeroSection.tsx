@@ -1,37 +1,11 @@
 "use client";
-// import Link from "next/link";
-// import { authClient } from "@/lib/auth-client";
 import { useUserContext } from "@/app/contexts/UserContext";
 
 export default function HeroSection() {
   const { login } = useUserContext();
 
   const handleLogin = async () => {
-    login('DOES NOT MATTER, IS HARD SET IN LOGIN METHOD FOR NOW');
-    /* Comment out until production
-    const { data, error } = await authClient.signIn.social({
-      provider: "bnav-oidc",
-      callbackURL: "/projects",
-    });
-
-    if (error) {
-      alert(`Login failed: ${error.message}`);
-      return;
-    }
-
-    if (data == null) {
-      // Handle null response
-    } else if (data.redirect) {
-      // Handle redirect case - navigate to data.url
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } else if ("user" in data) {
-      // Only access user if it exists in this response type
-      login(data.user.id);
-      console.log('User being set in UserContext - ', data.user.id);
-    }
-      */
+    login();
   };
 
   return (

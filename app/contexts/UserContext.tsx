@@ -1,11 +1,12 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 
 interface UserContextType {
   isLoggedIn: boolean;
   userId: string | null;
   username: string | null;
-  login: (userId: string) => Promise<void>;
+  login: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -22,18 +23,32 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
 
-  const login = async (userId: string) => {
-    // Implement login logic with betterauth
-    console.log("Logging in user:", userId);
-    // Just set hardcoded userID for now
-    setIsLoggedIn(true);
-    setUserId("wGKGJLpiPKkRQxBITC2K6OpxHfSpQkFS");
-    setUsername("Brandon");
+  const login = async () => {
+
+    const { data, error } = await authClient.signIn.social({
+      provider: "bnav-oidc", // Matches your auth.ts configuration
+      callbackURL: "/projects", // Optional redirect after login
+    });
+
+    if (error) {
+      alert(`Login failed: ${error.message}`);
+    } else {
+      if (data.redirect && data.url) {
+        window.location.href = data.url;
+      } else {
+        if ('user' in data) {
+          setIsLoggedIn(true);
+          setUserId(data.user.id);
+          setUsername(data.user.name);
+        }
+      }
+    }
   };
 
   const logout = async () => {
     setIsLoggedIn(false);
     setUserId(null);
+    setUsername(null);
   };
 
   // Fetch user authentication status on mount
