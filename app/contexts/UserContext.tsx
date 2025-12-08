@@ -24,29 +24,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [username, setUsername] = useState<string | null>(null);
 
   const login = async () => {
-    const { data, error } = await authClient.signIn.social(
-      {
-        provider: "bnav-oidc", // Matches your auth.ts configuration
-        callbackURL: "/projects", // Optional redirect after login
-      },
-      {
-        onSuccess: (ctx) => {
-          console.log('running onSuccess')
-          console.log(ctx)
-
-          let data = ctx.data
-          if (data.redirect && data.url) {
-            window.location.href = data.url;
-          } else {
-            if ("user" in data) {
-              setIsLoggedIn(true);
-              setUserId(data.user.id);
-              setUsername(data.user.name);
-            }
-          }
-        },
-      }
-    );
+    const { data, error } = await authClient.signIn.social({
+      provider: "bnav-oidc", // Matches your auth.ts configuration
+      callbackURL: "/projects", // Optional redirect after login
+    });
 
     // if (error) {
     //   alert(`Login failed: ${error.message}`);
@@ -72,6 +53,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   // Fetch user authentication status on mount
   useEffect(() => {
     // Check authentication status from betterauth
+    const authenticate = async function () {
+      const { data: session, error } = await authClient.getSession();
+
+      if (session?.user) {
+        setIsLoggedIn(true);
+        setUserId(session.user.id);
+        setUsername(session.user.name);
+      }
+    };
+
+    authenticate();
   }, []);
 
   return (
