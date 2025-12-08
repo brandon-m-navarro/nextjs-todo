@@ -31,6 +31,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       },
       {
         onSuccess: (ctx) => {
+          console.log('running onSuccess')
+          console.log(ctx)
+
           let data = ctx.data
           if (data.redirect && data.url) {
             window.location.href = data.url;
