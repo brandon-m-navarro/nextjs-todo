@@ -24,25 +24,40 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [username, setUsername] = useState<string | null>(null);
 
   const login = async () => {
-
-    const { data, error } = await authClient.signIn.social({
-      provider: "bnav-oidc", // Matches your auth.ts configuration
-      callbackURL: "/projects", // Optional redirect after login
-    });
-
-    if (error) {
-      alert(`Login failed: ${error.message}`);
-    } else {
-      if (data.redirect && data.url) {
-        window.location.href = data.url;
-      } else {
-        if ('user' in data) {
-          setIsLoggedIn(true);
-          setUserId(data.user.id);
-          setUsername(data.user.name);
-        }
+    const { data, error } = await authClient.signIn.social(
+      {
+        provider: "bnav-oidc", // Matches your auth.ts configuration
+        callbackURL: "/projects", // Optional redirect after login
+      },
+      {
+        onSuccess: (ctx) => {
+          let data = ctx.data
+          if (data.redirect && data.url) {
+            window.location.href = data.url;
+          } else {
+            if ("user" in data) {
+              setIsLoggedIn(true);
+              setUserId(data.user.id);
+              setUsername(data.user.name);
+            }
+          }
+        },
       }
-    }
+    );
+
+    // if (error) {
+    //   alert(`Login failed: ${error.message}`);
+    // } else {
+    //   if (data.redirect && data.url) {
+    //     window.location.href = data.url;
+    //   } else {
+    //     if ("user" in data) {
+    //       setIsLoggedIn(true);
+    //       setUserId(data.user.id);
+    //       setUsername(data.user.name);
+    //     }
+    //   }
+    // }
   };
 
   const logout = async () => {
