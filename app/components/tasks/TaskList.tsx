@@ -27,7 +27,6 @@ export default function TaskList({
   const toggleIsDone = (task: Task) => {
     task.isDone = !task.isDone;
     updateTask(task);
-    console.log('Toggled isDone for task:', task);
   };
 
   if (showingTasks.length === 0) {
@@ -44,7 +43,6 @@ export default function TaskList({
                 type="checkbox"
                 checked={task.isDone}
                 onChange={ () => {
-                  console.log('Checkbox changed');
                   toggleIsDone(task);
                 }}
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 mt-0.5"
