@@ -27,7 +27,7 @@ export default function LiveDataPreviews() {
     async function fetchLiveData() {
       try {
         const [projectsRes, tasksRes] = await Promise.all([
-          fetch("/api/projects/recent?limit=3"),
+          fetch("/api/projects/recent?limit=5"),
           fetch("/api/tasks/recent?limit=5"),
         ]);
 
@@ -98,7 +98,7 @@ export default function LiveDataPreviews() {
                   <span className="font-medium text-black">{project.name}</span>
                 </div>
                 {project.description && (
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-600 mt-2 max-h-[20px] line-clamp-1">
                     {project.description}
                   </p>
                 )}
