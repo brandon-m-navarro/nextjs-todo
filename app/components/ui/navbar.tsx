@@ -9,19 +9,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
-// Map of links to display
-const links = [
-  { name: "Home", href: "/", icon: HomeIcon },
-  {
-    name: "Projects",
-    href: "/projects",
-    icon: DocumentDuplicateIcon,
-  },
-  { name: "Tasks", href: "/tasks", icon: ListBulletIcon },
-];
-
 export default function NavBar() {
   const pathname = usePathname();
+
+  // Map of links to display
+  const links = [
+    { name: "Home", href: "/", icon: HomeIcon },
+    {
+      name: "Projects",
+      href: "/projects",
+      icon: DocumentDuplicateIcon,
+    },
+    {
+      name: "Tasks",
+      href: "/tasks",
+      icon: ListBulletIcon,
+    },
+  ];
+
   return (
     <div className="flex gap-[12px] grow">
       {links.map((link) => {

@@ -3,10 +3,12 @@ import { useUserContext } from "@/app/contexts/UserContext";
 import Image from "next/image";
 import NavBar from "./navbar";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { isLoggedIn, username, userImg, logout, login } = useUserContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
     <div className="max-w-6xl m-auto">
@@ -36,7 +38,10 @@ export default function Header() {
                 <div className="absolute left-0 top-[52px] w-full object-fit bg-[#FFF] border-[2px]">
                   <div>
                     <button
-                      onClick={logout}
+                      onClick={() => {
+                        logout();
+                        router.push("/");
+                      }}
                       className="hover:bg-[#D4D4D4] w-full cursor-pointer"
                     >
                       <span className="text-black pl-[4px] leading-[48px] font-bold">

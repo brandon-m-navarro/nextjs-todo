@@ -10,13 +10,12 @@ interface TaskFiltersProps {
 }
 
 export default function TaskFilters({
-  projects,
+  projects=[],
   currentProject,
   currentStatus,
   currentSort,
 }: TaskFiltersProps) {
   const router = useRouter();
-  const safeProjects = projects || [];
   const updateUrl = (updates: Record<string, string>) => {
     const params = new URLSearchParams(window.location.search);
     Object.entries(updates).forEach(([key, value]) => {
@@ -36,7 +35,7 @@ export default function TaskFilters({
         <SelectBox
           name="current-project-select"
           options={[{ value: "", label: "All Projects" }].concat(
-            safeProjects.map((project) => {
+            projects.map((project) => {
               return {
                 value: project.id,
                 label: project.name,
