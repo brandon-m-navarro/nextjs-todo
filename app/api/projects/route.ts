@@ -3,7 +3,7 @@ import { generateId } from "@/lib/utilities";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Project } from "@/lib/definitions";
-
+import { headers } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
 // Fetch all projects, both public and those that are associated with the user
 export async function GET() {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
     const user = session?.user;
 
     console.log("API Route User:", user);

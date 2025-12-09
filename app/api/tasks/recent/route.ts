@@ -2,10 +2,13 @@ import { TaskWithProject, Task, Project } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 async function getRecentTasksPreview() {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
     const user = session?.user;
 
     const publicProjects = await prisma.project.findMany({

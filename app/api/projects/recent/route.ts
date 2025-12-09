@@ -2,9 +2,12 @@ import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Project } from "@/lib/definitions";
+import { headers } from "next/headers";
 
 export async function GET(request: NextRequest) {
-  const session = await auth.api.getSession();
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
   const user = session?.user;
 
   // searchParams is used to get the limit query parameter

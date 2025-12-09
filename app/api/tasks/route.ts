@@ -3,6 +3,7 @@ import { generateId } from "@/lib/utilities";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Task } from "@/lib/definitions";
+import { headers } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,7 +53,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
     const user = session?.user;
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
