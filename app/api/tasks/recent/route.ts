@@ -1,15 +1,48 @@
-import { TaskWithProject, Task } from "@/lib/definitions";
+import { TaskWithProject, Task, Project } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 async function getRecentTasksPreview() {
   try {
-    const projects = await prisma.project.findMany({ orderBy: { creationDateTime: 'desc' } });
+    const session = await auth.api.getSession();
+    const user = session?.user;
+
+    const publicProjects = await prisma.project.findMany({
+      orderBy: { lastModifiedDateTime: "desc" },
+      take: 5,
+      where: { userId: null },
+    });
+
+    let privateProjects: Project[] = [];
+    if (user) {
+      privateProjects = await prisma.project.findMany({
+        orderBy: { lastModifiedDateTime: "desc" },
+        take: 5,
+        where: { userId: user.id },
+      });
+    }
+
+    const projects = [...publicProjects, ...privateProjects];
     const allTasks: TaskWithProject[] = [];
 
     for (const project of projects) {
-      const tasks = await prisma.task.findMany({ where: { projectId: project.id } })
-      
+      const publicTasks = await prisma.task.findMany({
+        orderBy: { lastModifiedDateTime: "desc" },
+        take: 5,
+        where: { userId: null },
+      });
+
+      let privateTasks: Task[] = [];
+      if (user) {
+        privateTasks = await prisma.task.findMany({
+          orderBy: { lastModifiedDateTime: "desc" },
+          take: 5,
+          where: { userId: user.id },
+        });
+      }
+      const tasks = [...privateTasks, ...publicTasks];
+
       const tasksWithProject = tasks.map((task: Task) => ({
         ...task,
         projectId: task.projectId,

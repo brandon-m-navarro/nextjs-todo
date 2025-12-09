@@ -24,24 +24,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [username, setUsername] = useState<string | null>(null);
 
   const login = async () => {
-    const { data, error } = await authClient.signIn.social({
+    await authClient.signIn.social({
       provider: "bnav-oidc", // Matches your auth.ts configuration
       callbackURL: "/projects", // Optional redirect after login
     });
-
-    // if (error) {
-    //   alert(`Login failed: ${error.message}`);
-    // } else {
-    //   if (data.redirect && data.url) {
-    //     window.location.href = data.url;
-    //   } else {
-    //     if ("user" in data) {
-    //       setIsLoggedIn(true);
-    //       setUserId(data.user.id);
-    //       setUsername(data.user.name);
-    //     }
-    //   }
-    // }
   };
 
   const logout = async () => {
@@ -55,6 +41,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     // Check authentication status from betterauth
     const authenticate = async function () {
       const { data: session, error } = await authClient.getSession();
+
+      if (error) {
+        alert('Error authenticating user: ' + error.message);
+      }
 
       if (session?.user) {
         setIsLoggedIn(true);

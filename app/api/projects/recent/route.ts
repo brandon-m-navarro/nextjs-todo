@@ -1,17 +1,40 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { Project } from "@/lib/definitions";
 
 export async function GET(request: NextRequest) {
+  const session = await auth.api.getSession();
+  const user = session?.user;
+
   // searchParams is used to get the limit query parameter
   const { searchParams } = new URL(request.url);
 
   // limit is optional, default to 5
   const limit = parseInt(searchParams.get("limit") || "5");
 
-  // Fetch recent projects
-  const projects = await prisma.project.findMany({
-    orderBy: { lastModifiedDateTime: 'desc' }
+  // Fetch public projects
+  const publicProjects = await prisma.project.findMany({
+    where: { userId: null },
+    orderBy: { creationDateTime: 'desc' },
+    take: 5
   });
 
-  return NextResponse.json({ success: true, projects: projects.slice(0, limit) });
+  let privateProjects:Project[] = [];
+  if (user) {
+    privateProjects = await prisma.project.findMany({
+      where: { userId: user.id },
+      orderBy: { creationDateTime: 'desc' },
+      take: 5
+    });
+  }
+
+  const projects = [...privateProjects, ...publicProjects];
+
+  return NextResponse.json({
+    success: true,
+    projects: projects.slice(0, limit),
+    privateProjects: [],
+    publicProjects: [],
+  });
 }

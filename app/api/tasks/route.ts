@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateId } from "@/lib/utilities";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { Task } from "@/lib/definitions";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,19 +24,21 @@ export async function POST(request: NextRequest) {
     }
 
     const taskId = generateId("TSK");
-    const task = await prisma.task.create({ data: {
-      projectId: projectId,
-      id: taskId,
-      title,
-      description: description || null,
-      isDone: isDone || false,
-      ordinal: ordinal || null,
-      expectedCompletionDateTime: expectedCompletionDateTime
-        ? new Date(expectedCompletionDateTime)
-        : null,
-      creationDateTime: new Date(),
-      lastModifiedDateTime: new Date(),
-    } });
+    const task = await prisma.task.create({
+      data: {
+        projectId: projectId,
+        id: taskId,
+        title,
+        description: description || null,
+        isDone: isDone || false,
+        ordinal: ordinal || null,
+        expectedCompletionDateTime: expectedCompletionDateTime
+          ? new Date(expectedCompletionDateTime)
+          : null,
+        creationDateTime: new Date(),
+        lastModifiedDateTime: new Date(),
+      },
+    });
 
     return NextResponse.json({ success: true, task }, { status: 201 });
   } catch (error) {
@@ -48,14 +52,40 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth.api.getSession();
+    const user = session?.user;
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
+    const isPrivate = searchParams.get("private");
 
-    let tasks;
+    let tasks: Task[] = [];
     if (projectId) {
-      tasks = await prisma.task.findMany({ where: { projectId: projectId } })
+      tasks = await prisma.task.findMany({ where: { projectId: projectId } });
+    } else if (isPrivate) {
+      if (user) {
+        tasks = await prisma.task.findMany({
+          where: { userId: user.id },
+          orderBy: { lastModifiedDateTime: "desc" },
+        });
+      }
     } else {
-      tasks = await prisma.task.findMany({ orderBy: { creationDateTime: 'desc' } })
+      let privateTasks: Task[] = [];
+      if (user) {
+        privateTasks = await prisma.task.findMany({
+          where: { userId: user.id },
+          orderBy: { lastModifiedDateTime: "desc" },
+        });
+      }
+      const publicTasks = await prisma.task.findMany({
+        where: { userId: null },
+        orderBy: { lastModifiedDateTime: "desc" },
+      });
+
+      tasks = [...privateTasks, ...publicTasks].sort(
+        (a, b) =>
+          new Date(b.lastModifiedDateTime).getTime() -
+          new Date(a.lastModifiedDateTime).getTime()
+      );
     }
 
     return NextResponse.json({ success: true, tasks });
