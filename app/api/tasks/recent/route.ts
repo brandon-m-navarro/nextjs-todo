@@ -16,7 +16,12 @@ async function getRecentTasksPreview() {
       recentTasks = await prisma.task.findMany({
         orderBy: { lastModifiedDateTime: "desc" },
         take: 5,
-        where: { userId: user.id || null },
+        where: {
+          OR: [
+            { userId: user.id }, // matches the logged-in user's tasks
+            { userId: null }, // and tasks that are not assigned to any user
+          ],
+        },
       });
     } else {
       recentTasks = await prisma.task.findMany({
