@@ -34,6 +34,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setIsLoggedIn(false);
     setUserId(null);
     setUsername(null);
+    authClient.signOut();
   };
 
   // Fetch user authentication status on mount
