@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import SelectBox from "../ui/select-box";
 
 interface TaskFiltersProps {
   projects: Array<{ id: string; name: string }>;
@@ -31,38 +32,53 @@ export default function TaskFilters({
 
   return (
     <div className="flex flex-wrap gap-4 text-black">
-      <select
-        value={currentProject || ""}
-        onChange={(e) => updateUrl({ project: e.target.value })}
-        className="px-3 py-2 border border-gray-300 rounded-md"
-      >
-        <option value="">All Projects</option>
-        {safeProjects.map((project) => (
-          <option key={project.id} value={project.id}>
-            {project.name}
-          </option>
-        ))}
-      </select>
+      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+        <SelectBox
+          name="current-project-select"
+          options={[{ value: "", label: "All Projects" }].concat(
+            safeProjects.map((project) => {
+              return {
+                value: project.id,
+                label: project.name,
+              };
+            })
+          )}
+          value={currentProject || ""}
+          onChange={(selectedProject) => {
+            updateUrl({ project: selectedProject });
+          }}
+        />
+      </div>
 
-      <select
-        value={currentStatus || "all"}
-        onChange={(e) => updateUrl({ status: e.target.value })}
-        className="px-3 py-2 border border-gray-300 rounded-md"
-      >
-        <option value="all">All Tasks</option>
-        <option value="active">Active Only</option>
-        <option value="completed">Completed Only</option>
-      </select>
+      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+        <SelectBox
+          name="status-select"
+          options={[
+            { value: "all", label: "All Tasks" },
+            { value: "active", label: "Active Only" },
+            { value: "completed", label: "Completed Only" },
+          ]}
+          value={currentStatus || "all"}
+          onChange={(selectedStatus) => {
+            updateUrl({ status: selectedStatus });
+          }}
+        />
+      </div>
 
-      <select
-        value={currentSort || "newest"}
-        onChange={(e) => updateUrl({ sort: e.target.value })}
-        className="px-3 py-2 border border-gray-300 rounded-md"
-      >
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-        <option value="due-date">Due Date</option>
-      </select>
+      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+        <SelectBox
+          name="sort-select"
+          options={[
+            { value: "newest", label: "Newest First" },
+            { value: "oldest", label: "Oldest First" },
+            { value: "due-date", label: "Due Date" },
+          ]}
+          value={currentSort || "newest"}
+          onChange={(selectedSort) => {
+            updateUrl({ sort: selectedSort });
+          }}
+        />
+      </div>
 
       {(currentProject || currentStatus || currentSort) && (
         <button

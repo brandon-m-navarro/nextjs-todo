@@ -3,8 +3,10 @@ interface SelectBoxProps {
   name: string;
   options: { value: string; label: string }[];
   value?: string;
+  defaultValue?: string | null;
   onChange?: (value: string) => void;
   required?: boolean;
+  className?: string;
 }
 
 export default function SelectBox({
@@ -12,7 +14,9 @@ export default function SelectBox({
   options,
   value,
   onChange,
+  defaultValue=null,
   required,
+  className=""
 }: SelectBoxProps) {
   return (
     <select
@@ -20,9 +24,11 @@ export default function SelectBox({
       value={value}
       onChange={(e) => onChange?.(e.target.value)}
       required={required}
-      className="w-full bg-transparent border-none outline-none"
+      className={`w-full bg-transparent border-none outline-none ${className}`}
     >
-      <option value="">Select a project</option>
+      {defaultValue && (
+        <option value="">{defaultValue}</option>
+      )}
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

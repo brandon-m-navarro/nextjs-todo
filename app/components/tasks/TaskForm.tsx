@@ -162,6 +162,7 @@ export default function TaskForm({
                       console.log("Selected project ID:", selectedId);
                       setSelectedProjectId(selectedId);
                     }}
+                    defaultValue={"Select a project"}
                     required
                   />
                 </div>
