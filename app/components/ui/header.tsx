@@ -5,7 +5,7 @@ import NavBar from "./navbar";
 import { useState } from "react";
 
 export default function Header() {
-  const { isLoggedIn, login, username, logout } = useUserContext();
+  const { isLoggedIn, username, userImg, logout, login } = useUserContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -22,7 +22,7 @@ export default function Header() {
               <div className="w-full h-[48px] hover:bg-[#D4D4D4] rounded-md">
                 <div className="flex items-center h-full ml-[12px]">
                   <Image
-                    src={"user.svg"}
+                    src={userImg ? userImg : "user.svg"}
                     className="rounded-[999px] mr-[6px]"
                     alt="Profile Img"
                     width={24}

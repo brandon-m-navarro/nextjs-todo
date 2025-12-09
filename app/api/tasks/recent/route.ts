@@ -7,62 +7,68 @@ import { headers } from "next/headers";
 async function getRecentTasksPreview() {
   try {
     const session = await auth.api.getSession({
-        headers: await headers()
+      headers: await headers(),
     });
     const user = session?.user;
 
-    const publicProjects = await prisma.project.findMany({
-      orderBy: { lastModifiedDateTime: "desc" },
-      take: 5,
-      where: { userId: null },
-    });
-
-    let privateProjects: Project[] = [];
+    let recentTasks: Task[] = [];
     if (user) {
-      privateProjects = await prisma.project.findMany({
+      recentTasks = await prisma.task.findMany({
         orderBy: { lastModifiedDateTime: "desc" },
         take: 5,
-        where: { userId: user.id },
+        where: { userId: user.id || null },
       });
-    }
-
-    const projects = [...publicProjects, ...privateProjects];
-    const allTasks: TaskWithProject[] = [];
-
-    for (const project of projects) {
-      const publicTasks = await prisma.task.findMany({
+    } else {
+      recentTasks = await prisma.task.findMany({
         orderBy: { lastModifiedDateTime: "desc" },
         take: 5,
         where: { userId: null },
       });
+    }
 
-      let privateTasks: Task[] = [];
-      if (user) {
-        privateTasks = await prisma.task.findMany({
-          orderBy: { lastModifiedDateTime: "desc" },
-          take: 5,
-          where: { userId: user.id },
-        });
+    // Loop through recent tasks to get collection of reference projectIds
+    let projectIds: string[] = [];
+    for (let i = 0; i < recentTasks.length; i++) {
+      if (!projectIds.includes(recentTasks[i].projectId)) {
+        projectIds.push(recentTasks[i].projectId);
       }
-      const tasks = [...privateTasks, ...publicTasks];
+    }
 
-      const tasksWithProject = tasks.map((task: Task) => ({
-        ...task,
-        projectId: task.projectId,
-        isDone: task.isDone,
-        creationDateTime: task.creationDateTime,
-        lastModifiedDateTime: task.lastModifiedDateTime,
-        projectName: project.name,
-        projectColor: project.hexColor,
-      }));
-      allTasks.push(...tasksWithProject);
+    // Fetch projects
+    const projects = await prisma.project.findMany({
+      where: { id: { in: projectIds } },
+    });
+
+    // Loop through Tasks and match them with their project
+    const allTasks: TaskWithProject[] = [];
+    for (let i = 0; i < recentTasks.length; i++) {
+      const associatedProject = projects.find((project) => {
+        return project.id === recentTasks[i].projectId;
+      });
+
+      if (associatedProject) {
+        const taskWithProject = {
+          ...recentTasks[i],
+          projectName: associatedProject.name,
+          projectColor: associatedProject.hexColor,
+        };
+
+        allTasks.push(taskWithProject);
+
+        // Stop processing when we get needed number of Tasks
+        if (allTasks.length > 5) {
+          break;
+        }
+      } else {
+        console.error("Error finding associated task with project");
+      }
     }
 
     return allTasks
       .sort(
         (a, b) =>
-          new Date(b.creationDateTime).getTime() -
-          new Date(a.creationDateTime).getTime()
+          new Date(b.lastModifiedDateTime).getTime() -
+          new Date(a.lastModifiedDateTime).getTime()
       )
       .slice(0, 5);
   } catch (error) {

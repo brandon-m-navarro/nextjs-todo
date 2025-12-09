@@ -6,6 +6,7 @@ interface UserContextType {
   isLoggedIn: boolean;
   userId: string | null;
   username: string | null;
+  userImg: string | null;
   login: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -22,6 +23,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [userImg, setUserImg] = useState<string | null>(null);
 
   const login = async () => {
     await authClient.signIn.social({
@@ -51,6 +53,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setIsLoggedIn(true);
         setUserId(session.user.id);
         setUsername(session.user.name);
+        if (session.user.image) {
+          setUserImg(session.user.image);
+        } else {
+          setUserImg(null);
+        }
       }
     };
 
@@ -63,6 +70,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         isLoggedIn,
         userId,
         username,
+        userImg,
         login,
         logout,
       }}
