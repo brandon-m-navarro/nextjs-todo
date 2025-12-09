@@ -1,4 +1,4 @@
-import { TaskWithProject, Task, Project } from "@/lib/definitions";
+import { TaskWithProject, Task } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -27,7 +27,7 @@ async function getRecentTasksPreview() {
     }
 
     // Loop through recent tasks to get collection of reference projectIds
-    let projectIds: string[] = [];
+    const projectIds: string[] = [];
     for (let i = 0; i < recentTasks.length; i++) {
       if (!projectIds.includes(recentTasks[i].projectId)) {
         projectIds.push(recentTasks[i].projectId);
