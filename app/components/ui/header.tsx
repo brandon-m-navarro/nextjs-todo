@@ -23,7 +23,7 @@ export default function Header() {
                 <div className="flex items-center h-full ml-[12px]">
                   <Image
                     src={userImg ? userImg : "user.svg"}
-                    className="rounded-[999px] mr-[6px]"
+                    className="rounded-[999px] mr-[6px] border-[rgb(0,0,0, 0.25)] border-[1px] border-solid"
                     alt="Profile Img"
                     width={24}
                     height={24}
