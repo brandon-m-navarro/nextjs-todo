@@ -27,8 +27,20 @@ export default function LiveDataPreviews() {
     async function fetchLiveData() {
       try {
         const [projectsRes, tasksRes] = await Promise.all([
-          fetch("/api/projects/recent?limit=3"),
-          fetch("/api/tasks/recent?limit=5"),
+          fetch("/api/projects/recent?limit=3", {
+            method: "GET",
+            credentials: "include", // Important for sending cookies
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }),
+          fetch("/api/tasks/recent?limit=5", {
+            method: "GET",
+            credentials: "include", // Important for sending cookies
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }),
         ]);
 
         const projectsData = await projectsRes.json();
