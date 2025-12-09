@@ -24,7 +24,7 @@ export default function SelectBox({
       value={value}
       onChange={(e) => onChange?.(e.target.value)}
       required={required}
-      className={`w-full bg-transparent border-none outline-none ${className}`}
+      className={`w-full h-full bg-transparent border-none outline-none cursor-pointer ${className}`}
     >
       {defaultValue && (
         <option value="">{defaultValue}</option>

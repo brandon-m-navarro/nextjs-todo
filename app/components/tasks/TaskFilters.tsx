@@ -32,7 +32,7 @@ export default function TaskFilters({
 
   return (
     <div className="flex flex-wrap gap-4 text-black">
-      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+      <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center">
         <SelectBox
           name="current-project-select"
           options={[{ value: "", label: "All Projects" }].concat(
@@ -47,10 +47,11 @@ export default function TaskFilters({
           onChange={(selectedProject) => {
             updateUrl({ project: selectedProject });
           }}
+          className="box-border px-3 py-2"
         />
       </div>
 
-      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+      <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center">
         <SelectBox
           name="status-select"
           options={[
@@ -62,10 +63,11 @@ export default function TaskFilters({
           onChange={(selectedStatus) => {
             updateUrl({ status: selectedStatus });
           }}
+          className="box-border px-3 py-2"
         />
       </div>
 
-      <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+      <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center">
         <SelectBox
           name="sort-select"
           options={[
@@ -77,6 +79,7 @@ export default function TaskFilters({
           onChange={(selectedSort) => {
             updateUrl({ sort: selectedSort });
           }}
+          className="box-border px-3 py-2"
         />
       </div>
 

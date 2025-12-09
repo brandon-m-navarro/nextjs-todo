@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Task } from "@/lib/definitions";
 import { useTaskContext } from "@/app/contexts/TaskContext";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
+import SelectBox from "../ui/select-box";
 
 interface TaskEditFormProps {
   taskId: string;
@@ -226,19 +227,26 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
           >
             Project
           </label>
-          <select
-            id="projectId"
-            name="projectId"
-            value={formData.projectId}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))}
-          </select>
+
+          <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center">
+            <SelectBox
+              name="project"
+              options={projects.map((p) => ({
+                value: p.id,
+                label: p.name,
+              }))}
+              value={formData.projectId}
+              onChange={(selectedProjectId) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  projectId: selectedProjectId
+                }));
+              }}
+              defaultValue={"Select a project"}
+              required
+              className="box-border px-3 py-2"
+            />
+          </div>
         </div>
 
         {/* Status */}

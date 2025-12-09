@@ -150,7 +150,7 @@ export default function TaskForm({
             <div className="space-y-6">
               <div className="flex flex-col">
                 <label className="text-lg font-medium mb-2">Project</label>
-                <div className="h-12 border border-gray-300 rounded-md px-3 py-2 text-sm bg-white flex items-center">
+                <div className="h-12 border border-gray-300 rounded-md pr-3 text-sm bg-white flex items-center">
                   <SelectBox
                     name="project"
                     options={projects.map((p) => ({
@@ -164,6 +164,7 @@ export default function TaskForm({
                     }}
                     defaultValue={"Select a project"}
                     required
+                    className="box-border px-3 py-2"
                   />
                 </div>
               </div>
