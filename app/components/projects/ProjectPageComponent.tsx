@@ -29,7 +29,7 @@ export default function ProjectPageComponent({
     return (
       <div className="p-8 text-black">
         <BackButton overrideRouter={"/projects"} />
-        <div>Project not found</div>
+        <div>Loading project...</div>
       </div>
     );
   }
@@ -69,6 +69,11 @@ export default function ProjectPageComponent({
                   {project.description && (
                     <p className="text-gray-600">{project.description}</p>
                   )}
+                  {/* List visibility */}
+                  <p className="mt-4 text-sm text-gray-500">
+                    Visibility:{" "}
+                    {project.userId ? "Private" : "Public (Visible to all)"}
+                  </p>
                 </div>
               </div>
             </div>

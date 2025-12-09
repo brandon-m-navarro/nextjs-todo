@@ -32,7 +32,7 @@ export default function TaskFilters({
 
   return (
     <div className="flex flex-wrap gap-4 text-black">
-      <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center">
+      <div className="h-12 border border-gray-300 pr-3 rounded-md text-sm bg-white flex items-center max-w-[250px]">
         <SelectBox
           name="current-project-select"
           options={[{ value: "", label: "All Projects" }].concat(

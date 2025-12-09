@@ -12,7 +12,8 @@ export default function TaskList({
   projectId = null,
   tasksToShow = [],
 }: TaskListProps) {
-  const { tasks } = useTaskContext();
+  const { tasks, updateTask } = useTaskContext();
+
   const showingTasks = (() => {
     if (projectId !== null) {
       return tasks.filter((task) => task.projectId === projectId);
@@ -22,6 +23,12 @@ export default function TaskList({
       return tasks;
     }
   })();
+
+  const toggleIsDone = (task: Task) => {
+    task.isDone = !task.isDone;
+    updateTask(task);
+    console.log('Toggled isDone for task:', task);
+  };
 
   if (showingTasks.length === 0) {
     return <div className="p-8 text-center text-gray-500">No tasks found</div>;
@@ -36,7 +43,10 @@ export default function TaskList({
               <input
                 type="checkbox"
                 checked={task.isDone}
-                readOnly
+                onChange={ () => {
+                  console.log('Checkbox changed');
+                  toggleIsDone(task);
+                }}
                 className="h-5 w-5 rounded border-gray-300 text-blue-600 mt-0.5"
               />
 

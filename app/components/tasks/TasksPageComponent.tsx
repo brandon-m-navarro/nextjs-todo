@@ -68,7 +68,7 @@ export default function TasksPageComponent() {
     : null;
 
   return (
-    <div className="max-w-6xl mx-auto text-black p-0 sm:p-6">
+    <div className="max-w-6xl mx-auto text-black">
       {/* Stats Overview */}
       <div className="grid grid-cols-3 gap-2 sm:gap-6 mb-6 sm:mb-8">
         <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow text-center">
