@@ -121,7 +121,7 @@ export default function LiveDataPreviews() {
       {/* Recent Tasks Preview */}
       <div className="bg-gray-50 rounded-xl p-6">
         <h3 className="text-2xl font-semibold mb-4 text-black">
-          Recent Activity
+          Recent Tasks
         </h3>
         {tasks.length > 0 ? (
           <div className="space-y-3">
