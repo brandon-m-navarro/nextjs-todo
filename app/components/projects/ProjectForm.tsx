@@ -225,7 +225,7 @@ export default function ProjectForm() {
 
       {/* Preview */}
       <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 wrap-anywhere">
           Project Preview
         </h3>
         <div className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
