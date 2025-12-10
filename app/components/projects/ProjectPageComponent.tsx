@@ -4,6 +4,7 @@ import BackButton from "@/app/components/ui/back-button";
 import TaskManager from "@/app/components/tasks/TaskManager";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
 import { useUserContext } from "@/app/contexts/UserContext";
+import { useTaskContext } from "@/app/contexts/TaskContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 interface ProjectPageComponentProps {
@@ -15,6 +16,7 @@ export default function ProjectPageComponent({
 }: ProjectPageComponentProps) {
   const { getProjectById, isLoading, clone } = useProjectContext();
   const { isLoggedIn } = useUserContext();
+  const { updateTasksContext } = useTaskContext();
   const project = getProjectById(projectId);
   const router = useRouter();
 
@@ -48,8 +50,12 @@ export default function ProjectPageComponent({
             onClick={() => {
               clone(project.id, (response) => {
                 if (response?.success) {
+
+                  // Update context to include cloned tasks
+                  const tasks = response.tasks || [];
+                  updateTasksContext(tasks);
+
                   router.back();
-                  router.refresh();
                   alert("Project cloned successfully!");
                 } else {
                   alert(
@@ -60,7 +66,7 @@ export default function ProjectPageComponent({
                 }
               });
             }}
-            className="px-4 py-2 ml-auto mr-[12px] bg-green-500 text-white rounded-lg hover:bg-green-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto mt-4 sm:mt-0"
+            className="px-4 py-2 cursor-pointer ml-auto mr-[12px] bg-green-500 text-white rounded-lg hover:bg-green-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto mt-4 sm:mt-0"
           >
             Clone
           </button>

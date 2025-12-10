@@ -61,14 +61,14 @@ export async function POST(
       userId: user.id,
     }));
 
-    for (const taskData of clonedTasksData) {
-      await prisma.task.create({
-        data: taskData,
-      });
-    }
+    const clonedTasks = await prisma.task.createManyAndReturn({
+      data: clonedTasksData,
+    });
+
+    console.log("Cloned Tasks (FROM ROUTE):", clonedTasks);
 
     return NextResponse.json(
-      { success: true, project: clonedProject },
+      { success: true, project: clonedProject, tasks: clonedTasks },
       { status: 201 }
     );
   } catch (error) {

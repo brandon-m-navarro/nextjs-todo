@@ -35,6 +35,7 @@ interface TaskContextType {
   ) => Promise<Task | void>;
   getTaskById: (taskId: string) => Task | undefined;
   getTasksForProject: (projectId: string) => Task[];
+  updateTasksContext: (tasks: Task[]) => void;
 }
 
 interface TaskProviderProps {
@@ -310,6 +311,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     });
   };
 
+  const updateTasksContext = (tasks: Task[]) => {
+    setTasks((prevTasks) => [...prevTasks, ...tasks]);
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -322,6 +327,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         deleteTask,
         getTaskById,
         getTasksForProject,
+        updateTasksContext
       }}
     >
       {children}

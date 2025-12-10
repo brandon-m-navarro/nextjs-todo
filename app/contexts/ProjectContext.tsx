@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { Project } from "@/lib/definitions";
+import { Project, Task } from "@/lib/definitions";
 
 interface ProjectContextType {
   projects: Project[];
@@ -12,6 +12,7 @@ interface ProjectContextType {
     callback?: (response?: {
       success: boolean;
       project?: Project;
+      tasks?: Task[];
       error?: string;
     }) => void
   ) => Promise<Project | void>;
@@ -91,6 +92,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     callback?: (response?: {
       success: boolean;
       project?: Project;
+      tasks?: Task[];
       error?: string;
     }) => void
   ) => {
@@ -125,7 +127,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
 
       setProjects((prevProjects) => [clonedProject, ...prevProjects]);
-      callback?.({ success: true, project: clonedProject });
+      callback?.({ success: true, project: clonedProject, tasks: data.tasks });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to clone project";
