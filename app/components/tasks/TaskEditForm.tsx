@@ -197,6 +197,7 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
             value={formData.title}
             onChange={handleChange}
             required
+            maxLength={255}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -215,6 +216,7 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
             value={formData.description}
             onChange={handleChange}
             rows={3}
+            maxLength={4000}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -265,7 +267,7 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
         </div>
 
         {/* Priority */}
-        <div>
+        {/* <div>
           <label
             htmlFor="ordinal"
             className="block text-sm font-medium text-gray-700 mb-2"
@@ -279,9 +281,10 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
             value={formData.ordinal + ""}
             onChange={handleChange}
             min="0"
+            max="32767" SmallInt max
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-        </div>
+        </div> */}
 
         {/* Due Date */}
         <div>

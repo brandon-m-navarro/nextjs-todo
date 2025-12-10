@@ -131,11 +131,6 @@ export default function TaskForm({
       <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
         <div className="flex-1 rounded-lg sm:bg-gray-50 sm:px-6 sm:pb-6 sm:pt-8 w-full">
           <div className="flex align-center mb-6">
-            {/* <h1
-              className={`hidden sm:block text-2xl mr-[24px] md:text-3xl lg:text-[36px] text-center lg:text-left`}
-            >
-              Add New Task
-            </h1> */}
             <SpinnerComponent spinnerState={spinnerState} size={40} />
           </div>
 
@@ -178,6 +173,7 @@ export default function TaskForm({
                   name="title"
                   className="w-full h-12 rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                   placeholder="Enter task title..."
+                  maxLength={255}
                   required
                 />
               </div>
@@ -201,10 +197,10 @@ export default function TaskForm({
                   rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  maxLength={256}
                   name="description"
-                  className="w-full min-h-[120px] rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none resize-vertical"
+                  maxLength={4000}
                   placeholder="Enter task description"
+                  className="w-full min-h-[120px] rounded-md border border-gray-300 px-3 py-2 text-sm placeholder:text-gray-500 focus:border-blue-500 focus:outline-none resize-vertical"
                 />
               </div>
             </div>

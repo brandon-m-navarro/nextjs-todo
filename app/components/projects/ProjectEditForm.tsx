@@ -179,6 +179,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             value={formData.name}
             onChange={handleChange}
             required
+            maxLength={255}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -197,8 +198,9 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             value={formData.description}
             onChange={handleChange}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            maxLength={4000}
             placeholder="Describe what this project is about..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 

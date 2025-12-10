@@ -93,7 +93,7 @@ model Project {
   id                   String   @id @db.VarChar(50)
   userId               String?  @db.VarChar(50)
   name                 String   @db.VarChar(255)
-  description          String?
+  description          String?  @db.VarChar(4000)
   hexColor             String?  @db.VarChar(6)
   icon                 String?  @db.VarChar(255)
   creationDateTime     DateTime @default(now()) @db.Timestamptz
@@ -111,9 +111,9 @@ model Task {
   userId                      String?   @db.VarChar(50)
   projectId                   String    @db.VarChar(50)
   title                       String    @db.VarChar(255)
-  description                 String?
+  description                 String?   @db.VarChar(4000)
   isDone                      Boolean   @default(false)
-  ordinal                     Int?
+  ordinal                     Int?      @db.SmallInt
   expectedCompletionDateTime  DateTime? @db.Timestamptz
   creationDateTime            DateTime  @default(now()) @db.Timestamptz
   lastModifiedDateTime        DateTime  @default(now()) @db.Timestamptz
