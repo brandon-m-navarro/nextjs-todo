@@ -3,7 +3,9 @@ import Accordion from "../ui/accordion";
 import BackButton from "@/app/components/ui/back-button";
 import TaskManager from "@/app/components/tasks/TaskManager";
 import { useProjectContext } from "@/app/contexts/ProjectContext";
+import { useUserContext } from "@/app/contexts/UserContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 interface ProjectPageComponentProps {
   projectId: string;
 }
@@ -11,8 +13,10 @@ interface ProjectPageComponentProps {
 export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
-  const { getProjectById, isLoading } = useProjectContext();
+  const { getProjectById, isLoading, clone } = useProjectContext();
+  const { isLoggedIn } = useUserContext();
   const project = getProjectById(projectId);
+  const router = useRouter();
 
   // Show loading state while projects are being fetched
   if (isLoading) {
@@ -38,9 +42,31 @@ export default function ProjectPageComponent({
     <div className="p-0 pb-15 sm:p-8 text-black max-w-6xl mx-auto">
       <div className="relative flex flex-col mb-6 sm:flex-row sm:items-center sm:mb-8 sm:justify-between">
         <BackButton />
+        {/* If the user is signed in and doesn't own the Project, give them the ability to clone the Project */}
+        {isLoggedIn && (
+          <button
+            onClick={() => {
+              clone(project.id, (response) => {
+                if (response?.success) {
+                  router.back();
+                  alert("Project cloned successfully!");
+                } else {
+                  alert(
+                    `Failed to clone project: ${
+                      response?.error || "Unknown error"
+                    }`
+                  );
+                }
+              });
+            }}
+            className="px-4 py-2 ml-auto mr-[12px] bg-green-500 text-white rounded-lg hover:bg-green-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto mt-4 sm:mt-0"
+          >
+            Clone
+          </button>
+        )}
         <Link
           href={`/projects/${project.id}/edit`}
-          className="px-4 py-2 bg-blue-500 sm:ml-auto text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all duration-150 text-center sm:inline-block w-full sm:w-auto"
         >
           Edit Project
         </Link>

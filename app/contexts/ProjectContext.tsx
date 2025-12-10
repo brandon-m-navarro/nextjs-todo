@@ -1,13 +1,20 @@
 "use client";
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { Project } from "@/lib/definitions";
-// import { useUserContext } from "./UserContext";
 
 interface ProjectContextType {
   projects: Project[];
   publicProjects: Project[];
   privateProjects: Project[];
   isLoading: boolean;
+  clone: (
+    projectId: string,
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
+  ) => Promise<Project | void>;
   addProject: (
     project: Omit<Project, "id" | "creationDateTime" | "lastModifiedDateTime">,
     callback?: (response?: {
@@ -53,15 +60,13 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // const { userId } = useUserContext();
-
   // Fetch projects on mount
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         setIsLoading(true);
         const response = await fetch("/api/projects");
-        
+
         if (response.ok) {
           const data = await response.json();
 
@@ -79,6 +84,54 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
     fetchProjects();
   }, []);
+
+  // Clone Project
+  const clone = async (
+    projectId: string,
+    callback?: (response?: {
+      success: boolean;
+      project?: Project;
+      error?: string;
+    }) => void
+  ) => {
+    try {
+      const response = await fetch(`/api/projects/clone`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ projectId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to clone project");
+      }
+
+      const data = await response.json();
+      const clonedProject: Project = data.project;
+
+      // Add cloned project to context
+      if (clonedProject.userId) {
+        setPrivateProjects((prevPrivateProjects) => [
+          clonedProject,
+          ...prevPrivateProjects,
+        ]);
+      } else {
+        setPublicProjects((prevPublicProjects) => [
+          clonedProject,
+          ...prevPublicProjects,
+        ]);
+      }
+
+      setProjects((prevProjects) => [clonedProject, ...prevProjects]);
+      callback?.({ success: true, project: clonedProject });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to clone project";
+      callback?.({ success: false, error: errorMessage });
+    }
+  };
 
   // Add Project with optimistic update and rollback on failure
   const addProject = async (
@@ -396,6 +449,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         publicProjects,
         privateProjects,
         isLoading,
+        clone,
         addProject,
         updateProject,
         deleteProject,
