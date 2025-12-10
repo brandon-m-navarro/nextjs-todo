@@ -49,6 +49,7 @@ export default function ProjectPageComponent({
               clone(project.id, (response) => {
                 if (response?.success) {
                   router.back();
+                  router.refresh();
                   alert("Project cloned successfully!");
                 } else {
                   alert(
