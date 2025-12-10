@@ -245,13 +245,13 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
       <div className="mt-8 flex gap-4 pt-6 border-t border-gray-200">
         <button
           onClick={handleDelete}
-          className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+          className="cursor-pointer px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
         >
           Delete Task
         </button>
         <button
           onClick={handleToggleDone}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           {taskState.isDone ? "Mark as Undone" : "Mark as Done"}
         </button>

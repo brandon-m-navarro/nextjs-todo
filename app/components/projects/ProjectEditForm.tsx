@@ -252,7 +252,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
 
         {/* isPublic Toggle */}
         {isLoggedIn && (
-          <div>
+          <div className="cursor-pointer">
             <label className="flex items-center space-x-3">
               <input
                 type="checkbox"
@@ -278,7 +278,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="cursor-pointer px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
@@ -286,7 +286,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isSubmitting ? "Updating..." : "Update Project"}
           </button>
@@ -295,7 +295,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="hidden sm:block px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors ml-auto"
+            className="hidden cursor-pointer sm:block px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors ml-auto"
           >
             {isDeleting ? "Deleting..." : "Delete Project"}
           </button>

@@ -252,7 +252,7 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
         </div>
 
         {/* Status */}
-        <div className="flex items-center">
+        <div className="flex items-center cursor-pointer">
           <input
             type="checkbox"
             id="isDone"
@@ -309,14 +309,14 @@ export default function TaskEditForm({ taskId }: TaskEditFormProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="cursor-pointer px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isSubmitting ? "Updating..." : "Update Task"}
           </button>

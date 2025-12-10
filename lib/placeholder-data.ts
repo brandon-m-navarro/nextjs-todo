@@ -753,7 +753,7 @@ export const Tasks = [
 export const Projects = [
   {
     id: "PRO-UEgZgZMLUEus",
-    name: "Project To Be Deleted II",
+    name: "Project To Be Deleted",
     description: null,
     hexColor: null,
     icon: null,
@@ -765,8 +765,8 @@ export const Projects = [
     name: "Form Submission Success Animation",
     description:
       "This project eventually became the 'spinner.tsx'  component and is used in Task creation. Lets see how quickly the projects are updated.",
-    hexColor: "5cf6",
-    icon: "🏋️",
+    hexColor: "5cf600",
+    icon: null,
     creationDateTime: "2025-09-26T23:51:39.815Z",
     lastModifiedDateTime: "2025-10-06T23:14:22.712Z",
   },

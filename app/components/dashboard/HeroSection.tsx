@@ -19,7 +19,8 @@ export default function HeroSection() {
         </h1>
         <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
           A minimal todo application demonstrating integration with my SSO
-          ecosystem, implemented using Next.js, Prisma, and TailwindCSS. Created by me, not AI.
+          ecosystem, implemented using Next.js, Prisma, and TailwindCSS. Created
+          by a person, not AI.
         </p>
 
         {/* Connected Button Group */}

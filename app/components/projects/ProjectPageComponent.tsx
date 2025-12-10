@@ -15,7 +15,7 @@ export default function ProjectPageComponent({
   projectId,
 }: ProjectPageComponentProps) {
   const { getProjectById, isLoading, clone } = useProjectContext();
-  const { isLoggedIn } = useUserContext();
+  const { isLoggedIn, userId } = useUserContext();
   const { updateTasksContext } = useTaskContext();
   const project = getProjectById(projectId);
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function ProjectPageComponent({
       <div className="relative flex flex-col mb-6 sm:flex-row sm:items-center sm:mb-8 sm:justify-between">
         <BackButton />
         {/* If the user is signed in and doesn't own the Project, give them the ability to clone the Project */}
-        {isLoggedIn && (
+        {isLoggedIn && project.userId !== userId && (
           <button
             onClick={() => {
               clone(project.id, (response) => {

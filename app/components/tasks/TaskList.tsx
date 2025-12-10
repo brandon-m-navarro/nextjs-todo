@@ -45,7 +45,7 @@ export default function TaskList({
                 onChange={ () => {
                   toggleIsDone(task);
                 }}
-                className="h-5 w-5 rounded border-gray-300 text-blue-600 mt-0.5"
+                className="cursor-pointer h-5 w-5 rounded border-gray-300 text-blue-600 mt-0.5"
               />
 
               <div className="flex-1 min-w-0 self-center">
