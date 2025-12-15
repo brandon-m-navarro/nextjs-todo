@@ -171,6 +171,7 @@ export default function TasksPageComponent() {
               <Toggle
                 label="Show only my tasks"
                 className="ml-auto"
+                defaultChecked={showPrivateOnly}
                 onChange={(pressed) => {
                   updateUrl({ isPrivate: pressed ? "true" : "" });
                 }}

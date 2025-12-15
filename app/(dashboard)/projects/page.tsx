@@ -11,7 +11,7 @@ export default function ProjectsPage() {
   return (
     <div className="pb-15 sm:p-6 md:p-8 max-w-6xl mx-auto">
       {isLoggedIn && (
-        <>
+        <div className="mb-[36px]">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
             <div className="flex-1">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -36,7 +36,7 @@ export default function ProjectsPage() {
           ) : (
             <ProjectChooser projects={privateProjects} />
           )}
-        </>
+        </div>
       )}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
         <div className="flex-1">
