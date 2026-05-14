@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client'
 import { Tasks, Projects } from '../lib/placeholder-data'
-
-const prisma = new PrismaClient()
+import prisma from "@/lib/prisma";
 
 async function main() {
   try {

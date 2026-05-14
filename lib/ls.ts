@@ -13,7 +13,7 @@ export interface AppData {
   // tasks?: Array<{ id: string; title: string }>;
   // projects?: Array<{ id: string; name: string }>;
 
-  [key: string]: unknown; // Flexible structure if you don't know exact shape
+  [key: string]: unknown;
 }
 
 // Get local storage data for the application

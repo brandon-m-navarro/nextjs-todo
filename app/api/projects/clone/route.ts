@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma  from "@/lib/prisma";
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 import { generateId } from "@/lib/utilities";
+import { Task } from "@/lib/definitions";
 
 export async function POST(
   request: NextRequest,
@@ -50,7 +51,7 @@ export async function POST(
       where: { projectId: originalProject.id },
     });
 
-    const clonedTasksData = originalTasks.map((task) => ({
+    const clonedTasksData:Task[] = originalTasks.map((task) => ({
       id: generateId("TSK"),
       title: task.title,
       description: task.description,
@@ -59,13 +60,13 @@ export async function POST(
       expectedCompletionDateTime: task.expectedCompletionDateTime,
       projectId: clonedProject.id, // Associate with the cloned project
       userId: user.id,
+      creationDateTime: task.creationDateTime,
+      lastModifiedDateTime: task.lastModifiedDateTime
     }));
 
-    const clonedTasks = await prisma.task.createManyAndReturn({
+    const clonedTasks: Task[] = await prisma.task.createManyAndReturn({
       data: clonedTasksData,
     });
-
-    console.log("Cloned Tasks (FROM ROUTE):", clonedTasks);
 
     return NextResponse.json(
       { success: true, project: clonedProject, tasks: clonedTasks },

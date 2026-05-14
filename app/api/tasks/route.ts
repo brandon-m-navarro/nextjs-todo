@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateId } from "@/lib/utilities";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Task } from "@/lib/definitions";
 import { headers } from "next/headers";

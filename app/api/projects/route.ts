@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateId } from "@/lib/utilities";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Project } from "@/lib/definitions";
 import { headers } from "next/headers";
@@ -55,7 +55,7 @@ export async function GET() {
       orderBy: { creationDateTime: 'desc' }
     });
 
-    let privateProjects:Project[] = [];
+    let privateProjects: Project[] = [];
     if (user) {
       privateProjects = await prisma.project.findMany({
         where: { userId: user.id },
@@ -64,7 +64,7 @@ export async function GET() {
     }
 
     // For now, combine both public and private projects into a single list
-    const projects = [...privateProjects, ...publicProjects];
+    const projects: Project[] = [...privateProjects, ...publicProjects];
 
     return NextResponse.json({
       success: true,

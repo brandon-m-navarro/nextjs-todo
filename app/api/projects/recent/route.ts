@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { Project } from "@/lib/definitions";
 import { headers } from "next/headers";
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get("limit") || "5");
 
   // Fetch public projects
-  const publicProjects = await prisma.project.findMany({
+  const publicProjects:Project[] = await prisma.project.findMany({
     where: { userId: null },
     orderBy: { creationDateTime: 'desc' },
     take: 5

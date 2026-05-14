@@ -1,6 +1,6 @@
 import { TaskWithProject, Task } from "@/lib/definitions";
 import { NextResponse, NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
